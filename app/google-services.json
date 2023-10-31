@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1078053496037",
+    "project_id": "treasurehunt-szoftarch",
+    "storage_bucket": "treasurehunt-szoftarch.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1078053496037:android:6ccc25f9e7a24816a2e00c",
+        "android_client_info": {
+          "package_name": "hu.bme.aut.szoftarch.kozkincsker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCnkLt22SvVnpHOJC5Yp45WzK1v1P1ZAOY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

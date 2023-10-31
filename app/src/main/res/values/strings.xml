@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">TreasureHunt</string>
+
+    <string name="login">LOGIN</string>
+    <string name="register">REGISTER</string>
+    <string name="title_email">Email</string>
+    <string name="title_password">Password</string>
+    <string name="missing_email">Please enter your email</string>
+    <string name="missing_password">Please enter your password</string>
+</resources>
