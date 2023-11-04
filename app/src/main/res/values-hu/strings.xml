@@ -18,4 +18,7 @@
     <string name="task_type_order_answer">Listát kell sorba rendezni</string>
     <string name="task_type_text_answer">Szövegt kell megadni válaszként</string>
     <string name="task_type_image_answer">Képet kell megadni válaszként</string>
+    <string name="level_type_all_task_per_level">Minden feladatot meg kell oldani</string>
+    <string name="level_type_min_one_task_per_level">Minimum egy feladatot meg kell oldani</string>
+    <string name="level_type_max_one_task_per_level">Pontosan egy feladatot meg kell oldani</string>
 </resources>

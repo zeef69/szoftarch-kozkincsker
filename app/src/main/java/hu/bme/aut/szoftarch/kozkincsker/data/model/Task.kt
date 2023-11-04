@@ -7,13 +7,10 @@ import java.util.UUID
 @Parcelize
 data class Task (
     var id: String = UUID.randomUUID().toString(),
-    var mission: Mission = Mission(),
+    var level: Level = Level(),
     var title: String = "",
     var descripion: String = "",
     var score: Int = 0,
     var answers: String = "",
-    var taskType: TaskType = TaskType.ListedAnswer,
-    var previousTask: Task? = null,
-    var nextTask: Task? = null
-
+    var taskType: TaskType = TaskType.ListedAnswer
 ): Parcelable
