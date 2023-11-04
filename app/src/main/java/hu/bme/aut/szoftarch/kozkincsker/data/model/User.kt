@@ -9,8 +9,8 @@ data class User(
     var name: String = "",
     var score: Int = 0,
     var actualLanguage: String = "English",
-    var options: UserOptions = UserOptions(),
     var isAdmin: Boolean = false,
     var ableToEvaluate: Boolean = true,
-    var privatePlayableMissions: MutableList<Mission> = ArrayList()
+    var privatePlayableMissions: MutableList<Mission> = ArrayList(),
+    var designedMissions: MutableList<Mission> = ArrayList()
 ): Parcelable
