@@ -23,6 +23,7 @@ data class Mission(
     var designer: User? = null,
     var missionTags : MutableList<MissionTag> = ArrayList(),
     var feedbacks: MutableList<Feedback> = ArrayList(),
+    var badge: Badge? = null,
 ): Parcelable
 {
     enum class  Visibility {

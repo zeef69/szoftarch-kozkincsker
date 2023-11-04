@@ -12,5 +12,7 @@ data class User(
     var isAdmin: Boolean = false,
     var ableToEvaluate: Boolean = true,
     var privatePlayableMissions: MutableList<Mission> = ArrayList(),
-    var designedMissions: MutableList<Mission> = ArrayList()
+    var designedMissions: MutableList<Mission> = ArrayList(),
+    var sessions: MutableList<Session> = ArrayList(),
+    var badges: MutableList<Badge>  = ArrayList(),
 ): Parcelable
