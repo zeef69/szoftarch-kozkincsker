@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">KincsKereső</string>
+
+    <string name="login">BEJELENTKEZÉS</string>
+    <string name="register">REGISZTRÁCIÓ</string>
+    <string name="title_email">E-mail</string>
+    <string name="title_password">Jelszó</string>
+    <string name="missing_email">Írd be az e-mailcímed</string>
+    <string name="missing_password">Írd be jelszavad</string>
+</resources>
