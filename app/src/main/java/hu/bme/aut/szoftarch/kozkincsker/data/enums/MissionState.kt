@@ -3,9 +3,9 @@ package hu.bme.aut.szoftarch.kozkincsker.data.enums
 import com.google.firebase.firestore.PropertyName
 import hu.bme.aut.szoftarch.kozkincsker.R
 
-enum class MissionVisibility(val translation: Int) {
+enum class MissionState(val translation: Int) {
     @PropertyName("private")
-    Private(R.string.mission_visibility_private),
+    Planning(R.string.mission_state_planning),
     @PropertyName("public")
-    Public(R.string.mission_visibility_public)
+    Done(R.string.mission_state_done)
 }
