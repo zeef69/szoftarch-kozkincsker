@@ -8,7 +8,6 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class Level(
     var id: String = UUID.randomUUID().toString(),
-    var mission: Mission = Mission(),
     var levelNumber: Int = 0,
     var previousLevel: Level? = null,
     var nextLevel: Level? = null,
