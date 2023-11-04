@@ -12,5 +12,5 @@ data class Level(
     var previousLevel: Level? = null,
     var nextLevel: Level? = null,
     var levelType: LevelType = LevelType.MinOneTaskInLevel,
-    var taskList: List<Task> = emptyList()
+    var taskList: MutableList<Task> = ArrayList()
 ): Parcelable
