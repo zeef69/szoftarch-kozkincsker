@@ -13,7 +13,7 @@ data class Feedback(
     var comment: String = "",
     var commentState: CommentVisibility = CommentVisibility.SHOW
 ): Parcelable{
-    enum class CommentVisibility() {
+    enum class CommentVisibility{
         SHOW, HIDE
     }
 }
