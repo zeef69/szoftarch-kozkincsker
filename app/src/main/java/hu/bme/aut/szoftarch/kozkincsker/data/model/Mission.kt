@@ -1,8 +1,8 @@
 package hu.bme.aut.szoftarch.kozkincsker.data.model
 
+import android.opengl.Visibility
 import android.os.Parcelable
-import hu.bme.aut.szoftarch.kozkincsker.data.enums.MissionState
-import hu.bme.aut.szoftarch.kozkincsker.data.enums.MissionVisibility
+import com.google.firebase.firestore.PropertyName
 import java.util.UUID
 import kotlinx.parcelize.Parcelize
 import java.time.Duration
@@ -18,9 +18,26 @@ data class Mission(
     var daysToSolve: Int = 0,
     var accessCode: String = "",
     var isPlayableWithoutModerator: Boolean = true,
-    var visibility: MissionVisibility = MissionVisibility.Private,
-    var state: MissionState = MissionState.Planning,
+    var visibility: Visibility = Visibility.PRIVATE,
+    var state: State = State.DESIGNING,
     var designer: User? = null,
     var missionTags : MutableList<MissionTag> = ArrayList(),
     var feedbacks: MutableList<Feedback> = ArrayList(),
 ): Parcelable
+{
+    enum class  Visibility {
+        @PropertyName("private")
+        PRIVATE,
+
+        @PropertyName("public")
+        PUBLIC,
+    }
+
+    enum class  State {
+        @PropertyName("designing")
+        DESIGNING,
+
+        @PropertyName("finished")
+        FINISHED,
+    }
+}
