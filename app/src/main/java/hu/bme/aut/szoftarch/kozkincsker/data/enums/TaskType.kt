@@ -4,8 +4,8 @@ import com.google.firebase.firestore.PropertyName
 import hu.bme.aut.szoftarch.kozkincsker.R
 
 enum class TaskType(val translation: Int, val checkable: Boolean) {
-    @PropertyName("listed_answers")
-    ListedAnswers(R.string.task_type_listed_answer, true){
+    @PropertyName("listed_answer")
+    ListedAnswer(R.string.task_type_listed_answer, true){
         override fun solutionCheck(desingherAnswers: String, userAnswer: String) = true
     },
     @PropertyName("number_answer")
