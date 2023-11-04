@@ -7,10 +7,6 @@
     <string name="title_password">Jelszó</string>
     <string name="missing_email">Írd be az e-mailcímed</string>
     <string name="missing_password">Írd be jelszavad</string>
-    <string name="mission_visibility_private">Privát</string>
-    <string name="mission_visibility_public">Publikus</string>
-    <string name="mission_state_planning">Tervezés alatt</string>
-    <string name="mission_state_done">Kész</string>
     <string name="task_type_listed_answer">Listából kell kiválasztani</string>
     <string name="task_type_number_answer">Szám megadása válaszként</string>
     <string name="task_type_date_answer">Dátum megadása válaszként</string>
