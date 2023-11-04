@@ -8,7 +8,7 @@ import java.util.UUID
 data class Feedback(
     var id: String = UUID.randomUUID().toString(),
     var mission: Mission = Mission(),
-    var user: User = User(),
+    var writer: User = User(),
     var rate: Double = 0.0,
     var comment: String = "",
     var commentState: CommentVisibility = CommentVisibility.SHOW
