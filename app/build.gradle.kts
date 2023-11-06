@@ -89,4 +89,5 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
     implementation("androidx.compose.material:material:1.5.4")
+    debugImplementation("androidx.compose.ui:ui-tooling:$composeVersion")
 }
