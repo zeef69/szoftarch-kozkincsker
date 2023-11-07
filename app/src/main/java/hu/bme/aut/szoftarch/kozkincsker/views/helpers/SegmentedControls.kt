@@ -1,5 +1,6 @@
 package hu.bme.aut.szoftarch.kozkincsker.views.helpers
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -33,6 +34,7 @@ fun SegmentedControl(texts: List<String>, qualitySwitchState: Int, onValueChange
                         MaterialTheme.colors.primary
                     else Color.LightGray
                 ),
+                contentPadding = PaddingValues(0.dp),
                 modifier = Modifier
                     .weight(1f)
                     .padding(2.dp, 0.dp)
