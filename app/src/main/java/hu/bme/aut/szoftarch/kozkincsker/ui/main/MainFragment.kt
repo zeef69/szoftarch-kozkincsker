@@ -13,6 +13,7 @@ import co.zsmb.rainbowcake.base.RainbowCakeFragment
 import co.zsmb.rainbowcake.extensions.exhaustive
 import co.zsmb.rainbowcake.hilt.getViewModelFromFactory
 import dagger.hilt.android.AndroidEntryPoint
+import hu.bme.aut.szoftarch.kozkincsker.views.MissionsAndAccountBottomAppBar
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.FullScreenLoading
 import hu.bme.aut.szoftarch.kozkincsker.views.theme.AppUiTheme1
 
@@ -43,7 +44,7 @@ class MainFragment: RainbowCakeFragment<MainViewState, MainViewModel>() {
                 ) {
                     when (viewState) {
                         is Loading -> FullScreenLoading()
-                        is MainContent -> FullScreenLoading()
+                        is MainContent -> MissionsAndAccountBottomAppBar()
                     }.exhaustive
                 }
             }
