@@ -18,6 +18,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -37,16 +38,27 @@ import hu.bme.aut.szoftarch.kozkincsker.views.helpers.SegmentedControl
 @Composable
 fun NewTask(
     task: Task,
-    onBackClick: () -> Unit = {},
-    onSaveClick: (Task) -> Unit
+    onSaveClick: (Task) -> Unit,
+    onDeleteClick: (Task) -> Unit,
+    onBackClick: () -> Unit = {}
 ) {
 
     var privacySwitchState by remember { mutableIntStateOf(0) }
 
-    val typeList = mutableListOf<String>()
-    for(type in TaskType.values())
-        typeList.add(type.name)
-    var typeSelectedIndex by remember { mutableIntStateOf(0) }
+    val typeListNames = mutableListOf<String>()
+    val typeList = mutableListOf<TaskType>()
+    for(type in TaskType.values()) {
+        if(type.checkable && privacySwitchState == 0) {
+            typeListNames.add(type.name)
+            typeList.add(type)
+        }
+        else if(!type.checkable && privacySwitchState == 1) {
+            typeListNames.add(type.name)
+            typeList.add(type)
+        }
+    }
+    var typeSelectedIndexAutomatic by remember { mutableIntStateOf(0) }
+    var typeSelectedIndexHuman by remember { mutableIntStateOf(0) }
     var typeExpanded by remember { mutableStateOf(false) }
 
     var titleInput by remember { mutableStateOf(task.title) }
@@ -69,6 +81,11 @@ fun NewTask(
                     },
                     onClick = onBackClick
                 )
+            },
+            actions = {
+                IconButton(onClick = { onDeleteClick(task) }) {
+                    Icon(Icons.Filled.Delete, null)
+                }
             }
         )
         Column(
@@ -84,14 +101,25 @@ fun NewTask(
             ) { privacySwitchState = it }
 
             Box() {
-                ComboBox(
-                    list = typeList,
-                    selectedIndex = typeSelectedIndex,
-                    onIndexChanged = { typeSelectedIndex = it },
-                    isExpanded = typeExpanded,
-                    onExpandedChanged = { typeExpanded = it },
-                    textWidth = 100.dp
-                )
+                if(privacySwitchState == 0) {
+                    ComboBox(
+                        list = typeListNames,
+                        selectedIndex = typeSelectedIndexAutomatic,
+                        onIndexChanged = { typeSelectedIndexAutomatic = it },
+                        isExpanded = typeExpanded,
+                        onExpandedChanged = { typeExpanded = it },
+                        textWidth = 130.dp
+                    )
+                } else if(privacySwitchState == 1) {
+                    ComboBox(
+                        list = typeListNames,
+                        selectedIndex = typeSelectedIndexHuman,
+                        onIndexChanged = { typeSelectedIndexHuman = it },
+                        isExpanded = typeExpanded,
+                        onExpandedChanged = { typeExpanded = it },
+                        textWidth = 130.dp
+                    )
+                }
             }
 
             OutlinedTextField(
@@ -158,7 +186,16 @@ fun NewTask(
         Column( ) {
             Button(
                 onClick = {
-                    val newTask = Task()
+                    val newTask = task
+                    task.title = titleInput
+                    if(privacySwitchState == 0) {
+                        task.taskType = typeList[typeSelectedIndexAutomatic]
+                    } else if(privacySwitchState == 1) {
+                        task.taskType = typeList[typeSelectedIndexHuman]
+                    }
+                    task.descripion = descriptionInput
+                    task.answers = answerInput
+                    task.score = scoreInput.toInt()
                     onSaveClick(newTask)
                 },
                 modifier = Modifier
@@ -179,6 +216,7 @@ fun NewTaskPreview() {
     task1.title = "Task1"
     NewTask(
         task = task1,
-        onSaveClick = {}
+        onSaveClick = {},
+        onDeleteClick = {}
     )
 }

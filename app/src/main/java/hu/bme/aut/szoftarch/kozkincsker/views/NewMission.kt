@@ -1,9 +1,12 @@
 package hu.bme.aut.szoftarch.kozkincsker.views
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -25,8 +28,6 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -39,17 +40,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import hu.bme.aut.szoftarch.kozkincsker.data.enums.LevelType
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Level
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Task
+import hu.bme.aut.szoftarch.kozkincsker.views.helpers.ComboBox
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.SegmentedControl
 
 @Composable
 fun NewMission(
     mission: Mission,
-    onBackClick: () -> Unit = {},
+    onNewTask: (Level) -> Unit,
+    onTaskClicked: (Task) -> Unit,
     onSaveClick: (Mission) -> Unit,
-    onPostClick: (Mission) -> Unit
+    onPostClick: (Mission) -> Unit,
+    onBackClick: () -> Unit = {}
 ) {
     var titleInput by remember { mutableStateOf(mission.name) }
     var descriptionInput by remember { mutableStateOf("") }
@@ -120,13 +125,37 @@ fun NewMission(
                     .padding(all = 10.dp)
                     .fillMaxSize()
             ) {
-                itemsIndexed(levels) { _, item ->
+                itemsIndexed(levels) { _, level ->
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
                             .height(IntrinsicSize.Min)
                             .fillMaxWidth()
                     ) {
+                        Box(
+                            modifier = Modifier
+                                .height(IntrinsicSize.Min)
+                                .padding(all = 5.dp)
+                                .fillMaxWidth()
+                                .weight(0.1f, true)
+                        ) {
+                            val typeListNames = mutableListOf<String>()
+                            for(type in LevelType.values()) {
+                                typeListNames.add(type.name)
+                            }
+                            var typeSelectedIndex by remember { mutableIntStateOf(0) }
+                            var typeExpanded by remember { mutableStateOf(false) }
+
+                            ComboBox(
+                                list = typeListNames,
+                                selectedIndex = typeSelectedIndex,
+                                onIndexChanged = { typeSelectedIndex = it },
+                                isExpanded = typeExpanded,
+                                onExpandedChanged = { typeExpanded = it },
+                                textWidth = 0.dp
+                            )
+                            level.levelType = LevelType.values().toList()[typeSelectedIndex]
+                        }
                         Row(
                             horizontalArrangement = Arrangement.SpaceEvenly,
                             verticalAlignment = Alignment.CenterVertically,
@@ -134,9 +163,9 @@ fun NewMission(
                                 .height(IntrinsicSize.Min)
                                 .padding(all = 5.dp)
                                 .fillMaxWidth()
-                                .weight(0.8f, true)
+                                .weight(0.85f, true)
                         ) {
-                            for(task in item.taskList) {
+                            for(task in level.taskList) {
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
                                     modifier = Modifier
@@ -145,11 +174,12 @@ fun NewMission(
                                         .background(Color.LightGray)
                                         .padding(5.dp, 5.dp, 5.dp, 5.dp)
                                         .weight(1.0f, true)
+                                        .clickable { onTaskClicked(task) }
                                 ) {
                                     Text(
                                         text = task.title, color = Color.Black, fontSize = 18.sp, modifier = Modifier.padding(all = 2.dp).weight(0.6f, true)
                                     )
-                                    IconButton(
+                                    /*IconButton(
                                         onClick = { },
                                         modifier = Modifier
                                             .padding(vertical = 1.dp, horizontal = 1.dp)
@@ -164,19 +194,20 @@ fun NewMission(
                                             .weight(0.2f, false)
                                     ) {
                                         Icon(imageVector  = Icons.Filled.Delete, null)
-                                    }
+                                    }*/
                                 }
                                 Spacer(modifier = Modifier.width(5.dp))
                             }
                         }
-                        if(item.taskList.size < 3)
+                        if(level.taskList.size < 3)
                             Button(
-                                onClick = { },
+                                onClick = { onNewTask(level) },
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .padding(vertical = 5.dp, horizontal = 2.dp)
-                                    .weight(0.2f, true),
-                                shape = RoundedCornerShape(10)
+                                    .weight(0.15f, true),
+                                shape = RoundedCornerShape(10),
+                                contentPadding = PaddingValues(0.dp)
                             ) {
                                 Icon(imageVector  = Icons.Filled.Add, null)
                             }
@@ -186,7 +217,11 @@ fun NewMission(
         }
         Column( ) {
             Button(
-                onClick = { },
+                onClick = {
+                    val level = Level()
+                    levels.add(level)
+                    onNewTask(level)
+                },
                 modifier = Modifier
                     .padding(vertical = 5.dp, horizontal = 50.dp),
                 shape = RoundedCornerShape(10)
@@ -195,7 +230,10 @@ fun NewMission(
             }
             Button(
                 onClick = {
-                    val newMission = Mission()
+                    val newMission = mission
+                    newMission.name = titleInput
+                    //newMission.description = descriptionInput
+                    newMission.levelList = levels
                     onSaveClick(newMission)
                 },
                 modifier = Modifier
@@ -207,7 +245,10 @@ fun NewMission(
             }
             Button(
                 onClick = {
-                    val newMission = Mission()
+                    val newMission = mission
+                    newMission.name = titleInput
+                    //newMission.description = descriptionInput
+                    newMission.levelList = levels
                     onPostClick(newMission)
                 },
                 modifier = Modifier
@@ -240,7 +281,9 @@ fun NewMissionPreview() {
     mission.levelList = mutableListOf(level1, level2, level3)
     NewMission(
         mission = mission,
+        onNewTask = {},
+        onTaskClicked = {},
         onPostClick = {},
-        onSaveClick = {}
+        onSaveClick = {},
     )
 }
