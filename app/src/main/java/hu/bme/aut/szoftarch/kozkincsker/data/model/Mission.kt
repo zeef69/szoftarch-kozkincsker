@@ -1,14 +1,15 @@
 package hu.bme.aut.szoftarch.kozkincsker.data.model
 
 import android.os.Parcelable
+import com.google.firebase.firestore.DocumentId
 import com.google.firebase.firestore.PropertyName
-import java.util.UUID
 import kotlinx.parcelize.Parcelize
 import java.util.Date
 
 @Parcelize
 data class Mission(
-    var id: String = UUID.randomUUID().toString(),
+    @DocumentId
+    var id: String = "",
     var name: String = "",
     var creationDate: Date = Date(),
     var modificationDate: Date = Date(),
