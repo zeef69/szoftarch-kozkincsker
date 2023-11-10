@@ -39,15 +39,17 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
+import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.SegmentedControl
 
 @Composable
 fun Mission(
     mission: Mission,
-    onBackClick: () -> Unit = {},
-    onJoinCodeClick: () -> Unit = {}
+    onStartSession: (Session) -> Unit = {},
+    onBackClick: () -> Unit = {}
 ) {
     var switchState by remember { mutableIntStateOf(0) }
+    var checkedModerator by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -87,7 +89,7 @@ fun Mission(
             Text(
                 buildAnnotatedString {
                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append("mission.desctiption")
+                        append(mission.description)
                     }
                 },
                 textAlign = TextAlign.Start,
@@ -110,59 +112,11 @@ fun Mission(
                 )
 
             SegmentedControl(
-                listOf("Sessions", "Start Session", "Statistics"),
+                listOf("Start Session", "Statistics"),
                 switchState
             ) { switchState = it }
 
             if(switchState == 0) {
-                Text(
-                    buildAnnotatedString {
-                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                            append("Running sessions:")
-                        }
-                    },
-                    textAlign = TextAlign.Start,
-                    modifier = Modifier
-                        .padding(0.dp, 10.dp, 0.dp, 0.dp)
-                        .width(((LocalConfiguration.current.screenWidthDp / 2) - 20).dp)
-                )
-
-                /**/LazyColumn(
-                    modifier = Modifier
-                        .padding(all = 10.dp)
-                        .fillMaxSize()
-                ) {
-                    itemsIndexed(mission.levelList[0].taskList) { _, item ->
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(Color.LightGray)
-                                .padding(5.dp, 5.dp, 5.dp, 5.dp)
-                        ) {
-                            Text(
-                                text = item.title,
-                                color = Color.Black,
-                                fontSize = 18.sp,
-                                modifier = Modifier.padding(all = 2.dp).weight(0.6f, true)
-                            )
-                            Button(
-                                onClick = {
-                                    onJoinCodeClick()
-                                },
-                                modifier = Modifier
-                                    .padding(vertical = 2.dp, horizontal = 2.dp)
-                                    .fillMaxWidth()
-                                    .weight(0.4f, true),
-                                shape = RoundedCornerShape(10),
-                            ) {
-                                Text("Join")
-                            }
-                        }
-                    }
-                }/**/
-            }
-            else if(switchState == 1) {
                 Text(
                     buildAnnotatedString {
                         withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
@@ -175,31 +129,10 @@ fun Mission(
                         .width(((LocalConfiguration.current.screenWidthDp / 2) - 20).dp)
                 )
 
-                var checkedModerator by remember { mutableStateOf(false) }
                 Switch(
                     checked = checkedModerator,
                     onCheckedChange = {
                         checkedModerator = it
-                    }
-                )
-
-                Text(
-                    buildAnnotatedString {
-                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                            append("Private/Public:")
-                        }
-                    },
-                    textAlign = TextAlign.Start,
-                    modifier = Modifier
-                        .padding(0.dp, 10.dp, 0.dp, 0.dp)
-                        .width(((LocalConfiguration.current.screenWidthDp / 2) - 20).dp)
-                )
-
-                var checkedPrivate by remember { mutableStateOf(false) }
-                Switch(
-                    checked = checkedPrivate,
-                    onCheckedChange = {
-                        checkedPrivate = it
                     }
                 )
             }
@@ -259,21 +192,20 @@ fun Mission(
                 }
             }
         }
-        if(switchState != 2)
+        if(switchState == 0)
             Column() {
                 Button(
                     onClick = {
-                        onJoinCodeClick()
+                        val newSession = Session()
+                        newSession.mission = mission
+                        onStartSession(newSession)
                     },
                     modifier = Modifier
                         .padding(vertical = 2.dp, horizontal = 50.dp)
                         .fillMaxWidth(),
                     shape = RoundedCornerShape(10),
                 ) {
-                    if(switchState == 0)
-                        Text("Join with code")
-                    if(switchState == 1)
-                        Text("Start")
+                    Text("Start")
                 }
             }
     }

@@ -17,8 +17,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Feedback
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Level
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
+import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Task
 import hu.bme.aut.szoftarch.kozkincsker.data.model.User
+import hu.bme.aut.szoftarch.kozkincsker.views.Mission
 import hu.bme.aut.szoftarch.kozkincsker.views.NewMission
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.FullScreenLoading
 import hu.bme.aut.szoftarch.kozkincsker.views.theme.AppUiTheme1
@@ -74,9 +76,11 @@ class MainFragment: RainbowCakeFragment<MainViewState, MainViewModel>() {
 
                     when (viewState) {
                         is Loading -> FullScreenLoading()
-                        is MainContent -> /*Mission(
-                            mission
-                        )*/
+                        is MainContent -> Mission(
+                            mission = mission,
+                            onStartSession = ::onStartSession,
+                            onBackClick = { navigator?.pop() }
+                        )
 
                         /*NewTask(
                             task = task1,
@@ -85,14 +89,14 @@ class MainFragment: RainbowCakeFragment<MainViewState, MainViewModel>() {
                             onBackClick = { navigator?.pop() }
                         )*/
 
-                        NewMission(
+                        /*NewMission(
                             mission = mission,
                             onNewTask = {},
                             onTaskClicked = {},
                             onPostClick = ::onSaveMission,
                             onSaveClick = ::onSaveMission,
                             onBackClick = { navigator?.pop() }
-                        )
+                        )*/
                     }.exhaustive
                 }
             }
@@ -111,5 +115,9 @@ class MainFragment: RainbowCakeFragment<MainViewState, MainViewModel>() {
     private fun onDeleteTask(task: Task) {
         //viewModel.onDelete()
         //navigator?.pop()
+    }
+
+    private fun onStartSession(session: Session) {
+        //viewModel.startSession()
     }
 }

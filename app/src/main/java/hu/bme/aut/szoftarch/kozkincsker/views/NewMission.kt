@@ -179,22 +179,6 @@ fun NewMission(
                                     Text(
                                         text = task.title, color = Color.Black, fontSize = 18.sp, modifier = Modifier.padding(all = 2.dp).weight(0.6f, true)
                                     )
-                                    /*IconButton(
-                                        onClick = { },
-                                        modifier = Modifier
-                                            .padding(vertical = 1.dp, horizontal = 1.dp)
-                                            .weight(0.2f, false)
-                                    ) {
-                                        Icon(imageVector  = Icons.Filled.Edit, null)
-                                    }
-                                    IconButton(
-                                        onClick = { },
-                                        modifier = Modifier
-                                            .padding(vertical = 1.dp, horizontal = 1.dp)
-                                            .weight(0.2f, false)
-                                    ) {
-                                        Icon(imageVector  = Icons.Filled.Delete, null)
-                                    }*/
                                 }
                                 Spacer(modifier = Modifier.width(5.dp))
                             }
@@ -232,7 +216,7 @@ fun NewMission(
                 onClick = {
                     val newMission = mission
                     newMission.name = titleInput
-                    //newMission.description = descriptionInput
+                    newMission.description = descriptionInput
                     newMission.levelList = levels
                     onSaveClick(newMission)
                 },
@@ -247,7 +231,7 @@ fun NewMission(
                 onClick = {
                     val newMission = mission
                     newMission.name = titleInput
-                    //newMission.description = descriptionInput
+                    newMission.description = descriptionInput
                     newMission.levelList = levels
                     onPostClick(newMission)
                 },

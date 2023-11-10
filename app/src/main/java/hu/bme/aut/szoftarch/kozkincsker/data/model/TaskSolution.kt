@@ -6,7 +6,7 @@ import java.util.UUID
 @Parcelize
 data class TaskSolution(
     var id: String = UUID.randomUUID().toString(),
-    var session: Session,
+    var session: Session = Session(),
     var task: Task = Task(),
     var user: User = User(),
     var userAnswer: String = ""

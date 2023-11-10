@@ -62,7 +62,7 @@ fun NewTask(
     var typeExpanded by remember { mutableStateOf(false) }
 
     var titleInput by remember { mutableStateOf(task.title) }
-    var descriptionInput by remember { mutableStateOf(task.descripion) }
+    var descriptionInput by remember { mutableStateOf(task.description) }
     var answerInput by remember { mutableStateOf(task.answers) }
     var scoreInput by remember { mutableStateOf(task.score.toString()) }
 
@@ -193,7 +193,7 @@ fun NewTask(
                     } else if(privacySwitchState == 1) {
                         task.taskType = typeList[typeSelectedIndexHuman]
                     }
-                    task.descripion = descriptionInput
+                    task.description = descriptionInput
                     task.answers = answerInput
                     task.score = scoreInput.toInt()
                     onSaveClick(newTask)

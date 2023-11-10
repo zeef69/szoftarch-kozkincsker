@@ -9,7 +9,7 @@ data class Task (
     var id: String = UUID.randomUUID().toString(),
     var level: Level = Level(),
     var title: String = "",
-    var descripion: String = "",
+    var description: String = "",
     var score: Int = 0,
     var answers: String = "",
     var taskType: TaskType = TaskType.ListedAnswer

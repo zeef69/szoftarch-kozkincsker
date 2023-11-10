@@ -9,7 +9,7 @@ import java.util.Date
  * Küldetés osztály
  * @param id
  * @param name Küoldetés neve
- * @param descripion Küldetés leírása
+ * @param description Küldetés leírása
  * @param creationDate Létrehozás dátuma
  * @param modificationDate Utolsó módosítás dátuma
  * @param hoursToSolve megoldási idő - óra
@@ -29,7 +29,7 @@ data class Mission(
     @DocumentId
     var id: String = "",
     var name: String = "",
-    var descripion: String = "",
+    var description: String = "",
     var creationDate: Date = Date(),
     var modificationDate: Date = Date(),
     var hoursToSolve: Int = 0,
