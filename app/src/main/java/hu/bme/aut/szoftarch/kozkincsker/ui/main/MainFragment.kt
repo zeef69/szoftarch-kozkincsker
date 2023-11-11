@@ -23,6 +23,7 @@ import hu.bme.aut.szoftarch.kozkincsker.data.model.User
 import hu.bme.aut.szoftarch.kozkincsker.views.Mission
 import hu.bme.aut.szoftarch.kozkincsker.views.ModeratorPlayerList
 import hu.bme.aut.szoftarch.kozkincsker.views.NewMission
+import hu.bme.aut.szoftarch.kozkincsker.views.NewTask
 import hu.bme.aut.szoftarch.kozkincsker.views.Rating
 import hu.bme.aut.szoftarch.kozkincsker.views.Session
 import hu.bme.aut.szoftarch.kozkincsker.views.Task
@@ -55,27 +56,39 @@ class MainFragment: RainbowCakeFragment<MainViewState, MainViewModel>() {
                     color = MaterialTheme.colors.background
                 ) {
                     val mission = Mission()
+                    val newmission = Mission()
                     val level1 = Level()
                     val level2 = Level()
                     val level3 = Level()
-                    val task1 = Task()
+                    val task11 = Task()
+                    val task12 = Task()
                     val task2 = Task()
-                    val task3 = Task()
+                    val task31 = Task()
+                    val task32 = Task()
+                    val task33 = Task()
                     val feedback = Feedback()
                     val user = User()
                     val user2 = User()
                     val session = Session()
-                    task1.title = "Task1"
+                    task11.title = "Task1.1"
+                    task12.title = "Task1.2"
                     task2.title = "Task2"
-                    task3.title = "Task3"
-                    level1.taskList = mutableListOf(task1, task2)
-                    level2.taskList = mutableListOf(task1)
-                    level3.taskList = mutableListOf(task1, task2, task3)
+                    task31.title = "Task3.1"
+                    task32.title = "Task3.2"
+                    task33.title = "Task3.3"
+                    task11.description= "Task1.1 description, long text, ..... Looooooooong, Can you do that? Go to the tower and look around!"
+                    level1.taskList = mutableListOf(task11, task12)
+                    level2.taskList = mutableListOf(task2)
+                    level3.taskList = mutableListOf(task31, task32, task33)
                     mission.levelList = mutableListOf(level1, level2, level3)
                     feedback.comment = "Legjobb"
                     feedback.stars = 5.0
+                    feedback.writer = user2
+                    feedback.mission = mission
                     mission.feedbacks = mutableListOf(feedback)
-                    mission.name = "Mission"
+                    mission.name = "MyMission"
+                    mission.description ="A new mission. Have fun!"
+                    mission.isPlayableWithoutModerator=false
                     user.name = "Dizájnoló"
                     user2.name = "Jatekos"
                     mission.designer = user
@@ -84,11 +97,11 @@ class MainFragment: RainbowCakeFragment<MainViewState, MainViewModel>() {
 
                     when (viewState) {
                         is Loading -> FullScreenLoading()
-                        is MainContent -> ModeratorPlayerList(
+                        is MainContent -> /*ModeratorPlayerList(
                             session = session,
                             onUserClicked = ::onUserClicked,
                             onBackClick = { navigator?.pop() }
-                        )
+                        )*/
 
 
                         /*Rating(
@@ -98,7 +111,7 @@ class MainFragment: RainbowCakeFragment<MainViewState, MainViewModel>() {
                         )*/
 
                         /*Task(
-                            task = task1,
+                            task = task11,
                             onSaveClicked = ::onSaveClicked,
                             onBackClick = { navigator?.pop() }
                         )*/
@@ -115,15 +128,15 @@ class MainFragment: RainbowCakeFragment<MainViewState, MainViewModel>() {
                             onBackClick = { navigator?.pop() }
                         )*/
 
-                        /*NewTask(
-                            task = task1,
+                        NewTask(
+                            task = task11,
                             onSaveClick = ::onSaveTask,
                             onDeleteClick = ::onDeleteTask,
                             onBackClick = { navigator?.pop() }
-                        )*/
+                        )
 
                         /*NewMission(
-                            mission = mission,
+                            mission = newmission,
                             onNewTask = {},
                             onTaskClicked = {},
                             onPostClick = ::onSaveMission,

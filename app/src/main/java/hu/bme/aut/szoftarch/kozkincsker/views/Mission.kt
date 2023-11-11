@@ -36,10 +36,14 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import hu.bme.aut.szoftarch.kozkincsker.data.model.Feedback
+import hu.bme.aut.szoftarch.kozkincsker.data.model.Level
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
+import hu.bme.aut.szoftarch.kozkincsker.data.model.User
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.SegmentedControl
 
 @Composable
@@ -76,7 +80,7 @@ fun Mission(
         ) {
             Text(
                 buildAnnotatedString {
-                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, fontSize = 24.sp)) {
                         append(mission.name)
                     }
                 },
@@ -130,10 +134,12 @@ fun Mission(
                 )
 
                 Switch(
-                    checked = checkedModerator,
+                    checked = checkedModerator and mission.isPlayableWithoutModerator,
+                    enabled = mission.isPlayableWithoutModerator,
                     onCheckedChange = {
                         checkedModerator = it
-                    }
+                    },
+
                 )
             }
             else {
@@ -209,4 +215,48 @@ fun Mission(
                 }
             }
     }
+}
+
+@Composable
+@Preview
+fun MissionPreview(){
+    val mission = Mission()
+    val level1 = Level()
+    val level2 = Level()
+    val level3 = Level()
+    val task1_1 = hu.bme.aut.szoftarch.kozkincsker.data.model.Task()
+    val task1_2 = hu.bme.aut.szoftarch.kozkincsker.data.model.Task()
+    val task2 = hu.bme.aut.szoftarch.kozkincsker.data.model.Task()
+    val task3_1 = hu.bme.aut.szoftarch.kozkincsker.data.model.Task()
+    val task3_2 = hu.bme.aut.szoftarch.kozkincsker.data.model.Task()
+    val task3_3 = hu.bme.aut.szoftarch.kozkincsker.data.model.Task()
+    val feedback = Feedback()
+    val user = User()
+    val user2 = User()
+    val session = Session()
+    task1_1.title = "Task1.1"
+    task1_2.title = "Task1.2"
+    task2.title = "Task2"
+    task3_1.title = "Task3.1"
+    task3_2.title = "Task3.2"
+    task3_3.title = "Task3.3"
+    level1.taskList = mutableListOf(task1_1, task1_2)
+    level2.taskList = mutableListOf(task2)
+    level3.taskList = mutableListOf(task3_1, task3_2, task3_3)
+    mission.levelList = mutableListOf(level1, level2, level3)
+    feedback.comment = "Legjobb"
+    feedback.stars = 5.0
+    mission.feedbacks = mutableListOf(feedback)
+    mission.name = "MyMission"
+    mission.description ="A new mission. Have fun!"
+    mission.isPlayableWithoutModerator=false
+    user.name = "Dizájnoló"
+    user2.name = "Jatekos"
+    mission.designer = user
+    session.mission = mission
+    session.players = mutableListOf(user, user2)
+
+    Mission(
+        mission = mission
+    )
 }
