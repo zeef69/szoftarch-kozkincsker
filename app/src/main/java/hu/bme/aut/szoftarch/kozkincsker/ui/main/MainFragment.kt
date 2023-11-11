@@ -116,11 +116,11 @@ class MainFragment: RainbowCakeFragment<MainViewState, MainViewModel>() {
                             onBackClick = { navigator?.pop() }
                         )*/
 
-                        /*Session(
+                        Session(
                             session = session,
                             onTaskClicked = ::onTaskClicked,
                             onBackClick = { navigator?.pop() }
-                        )*/
+                        )
 
                         /*Mission(
                             mission = mission,
@@ -128,12 +128,12 @@ class MainFragment: RainbowCakeFragment<MainViewState, MainViewModel>() {
                             onBackClick = { navigator?.pop() }
                         )*/
 
-                        NewTask(
+                        /*NewTask(
                             task = task11,
                             onSaveClick = ::onSaveTask,
                             onDeleteClick = ::onDeleteTask,
                             onBackClick = { navigator?.pop() }
-                        )
+                        )*/
 
                         /*NewMission(
                             mission = newmission,
