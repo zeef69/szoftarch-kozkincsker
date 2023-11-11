@@ -21,7 +21,11 @@ import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Task
 import hu.bme.aut.szoftarch.kozkincsker.data.model.User
 import hu.bme.aut.szoftarch.kozkincsker.views.Mission
+import hu.bme.aut.szoftarch.kozkincsker.views.ModeratorPlayerList
 import hu.bme.aut.szoftarch.kozkincsker.views.NewMission
+import hu.bme.aut.szoftarch.kozkincsker.views.Rating
+import hu.bme.aut.szoftarch.kozkincsker.views.Session
+import hu.bme.aut.szoftarch.kozkincsker.views.Task
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.FullScreenLoading
 import hu.bme.aut.szoftarch.kozkincsker.views.theme.AppUiTheme1
 
@@ -59,6 +63,8 @@ class MainFragment: RainbowCakeFragment<MainViewState, MainViewModel>() {
                     val task3 = Task()
                     val feedback = Feedback()
                     val user = User()
+                    val user2 = User()
+                    val session = Session()
                     task1.title = "Task1"
                     task2.title = "Task2"
                     task3.title = "Task3"
@@ -71,16 +77,43 @@ class MainFragment: RainbowCakeFragment<MainViewState, MainViewModel>() {
                     mission.feedbacks = mutableListOf(feedback)
                     mission.name = "Mission"
                     user.name = "Dizájnoló"
+                    user2.name = "Jatekos"
                     mission.designer = user
-
+                    session.mission = mission
+                    session.players = mutableListOf(user, user2)
 
                     when (viewState) {
                         is Loading -> FullScreenLoading()
-                        is MainContent -> Mission(
+                        is MainContent -> ModeratorPlayerList(
+                            session = session,
+                            onUserClicked = ::onUserClicked,
+                            onBackClick = { navigator?.pop() }
+                        )
+
+
+                        /*Rating(
+                            session = session,
+                            onSaveClicked = ::onSaveClicked,
+                            onBackClick = { navigator?.pop() }
+                        )*/
+
+                        /*Task(
+                            task = task1,
+                            onSaveClicked = ::onSaveClicked,
+                            onBackClick = { navigator?.pop() }
+                        )*/
+
+                        /*Session(
+                            session = session,
+                            onTaskClicked = ::onTaskClicked,
+                            onBackClick = { navigator?.pop() }
+                        )*/
+
+                        /*Mission(
                             mission = mission,
                             onStartSession = ::onStartSession,
                             onBackClick = { navigator?.pop() }
-                        )
+                        )*/
 
                         /*NewTask(
                             task = task1,
@@ -119,5 +152,21 @@ class MainFragment: RainbowCakeFragment<MainViewState, MainViewModel>() {
 
     private fun onStartSession(session: Session) {
         //viewModel.startSession()
+    }
+
+    private fun onTaskClicked(task: Task) {
+        //viewModel.onTaskClicked()
+    }
+
+    private fun onSaveClicked() {
+
+    }
+
+    private fun onSaveClicked(feedback: Feedback) {
+
+    }
+
+    private fun onUserClicked(user: User) {
+
     }
 }
