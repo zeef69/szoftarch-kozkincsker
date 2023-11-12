@@ -8,6 +8,7 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObject
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
+import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -44,18 +45,18 @@ class FirebaseDataSource @Inject constructor() {
     }
 
     suspend fun getMissionsOnce(): List<Mission> {
-        val items = mutableListOf<Mission>()
+        val missions = mutableListOf<Mission>()
         database.collection("missions").get()
             .addOnSuccessListener { documents ->
                 for(document in documents)
-                    items.add(document.toObject())
+                    missions.add(document.toObject())
             }
             .addOnFailureListener { exception ->
                 Log.d("failure", "Error getting documents: ", exception)
             }
             .await()
 
-        return items
+        return missions
     }
 
     suspend fun onUploadMission(newMission: Mission) {
@@ -80,6 +81,30 @@ class FirebaseDataSource @Inject constructor() {
 
     suspend fun onDeleteMission(mission: Mission) {
         database.collection("trips").document(mission.id).delete()
+            .addOnSuccessListener { documentReference ->
+                Log.d("success", "DocumentSnapshot written with ID: $documentReference.")
+            }
+            .addOnFailureListener { exception ->
+                Log.d("failure", "Error getting documents: ", exception)
+            }.await()
+    }
+
+    suspend fun getSessionsFromMission(mission: Mission): List<Session>{
+        val sessions = mutableListOf<Session>()
+        database.collection("sessions").whereEqualTo("mission", mission).get()
+            .addOnSuccessListener { documents ->
+                for(document in documents)
+                    sessions.add(document.toObject())
+            }
+            .addOnFailureListener { exception ->
+                Log.d("failure", "Error getting documents: ", exception)
+            }
+            .await()
+        return sessions
+    }
+
+    suspend fun addSession(newSession: Session){
+        database.collection("sessions").add(newSession)
             .addOnSuccessListener { documentReference ->
                 Log.d("success", "DocumentSnapshot written with ID: $documentReference.")
             }
