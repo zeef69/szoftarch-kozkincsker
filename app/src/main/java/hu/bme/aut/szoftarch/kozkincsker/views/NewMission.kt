@@ -103,7 +103,7 @@ fun NewMission(
             OutlinedTextField(
                 value = descriptionInput,
                 onValueChange = { descriptionInput = it },
-                singleLine = true,
+                singleLine = false,
                 placeholder = {
                     Text(
                         text = "Description",
