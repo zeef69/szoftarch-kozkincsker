@@ -49,6 +49,8 @@ import hu.bme.aut.szoftarch.kozkincsker.views.helpers.SegmentedControl
 @Composable
 fun Mission(
     mission: Mission,
+    designer: User? = null,
+    feedbacks: MutableList<Feedback> = ArrayList(),
     onStartSession: (Session) -> Unit = {},
     onBackClick: () -> Unit = {}
 ) {
@@ -102,11 +104,11 @@ fun Mission(
                     .width(((LocalConfiguration.current.screenWidthDp / 2) - 20).dp)
             )
 
-            if (mission.designer != null)
+            if (mission.designerId != null && designer?.id == mission.designerId)
                 Text(
                     buildAnnotatedString {
                         withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                            append(mission.designer!!.name)
+                            append(designer!!.name)
                         }
                     },
                     textAlign = TextAlign.Start,
@@ -172,7 +174,7 @@ fun Mission(
                         .padding(all = 10.dp)
                         .fillMaxSize()
                 ) {
-                    itemsIndexed(mission.feedbacks) { _, item ->
+                    itemsIndexed(feedbacks) { _, item ->
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier
@@ -203,7 +205,7 @@ fun Mission(
                 Button(
                     onClick = {
                         val newSession = Session()
-                        newSession.mission = mission
+                        newSession.missionId = mission.id
                         onStartSession(newSession)
                     },
                     modifier = Modifier
@@ -246,17 +248,20 @@ fun MissionPreview(){
     mission.levelList = mutableListOf(level1, level2, level3)
     feedback.comment = "Legjobb"
     feedback.stars = 5.0
-    mission.feedbacks = mutableListOf(feedback)
+    mission.feedbackIds = mutableListOf(feedback.id)
+    var feedbacks = mutableListOf(feedback)
     mission.name = "MyMission"
     mission.description ="A new mission. Have fun!"
     mission.isPlayableWithoutModerator=false
     user.name = "Dizájnoló"
     user2.name = "Jatekos"
-    mission.designer = user
-    session.mission = mission
-    session.players = mutableListOf(user, user2)
+    mission.designerId = user.id
+    session.missionId = mission.id
+    session.playerIds = mutableListOf(user.id, user2.id)
 
     Mission(
-        mission = mission
+        mission = mission,
+        designer = user,
+        feedbacks = feedbacks
     )
 }

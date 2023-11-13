@@ -7,7 +7,7 @@ import java.util.UUID
 @Parcelize
 data class Task (
     var id: String = UUID.randomUUID().toString(),
-    var level: Level = Level(),
+    var levelId: String = "",             //LevelId
     var title: String = "",
     var description: String = "",
     var score: Int = 0,

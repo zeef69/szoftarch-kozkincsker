@@ -29,12 +29,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import hu.bme.aut.szoftarch.kozkincsker.data.model.Feedback
+import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
 import hu.bme.aut.szoftarch.kozkincsker.data.model.User
 
 @Composable
 fun ModeratorPlayerList(
     session: Session,
+    mission: Mission,
+    designer: User,
+    players: MutableList<User> = ArrayList(),
     onUserClicked: (User) -> Unit,
     onBackClick: () -> Unit = {}
 ) {
@@ -65,7 +70,7 @@ fun ModeratorPlayerList(
             Text(
                 buildAnnotatedString {
                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append(session.mission.name)
+                        append(mission.name)
                     }
                 },
                 textAlign = TextAlign.Start,
@@ -77,7 +82,7 @@ fun ModeratorPlayerList(
             Text(
                 buildAnnotatedString {
                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append(session.mission.description)
+                        append(mission.description)
                     }
                 },
                 textAlign = TextAlign.Start,
@@ -86,11 +91,11 @@ fun ModeratorPlayerList(
                     .width(((LocalConfiguration.current.screenWidthDp / 2) - 20).dp)
             )
 
-            if(session.mission.designer != null)
+            if(mission.designerId != null && designer?.id == mission.designerId)
                 Text(
                     buildAnnotatedString {
                         withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                            append(session.mission.designer!!.name)
+                            append(designer!!.name)
                         }
                     },
                     textAlign = TextAlign.Start,
@@ -104,7 +109,7 @@ fun ModeratorPlayerList(
                     .padding(all = 10.dp)
                     .fillMaxSize()
             ) {
-                itemsIndexed(session.players) { _, item ->
+                itemsIndexed(players) { _, item ->
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
