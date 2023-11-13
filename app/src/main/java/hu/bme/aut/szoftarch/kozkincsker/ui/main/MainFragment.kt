@@ -67,6 +67,7 @@ class MainFragment: RainbowCakeFragment<MainViewState, MainViewModel>() {
                     val task32 = Task()
                     val task33 = Task()
                     val feedback = Feedback()
+                    val feedback2 = Feedback()
                     val user = User()
                     val user2 = User()
                     val session = Session()
@@ -83,22 +84,30 @@ class MainFragment: RainbowCakeFragment<MainViewState, MainViewModel>() {
                     mission.levelList = mutableListOf(level1, level2, level3)
                     feedback.comment = "Legjobb"
                     feedback.stars = 5.0
-                    feedback.writer = user2
-                    feedback.mission = mission
-                    mission.feedbacks = mutableListOf(feedback)
+                    feedback.writerId = user2.id
+                    feedback.missionId = mission.id
+                    feedback2.comment = "ÉLvezetes"
+                    feedback2.stars = 4.5
+                    feedback2.writerId = user.id
+                    feedback2.missionId = mission.id
+                    mission.feedbackIds = mutableListOf(feedback.id,feedback2.id)
+                    var feedbacks = mutableListOf(feedback,feedback2)
                     mission.name = "MyMission"
                     mission.description ="A new mission. Have fun!"
                     mission.isPlayableWithoutModerator=false
                     user.name = "Dizájnoló"
                     user2.name = "Jatekos"
-                    mission.designer = user
-                    session.mission = mission
-                    session.players = mutableListOf(user, user2)
-
+                    mission.designerId = user.id
+                    session.missionId = mission.id
+                    session.playerIds = mutableListOf(user.id, user2.id)
+                    var playerlist = mutableListOf(user, user2)
                     when (viewState) {
                         is Loading -> FullScreenLoading()
                         is MainContent -> /*ModeratorPlayerList(
                             session = session,
+                            mission = mission,
+                            designer = user,
+                            players = playerlist,
                             onUserClicked = ::onUserClicked,
                             onBackClick = { navigator?.pop() }
                         )*/
@@ -115,15 +124,18 @@ class MainFragment: RainbowCakeFragment<MainViewState, MainViewModel>() {
                             onSaveClicked = ::onSaveClicked,
                             onBackClick = { navigator?.pop() }
                         )*/
-
-                        Session(
+                        /*Session(
                             session = session,
+                            mission = mission,
+                            designer=user,
                             onTaskClicked = ::onTaskClicked,
                             onBackClick = { navigator?.pop() }
-                        )
+                        )*/
 
                         /*Mission(
                             mission = mission,
+                            designer = user,
+                            feedbacks = feedbacks,
                             onStartSession = ::onStartSession,
                             onBackClick = { navigator?.pop() }
                         )*/
@@ -135,14 +147,14 @@ class MainFragment: RainbowCakeFragment<MainViewState, MainViewModel>() {
                             onBackClick = { navigator?.pop() }
                         )*/
 
-                        /*NewMission(
+                        NewMission(
                             mission = newmission,
                             onNewTask = {},
                             onTaskClicked = {},
                             onPostClick = ::onSaveMission,
                             onSaveClick = ::onSaveMission,
                             onBackClick = { navigator?.pop() }
-                        )*/
+                        )
                     }.exhaustive
                 }
             }

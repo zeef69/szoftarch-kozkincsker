@@ -12,8 +12,8 @@ data class User(
     var actualLanguage: String = "English",
     var isAdmin: Boolean = false,
     var ableToEvaluate: Boolean = true,
-    var privatePlayableMissions: MutableList<Mission> = ArrayList(),
-    var designedMissions: MutableList<Mission> = ArrayList(),
-    var currentSessions: MutableList<Session> = ArrayList(),
-    var badges: MutableList<Badge>  = ArrayList(),
+    var privatePlayableMissionIds: MutableList<String> = ArrayList(), //MissionId list
+    var designedMissionIds: MutableList<String> = ArrayList(),        //MissionId list
+    var currentSessionIds: MutableList<String> = ArrayList(),         //Session List
+    var badgeIds: MutableList<String>  = ArrayList(),                 //Badge list
 ): Parcelable

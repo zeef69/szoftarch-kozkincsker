@@ -34,17 +34,21 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Task
+import hu.bme.aut.szoftarch.kozkincsker.data.model.User
 
 @Composable
 fun Session(
     session: Session,
+    mission: Mission,
+    designer: User,
     onTaskClicked: (Task) -> Unit,
     onBackClick: () -> Unit = {}
 ) {
 
-    val levels = session.mission.levelList
+    val levels = mission.levelList
 
     Column(
         modifier = Modifier
@@ -72,7 +76,7 @@ fun Session(
             Text(
                 buildAnnotatedString {
                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append(session.mission.name)
+                        append(mission.name)
                     }
                 },
                 textAlign = TextAlign.Start,
@@ -84,7 +88,7 @@ fun Session(
             Text(
                 buildAnnotatedString {
                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append(session.mission.description)
+                        append(mission.description)
                     }
                 },
                 textAlign = TextAlign.Start,
@@ -93,11 +97,11 @@ fun Session(
                     .width(((LocalConfiguration.current.screenWidthDp / 2) - 20).dp)
             )
 
-            if(session.mission.designer != null)
+            if(mission.designerId != null && designer?.id == mission.designerId)
                 Text(
                     buildAnnotatedString {
                         withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                            append(session.mission.designer!!.name)
+                            append(mission!!.name)
                         }
                     },
                     textAlign = TextAlign.Start,

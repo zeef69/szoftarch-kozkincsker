@@ -38,11 +38,11 @@ data class Mission(
     var isPlayableWithoutModerator: Boolean = true,
     var visibility: Visibility = Visibility.PRIVATE,
     var state: State = State.DESIGNING,
-    var designer: User? = null,
+    var designerId: String? = null,    //UserId (desinger)
     var levelList : MutableList<Level> = ArrayList(),
-    var missionTags : MutableList<MissionTag> = ArrayList(),
-    var feedbacks: MutableList<Feedback> = ArrayList(),
-    var badge: Badge? = null,
+    var missionTagIds : MutableList<String> = ArrayList(),  //MissionTagId list
+    var feedbackIds: MutableList<String> = ArrayList(),       //FeedbackId list
+    var badgeId: String? = null,       //BadgeId
 ): Parcelable
 {
     enum class  Visibility {

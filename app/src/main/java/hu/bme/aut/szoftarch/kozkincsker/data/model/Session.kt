@@ -19,9 +19,9 @@ data class Session(
     @DocumentId
     var id: String = "",
     var name: String = "",
-    var mission: Mission = Mission(),
+    var missionId: String = "",       //MissionId
     var accessCode: String = "",
     var startDate: Date = Date(),
-    var moderator: User? = null,
-    var players: MutableList<User> = ArrayList()
+    var moderator: String? = null,  //UserId (moderator)
+    var playerIds: MutableList<String> = ArrayList() //UserId list (players)
 ): Parcelable
