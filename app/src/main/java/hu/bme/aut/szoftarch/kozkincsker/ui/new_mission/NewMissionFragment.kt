@@ -12,7 +12,9 @@ import androidx.compose.ui.platform.ComposeView
 import co.zsmb.rainbowcake.base.RainbowCakeFragment
 import co.zsmb.rainbowcake.hilt.getViewModelFromFactory
 import dagger.hilt.android.AndroidEntryPoint
+import hu.bme.aut.szoftarch.kozkincsker.data.model.Level
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
+import hu.bme.aut.szoftarch.kozkincsker.data.model.Task
 import hu.bme.aut.szoftarch.kozkincsker.views.NewMission
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.FullScreenLoading
 import hu.bme.aut.szoftarch.kozkincsker.views.theme.AppUiTheme1
@@ -49,7 +51,7 @@ class NewMissionFragment : RainbowCakeFragment<NewMissionViewState, NewMissionVi
                         is Loading -> FullScreenLoading()
                         is NewMissionContent -> NewMission(
                             mission = mission,
-                            onNewTask = {},
+                            onNewTask = ::onNewTask,
                             onTaskClicked = {},
                             onPostClick = ::onSaveMission,
                             onSaveClick = ::onSaveMission,
@@ -63,5 +65,11 @@ class NewMissionFragment : RainbowCakeFragment<NewMissionViewState, NewMissionVi
 
     private fun onSaveMission(mission: Mission) {
         viewModel.uploadMission(mission)
+    }
+
+    private fun onNewTask(level: Level){
+        var newTask = Task()
+        newTask.title = "task"+level.taskList.size.toString()
+        level.taskList.add(newTask)
     }
 }
