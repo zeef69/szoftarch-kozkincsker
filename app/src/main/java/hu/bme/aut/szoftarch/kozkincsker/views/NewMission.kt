@@ -46,11 +46,12 @@ import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Task
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.ComboBox
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.SegmentedControl
+import java.util.Date
 
 @Composable
 fun NewMission(
     mission: Mission,
-    onNewTask: (Level) -> Unit,
+    onNewTask: (Mission, Level) -> Unit,
     onTaskClicked: (Task) -> Unit,
     onSaveClick: (Mission) -> Unit,
     onPostClick: (Mission) -> Unit,
@@ -61,7 +62,6 @@ fun NewMission(
     var privacySwitchState by remember { mutableIntStateOf(0) }
 
     val levels = mission.levelList
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -154,6 +154,8 @@ fun NewMission(
                                 onExpandedChanged = { typeExpanded = it },
                                 textWidth = 0.dp
                             )
+                            println(LevelType.values().toList())
+                            println(LevelType.values().toList()[typeSelectedIndex])
                             level.levelType = LevelType.values().toList()[typeSelectedIndex]
                         }
                         Row(
@@ -185,7 +187,11 @@ fun NewMission(
                         }
                         if(level.taskList.size < 3)
                             Button(
-                                onClick = { onNewTask(level) },
+                                onClick = {
+                                    mission.name = titleInput
+                                    mission.description = descriptionInput
+                                    mission.levelList = levels
+                                    onNewTask(mission, level) },
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .padding(vertical = 5.dp, horizontal = 2.dp)
@@ -202,9 +208,12 @@ fun NewMission(
         Column( ) {
             Button(
                 onClick = {
+                    mission.name = titleInput
+                    mission.description = descriptionInput
+                    mission.levelList = levels
                     val level = Level()
                     levels.add(level)
-                    onNewTask(level)
+                    onNewTask(mission, level)
                 },
                 modifier = Modifier
                     .padding(vertical = 5.dp, horizontal = 50.dp),
@@ -214,11 +223,11 @@ fun NewMission(
             }
             Button(
                 onClick = {
-                    val newMission = mission
-                    newMission.name = titleInput
-                    newMission.description = descriptionInput
-                    newMission.levelList = levels
-                    onSaveClick(newMission)
+                    mission.name = titleInput
+                    mission.description = descriptionInput
+                    mission.levelList = levels
+                    mission.modificationDate = Date()
+                    onSaveClick(mission)
                 },
                 modifier = Modifier
                     .padding(vertical = 2.dp, horizontal = 50.dp)
@@ -229,11 +238,11 @@ fun NewMission(
             }
             Button(
                 onClick = {
-                    val newMission = mission
-                    newMission.name = titleInput
-                    newMission.description = descriptionInput
-                    newMission.levelList = levels
-                    onPostClick(newMission)
+                    mission.name = titleInput
+                    mission.description = descriptionInput
+                    mission.levelList = levels
+                    mission.modificationDate = Date()
+                    onPostClick(mission)
                 },
                 modifier = Modifier
                     .padding(vertical = 2.dp, horizontal = 50.dp)
@@ -263,9 +272,10 @@ fun NewMissionPreview() {
     level2.taskList = mutableListOf(task1)
     level3.taskList = mutableListOf(task1, task2, task3)
     mission.levelList = mutableListOf(level1, level2, level3)
+    fun onNewTask(m:Mission, l:Level){}
     NewMission(
         mission = mission,
-        onNewTask = {},
+        onNewTask = ::onNewTask,
         onTaskClicked = {},
         onPostClick = {},
         onSaveClick = {},

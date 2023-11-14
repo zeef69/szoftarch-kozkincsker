@@ -33,12 +33,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Feedback
+import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.RatingBar
 
 @Composable
 fun Rating(
     session: Session,
+    mission: Mission,
     onSaveClicked: (Feedback) -> Unit,
     onBackClick: () -> Unit = {}
 ) {
@@ -111,7 +113,7 @@ fun Rating(
             Button(
                 onClick = {
                     val newFeedback = Feedback()
-                    newFeedback.mission = session.mission
+                    newFeedback.missionId = mission.id
                     newFeedback.stars = rating
                     newFeedback.comment = commentInput
                     onSaveClicked(newFeedback)

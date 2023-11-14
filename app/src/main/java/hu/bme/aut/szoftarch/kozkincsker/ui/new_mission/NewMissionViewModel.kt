@@ -11,11 +11,14 @@ class NewMissionViewModel
 )
     : RainbowCakeViewModel<NewMissionViewState>(Loading){
 
-    fun load() = execute {
+    fun load(mission: Mission) = execute {
         viewState = NewMissionContent(
-            isLoading = false
-        )
-    }
+                    mission = mission,
+                    isLoading = false
+                )
+
+        }
+
     fun uploadMission(newMission: Mission) = execute{
         newMissionPresenter.uploadMission(newMission)
     }

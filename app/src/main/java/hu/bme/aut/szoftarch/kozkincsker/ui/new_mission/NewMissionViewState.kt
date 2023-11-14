@@ -7,6 +7,6 @@ sealed class NewMissionViewState
 object Loading : NewMissionViewState()
 
 data class NewMissionContent(
-    //var defaultMission: Mission = Mission(),
+    var mission: Mission = Mission(),
     var isLoading: Boolean = true
 ) : NewMissionViewState()
