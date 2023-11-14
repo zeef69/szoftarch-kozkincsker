@@ -15,7 +15,7 @@ class MainActivity : SimpleNavActivity() {
         if (savedInstanceState == null) {
             //navigator.add(LoginFragment())
             //navigator.add(MainFragment())
-            navigator.add(NewMissionFragment())
+            navigator.add(NewMissionFragment.newInstance())
         }
     }
 }
