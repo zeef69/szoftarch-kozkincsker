@@ -248,7 +248,7 @@ fun MissionPreview(){
     mission.levelList = mutableListOf(level1, level2, level3)
     feedback.comment = "Legjobb"
     feedback.stars = 5.0
-    mission.feedbackIds = mutableListOf(feedback.id)
+    mission.feedbackIds = mutableListOf(feedback)
     var feedbacks = mutableListOf(feedback)
     mission.name = "MyMission"
     mission.description ="A new mission. Have fun!"
