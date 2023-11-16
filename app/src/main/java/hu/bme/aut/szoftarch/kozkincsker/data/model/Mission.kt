@@ -41,7 +41,7 @@ data class Mission(
     var designerId: String? = null,    //UserId (desinger)
     var levelList : MutableList<Level> = ArrayList(),
     var missionTagIds : MutableList<String> = ArrayList(),  //MissionTagId list
-    var feedbackIds: MutableList<String> = ArrayList(),       //FeedbackId list
+    var feedbackIds: MutableList<Feedback> = ArrayList(),       //FeedbackId list
     var badgeId: String? = null,       //BadgeId
 ): Parcelable
 {

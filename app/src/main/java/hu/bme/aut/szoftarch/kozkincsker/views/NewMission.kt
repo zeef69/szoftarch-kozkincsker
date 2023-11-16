@@ -28,6 +28,8 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Public
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -44,6 +46,7 @@ import hu.bme.aut.szoftarch.kozkincsker.data.enums.LevelType
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Level
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Task
+import hu.bme.aut.szoftarch.kozkincsker.views.helpers.ChangingIconButton
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.ComboBox
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.SegmentedControl
 import java.util.Date
@@ -59,7 +62,7 @@ fun NewMission(
 ) {
     var titleInput by remember { mutableStateOf(mission.name) }
     var descriptionInput by remember { mutableStateOf("") }
-    var privacySwitchState by remember { mutableIntStateOf(0) }
+    var privacySwitchState by remember { mutableIntStateOf(mission.visibility.ordinal) }
 
     val levels = mission.levelList
     Column(
@@ -85,21 +88,36 @@ fun NewMission(
                 .padding(12.dp, 12.dp, 12.dp, 25.dp)
                 .weight(1f, false)
         ) {
-            OutlinedTextField(
-                value = titleInput,
-                onValueChange = { titleInput = it },
-                singleLine = true,
-                placeholder = {
-                    Text(
-                        text = "Title",
-                        color = Color.Gray
-                    )
-                },
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
+                    .height(IntrinsicSize.Min)
                     .fillMaxWidth()
-                    .padding(0.dp, 2.dp, 0.dp, 2.dp)
-            )
+            ){
+                OutlinedTextField(
+                    value = titleInput,
+                    onValueChange = { titleInput = it },
+                    singleLine = true,
+                    placeholder = {
+                        Text(
+                            text = "Title",
+                            color = Color.Gray
+                        )
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(0.dp, 2.dp, 0.dp, 2.dp)
+                        .weight(0.82f, false)
+                )
+                ChangingIconButton(
+                    listOf(Icons.Filled.VisibilityOff, Icons.Filled.Public),
+                    privacySwitchState,
+                    modifier= Modifier
+                        .weight(0.18f, true)
+                        .padding(2.dp, 0.dp)
+                ){privacySwitchState = it}
 
+            }
             OutlinedTextField(
                 value = descriptionInput,
                 onValueChange = { descriptionInput = it },
@@ -115,14 +133,13 @@ fun NewMission(
                     .padding(0.dp, 2.dp, 0.dp, 2.dp)
             )
 
-            SegmentedControl (
+            /*SegmentedControl (
                 listOf("Private", "Public"),
                 privacySwitchState
-            ) { privacySwitchState = it }
-
+            ) { privacySwitchState = it }*/
             LazyColumn(
                 modifier = Modifier
-                    .padding(all = 10.dp)
+                    .padding(all = 5.dp)
                     .fillMaxSize()
             ) {
                 itemsIndexed(levels) { _, level ->
@@ -137,7 +154,7 @@ fun NewMission(
                                 .height(IntrinsicSize.Min)
                                 .padding(all = 5.dp)
                                 .fillMaxWidth()
-                                .weight(0.1f, true)
+                                .weight(0.1f, false)
                         ) {
                             val typeListNames = mutableListOf<String>()
                             for(type in LevelType.values()) {
@@ -179,7 +196,9 @@ fun NewMission(
                                         .clickable { onTaskClicked(task) }
                                 ) {
                                     Text(
-                                        text = task.title, color = Color.Black, fontSize = 18.sp, modifier = Modifier.padding(all = 2.dp).weight(0.6f, true)
+                                        text = task.title, color = Color.Black, fontSize = 18.sp, modifier = Modifier
+                                            .padding(all = 2.dp)
+                                            .weight(0.6f, true)
                                     )
                                 }
                                 Spacer(modifier = Modifier.width(5.dp))
@@ -191,6 +210,7 @@ fun NewMission(
                                     mission.name = titleInput
                                     mission.description = descriptionInput
                                     mission.levelList = levels
+                                    mission.visibility = if(privacySwitchState==0) Mission.Visibility.PRIVATE else Mission.Visibility.PUBLIC
                                     onNewTask(mission, level) },
                                 modifier = Modifier
                                     .fillMaxSize()
@@ -211,6 +231,7 @@ fun NewMission(
                     mission.name = titleInput
                     mission.description = descriptionInput
                     mission.levelList = levels
+                    mission.visibility = if(privacySwitchState==0) Mission.Visibility.PRIVATE else Mission.Visibility.PUBLIC
                     val level = Level()
                     levels.add(level)
                     onNewTask(mission, level)
@@ -227,6 +248,7 @@ fun NewMission(
                     mission.description = descriptionInput
                     mission.levelList = levels
                     mission.modificationDate = Date()
+                    mission.visibility = if(privacySwitchState==0) Mission.Visibility.PRIVATE else Mission.Visibility.PUBLIC
                     onSaveClick(mission)
                 },
                 modifier = Modifier
@@ -242,6 +264,7 @@ fun NewMission(
                     mission.description = descriptionInput
                     mission.levelList = levels
                     mission.modificationDate = Date()
+                    mission.visibility = if(privacySwitchState==0) Mission.Visibility.PRIVATE else Mission.Visibility.PUBLIC
                     onPostClick(mission)
                 },
                 modifier = Modifier
