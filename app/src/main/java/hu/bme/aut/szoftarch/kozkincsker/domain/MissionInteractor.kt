@@ -1,6 +1,7 @@
 package hu.bme.aut.szoftarch.kozkincsker.domain
 
 import hu.bme.aut.szoftarch.kozkincsker.data.datasource.FirebaseDataSource
+import hu.bme.aut.szoftarch.kozkincsker.data.model.Feedback
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -26,5 +27,9 @@ class MissionInteractor @Inject constructor(
 
     suspend fun deleteMission(mission: Mission) {
         firebaseDataSource.onDeleteMission(mission)
+    }
+
+    suspend fun newFeedback(feedback: Feedback, missionId: String) {
+        firebaseDataSource.onAddFeedbackToMission(feedback, missionId)
     }
 }

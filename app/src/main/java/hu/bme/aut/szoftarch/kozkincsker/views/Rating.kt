@@ -33,15 +33,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Feedback
-import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.RatingBar
 
 @Composable
 fun Rating(
-    session: Session,
-    mission: Mission,
-    onSaveClicked: (Feedback) -> Unit,
+    session: Session?,
+    onSaveClicked: (Feedback, String) -> Unit,
     onBackClick: () -> Unit = {}
 ) {
     var commentInput by remember { mutableStateOf("") }
@@ -112,11 +110,13 @@ fun Rating(
         Column( ) {
             Button(
                 onClick = {
-                    val newFeedback = Feedback()
-                    newFeedback.missionId = mission.id
-                    newFeedback.stars = rating
-                    newFeedback.comment = commentInput
-                    onSaveClicked(newFeedback)
+                    if(session != null) {
+                        val newFeedback = Feedback()
+                        newFeedback.missionId = session.missionId
+                        newFeedback.stars = rating
+                        newFeedback.comment = commentInput
+                        onSaveClicked(newFeedback, session.missionId)
+                    }
                 },
                 modifier = Modifier
                     .padding(vertical = 2.dp, horizontal = 50.dp)

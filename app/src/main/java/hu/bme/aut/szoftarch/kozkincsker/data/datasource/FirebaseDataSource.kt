@@ -3,10 +3,13 @@ package hu.bme.aut.szoftarch.kozkincsker.data.datasource
 import android.util.Log
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObject
+import hu.bme.aut.szoftarch.kozkincsker.data.model.Feedback
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
 import kotlinx.coroutines.cancel
@@ -70,7 +73,7 @@ class FirebaseDataSource @Inject constructor() {
     }
 
     suspend fun onEditMission(mission: Mission) {
-        database.collection("missions").document(mission.id).set(mission)
+        database.collection("missions").document(mission.id).set(mission, SetOptions.merge())
             .addOnSuccessListener { documentReference ->
                 Log.d("success", "DocumentSnapshot written with ID: $documentReference.")
             }
@@ -81,6 +84,22 @@ class FirebaseDataSource @Inject constructor() {
 
     suspend fun onDeleteMission(mission: Mission) {
         database.collection("trips").document(mission.id).delete()
+            .addOnSuccessListener { documentReference ->
+                Log.d("success", "DocumentSnapshot written with ID: $documentReference.")
+            }
+            .addOnFailureListener { exception ->
+                Log.d("failure", "Error getting documents: ", exception)
+            }.await()
+    }
+
+    suspend fun onAddFeedbackToMission(feedback: Feedback, missionId: String) {
+        if (uid != null) {
+            feedback.writerId = uid
+        }
+        val addFeedback : HashMap<String, Any> = HashMap()
+        addFeedback["feedbackIds"] = FieldValue.arrayUnion(feedback)
+
+        database.collection("missions").document(missionId).update(addFeedback)
             .addOnSuccessListener { documentReference ->
                 Log.d("success", "DocumentSnapshot written with ID: $documentReference.")
             }

@@ -90,7 +90,7 @@ class MainFragment: RainbowCakeFragment<MainViewState, MainViewModel>() {
                     feedback2.stars = 4.5
                     feedback2.writerId = user.id
                     feedback2.missionId = mission.id
-                    mission.feedbackIds = mutableListOf(feedback.id,feedback2.id)
+                    mission.feedbackIds = mutableListOf(feedback,feedback2)
                     var feedbacks = mutableListOf(feedback,feedback2)
                     mission.name = "MyMission"
                     mission.description ="A new mission. Have fun!"
