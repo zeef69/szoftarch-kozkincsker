@@ -149,4 +149,19 @@ class FirebaseDataSource @Inject constructor() {
                 Log.d("failure", "Error getting documents: ", exception)
             }.await()
     }
+
+    suspend fun getMissionById(missionId: String): Mission {
+        val missions = mutableListOf<Mission>()
+        database.collection("mission").whereEqualTo("missionId", missionId).get()
+            .addOnSuccessListener { documents ->
+                for(document in documents)
+                    missions.add(document.toObject())
+            }
+            .addOnFailureListener { exception ->
+                Log.d("failure", "Error getting documents: ", exception)
+            }
+            .await()
+
+        return missions[0]
+    }
 }
