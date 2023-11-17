@@ -12,6 +12,7 @@ import com.google.firebase.firestore.toObject
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Feedback
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
+import hu.bme.aut.szoftarch.kozkincsker.data.model.User
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -148,5 +149,15 @@ class FirebaseDataSource @Inject constructor() {
             .addOnFailureListener { exception ->
                 Log.d("failure", "Error getting documents: ", exception)
             }.await()
+    }
+
+    suspend fun getMissionById(missionId: String) : Mission {
+        val mission = Mission()
+        return mission
+    }
+
+    suspend fun getUserById(userId: String) : User {
+        val user = User()
+        return user
     }
 }
