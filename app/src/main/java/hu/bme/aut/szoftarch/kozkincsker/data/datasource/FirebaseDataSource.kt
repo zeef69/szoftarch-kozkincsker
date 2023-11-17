@@ -151,16 +151,17 @@ class FirebaseDataSource @Inject constructor() {
     }
 
     suspend fun getMissionById(missionId: String): Mission {
-        var mission = Mission()
+        var mission: Mission? = null
         database.collection("mission").document(missionId).get()
             .addOnSuccessListener { document ->
-                mission = document.toObject()!!
+                mission = document.toObject()
             }
             .addOnFailureListener { exception ->
                 Log.d("failure", "Error getting documents: ", exception)
             }
             .await()
 
-        return mission
+        return if(mission != null) mission as Mission
+        else Mission()
     }
 }
