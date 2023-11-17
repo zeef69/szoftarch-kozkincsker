@@ -15,11 +15,13 @@ import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Switch
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material.icons.filled.StarRate
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -44,18 +46,20 @@ import hu.bme.aut.szoftarch.kozkincsker.data.model.Level
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
 import hu.bme.aut.szoftarch.kozkincsker.data.model.User
+import hu.bme.aut.szoftarch.kozkincsker.views.helpers.CustomChart
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.SegmentedControl
+import java.util.Date
 
 @Composable
 fun Mission(
-    mission: Mission,
+    mission: Mission? = null,
     designer: User? = null,
-    feedbacks: MutableList<Feedback> = ArrayList(),
-    onStartSession: (Session) -> Unit = {},
+    onStartSession: (Session, Boolean) -> Unit,
     onBackClick: () -> Unit = {}
 ) {
     var switchState by remember { mutableIntStateOf(0) }
     var checkedModerator by remember { mutableStateOf(false) }
+    var nameInput by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -83,28 +87,30 @@ fun Mission(
             Text(
                 buildAnnotatedString {
                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, fontSize = 24.sp)) {
-                        append(mission.name)
+                        if (mission != null) {
+                            append(mission.name)
+                        }
                     }
                 },
                 textAlign = TextAlign.Start,
                 modifier = Modifier
                     .padding(0.dp, 10.dp, 0.dp, 0.dp)
-                    .width(((LocalConfiguration.current.screenWidthDp / 2) - 20).dp)
             )
 
             Text(
                 buildAnnotatedString {
                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append(mission.description)
+                        if (mission != null) {
+                            append(mission.description)
+                        }
                     }
                 },
                 textAlign = TextAlign.Start,
                 modifier = Modifier
                     .padding(0.dp, 10.dp, 0.dp, 0.dp)
-                    .width(((LocalConfiguration.current.screenWidthDp / 2) - 20).dp)
             )
 
-            if (mission.designerId != null && designer?.id == mission.designerId)
+            if (mission?.designerId != null && designer?.id == mission.designerId)
                 Text(
                     buildAnnotatedString {
                         withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
@@ -114,7 +120,6 @@ fun Mission(
                     textAlign = TextAlign.Start,
                     modifier = Modifier
                         .padding(0.dp, 10.dp, 0.dp, 0.dp)
-                        .width(((LocalConfiguration.current.screenWidthDp / 2) - 20).dp)
                 )
 
             SegmentedControl(
@@ -122,27 +127,43 @@ fun Mission(
                 switchState
             ) { switchState = it }
 
-            if(switchState == 0) {
-                Text(
-                    buildAnnotatedString {
-                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                            append("As Moderator:")
-                        }
+            if(mission != null && switchState == 0) {
+                OutlinedTextField(
+                    value = nameInput,
+                    onValueChange = { nameInput = it },
+                    singleLine = true,
+                    placeholder = {
+                        Text(
+                            text = "Session name",
+                            color = Color.Gray
+                        )
                     },
-                    textAlign = TextAlign.Start,
                     modifier = Modifier
-                        .padding(0.dp, 10.dp, 0.dp, 0.dp)
-                        .width(((LocalConfiguration.current.screenWidthDp / 2) - 20).dp)
+                        .fillMaxWidth()
+                        .padding(0.dp, 2.dp, 0.dp, 2.dp)
                 )
+                if(mission.isPlayableWithoutModerator) {
+                    Text(
+                        buildAnnotatedString {
+                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                append("As Moderator:")
+                            }
+                        },
+                        textAlign = TextAlign.Start,
+                        modifier = Modifier
+                            .padding(0.dp, 10.dp, 0.dp, 0.dp)
+                    )
 
-                Switch(
-                    checked = checkedModerator and mission.isPlayableWithoutModerator,
-                    enabled = mission.isPlayableWithoutModerator,
-                    onCheckedChange = {
-                        checkedModerator = it
-                    },
-
-                )
+                    Switch(
+                        checked = checkedModerator and mission.isPlayableWithoutModerator,
+                        enabled = mission.isPlayableWithoutModerator,
+                        onCheckedChange = {
+                            checkedModerator = it
+                        },
+                        modifier = Modifier
+                            .padding(0.dp, 10.dp, 0.dp, 0.dp)
+                    )
+                }
             }
             else {
                 Text(
@@ -156,6 +177,37 @@ fun Mission(
                         .padding(0.dp, 10.dp, 0.dp, 0.dp)
                         .width(((LocalConfiguration.current.screenWidthDp / 2) - 20).dp)
                 )
+
+                val feedbackNumber =  mission?.feedbackIds?.size
+                val result = mission?.feedbackIds?.groupBy { it.stars }?.map { it.key to it.value.size }?.toMap()
+                var one = 0.0f
+                var two = 0.0f
+                var three = 0.0f
+                var four = 0.0f
+                var five = 0.0f
+
+                if(result != null && feedbackNumber != null) {
+                    for(res in result) {
+                        if(res.key == 1.0)
+                            one = res.value.toFloat()/feedbackNumber
+                        if(res.key == 2.0)
+                            two = res.value.toFloat()/feedbackNumber
+                        if(res.key == 3.0)
+                            three = res.value.toFloat()/feedbackNumber
+                        if(res.key == 4.0)
+                            four = res.value.toFloat()/feedbackNumber
+                        if(res.key == 5.0)
+                            five = res.value.toFloat()/feedbackNumber
+                    }
+                }
+
+                if (feedbackNumber != null) {
+                    CustomChart(
+                        average = one * 1.0f + two * 2.0f + three * 3.0f + four * 4.0f + five * 5.0f,
+                        barValue = listOf(one, two, three, four, five),
+                        xAxisScale = listOf("1", "2", "3", "4", "5")
+                    )
+                }
 
                 Text(
                     buildAnnotatedString {
@@ -174,27 +226,34 @@ fun Mission(
                         .padding(all = 10.dp)
                         .fillMaxSize()
                 ) {
-                    itemsIndexed(feedbacks) { _, item ->
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(Color.LightGray)
-                                .padding(5.dp, 5.dp, 5.dp, 5.dp)
-                        ) {
-                            Text(
-                                text = item.comment,
-                                color = Color.Black,
-                                fontSize = 18.sp,
-                                modifier = Modifier.padding(all = 2.dp).weight(0.6f, true)
-                            )
-                            Icon(
-                                imageVector  = Icons.Filled.StarRate, null,
+                    if (mission != null) {
+                        itemsIndexed(mission.feedbackIds) { _, item ->
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
                                 modifier = Modifier
-                                    .padding(vertical = 2.dp, horizontal = 2.dp)
-                                    .fillMaxWidth()
-                                    .weight(0.4f, true),
-                            )
+                                    .fillMaxSize()
+                                    .background(Color.LightGray)
+                                    .padding(5.dp, 5.dp, 5.dp, 5.dp)
+                            ) {
+                                Text(
+                                    text = item.comment,
+                                    color = Color.Black,
+                                    fontSize = 18.sp,
+                                    modifier = Modifier.padding(all = 2.dp).weight(0.6f, true)
+                                )
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .padding(vertical = 2.dp, horizontal = 2.dp)
+                                        .weight(0.4f, true),
+                                ) {
+                                    for (i in 1..5) {
+                                        if (i <= item.stars.toInt()) Icon(Icons.Filled.StarRate, "")
+                                        else Icon(Icons.Filled.StarBorder, "")
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -204,9 +263,13 @@ fun Mission(
             Column() {
                 Button(
                     onClick = {
-                        val newSession = Session()
-                        newSession.missionId = mission.id
-                        onStartSession(newSession)
+                        if (mission != null) {
+                            val newSession = Session()
+                            newSession.missionId = mission.id
+                            newSession.name = nameInput
+                            newSession.startDate = Date()
+                            onStartSession(newSession, checkedModerator)
+                        }
                     },
                     modifier = Modifier
                         .padding(vertical = 2.dp, horizontal = 50.dp)
@@ -249,7 +312,6 @@ fun MissionPreview(){
     feedback.comment = "Legjobb"
     feedback.stars = 5.0
     mission.feedbackIds = mutableListOf(feedback)
-    var feedbacks = mutableListOf(feedback)
     mission.name = "MyMission"
     mission.description ="A new mission. Have fun!"
     mission.isPlayableWithoutModerator=false
@@ -259,9 +321,9 @@ fun MissionPreview(){
     session.missionId = mission.id
     session.playerIds = mutableListOf(user.id, user2.id)
 
-    Mission(
+    /*Mission(
         mission = mission,
         designer = user,
         feedbacks = feedbacks
-    )
+    )*/
 }

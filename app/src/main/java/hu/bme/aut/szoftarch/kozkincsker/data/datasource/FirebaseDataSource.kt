@@ -131,4 +131,22 @@ class FirebaseDataSource @Inject constructor() {
                 Log.d("failure", "Error getting documents: ", exception)
             }.await()
     }
+
+    suspend fun onStartSession(session: Session, asModerator: Boolean) {
+        if(asModerator && uid != null) {
+            session.moderator = uid
+        }
+        val allowedChars = ('A'..'Z') + ('0'..'9')
+        session.accessCode = (1..6)
+            .map { allowedChars.random() }
+            .joinToString("")
+
+        database.collection("sessions").add(session)
+            .addOnSuccessListener { documentReference ->
+                Log.d("success", "DocumentSnapshot written with ID: $documentReference.")
+            }
+            .addOnFailureListener { exception ->
+                Log.d("failure", "Error getting documents: ", exception)
+            }.await()
+    }
 }
