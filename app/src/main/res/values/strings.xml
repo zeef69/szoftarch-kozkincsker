@@ -7,14 +7,17 @@
     <string name="title_password">Password</string>
     <string name="missing_email">Please enter your email</string>
     <string name="missing_password">Please enter your password</string>
-    <string name="task_type_listed_answer">Listából választás</string>
-    <string name="task_type_number_answer">Szám</string>
-    <string name="task_type_date_answer">Dátum</string>
-    <string name="task_type_map_answer">Térképes</string>
-    <string name="task_type_order_answer">List sorbarendezés</string>
-    <string name="task_type_text_answer">Szöveges válasz</string>
-    <string name="task_type_image_answer">Képpel válasz</string>
+    <string name="task_type_listed_answer">List choice</string>
+    <string name="task_type_number_answer">Number</string>
+    <string name="task_type_date_answer">Date</string>
+    <string name="task_type_map_answer">Map</string>
+    <string name="task_type_order_answer">List order</string>
+    <string name="task_type_text_answer">Text answer</string>
+    <string name="task_type_image_answer">Image answer</string>
     <string name="level_type_all_task_per_level">Minden feladatot meg kell oldani</string>
     <string name="level_type_min_one_task_per_level">Minimum egy feladatot meg kell oldani</string>
     <string name="level_type_max_one_task_per_level">Pontosan egy feladatot meg kell oldani</string>
+    <string name="other_settings">Other settings</string>
+    <string name="new_mission_title">Mission title</string>
+    <string name="new_mission_description">Mission description</string>
 </resources>

@@ -39,6 +39,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -46,13 +47,17 @@ import hu.bme.aut.szoftarch.kozkincsker.data.enums.LevelType
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Level
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Task
+import hu.bme.aut.szoftarch.kozkincsker.views.helpers.AccordionMenu
+import hu.bme.aut.szoftarch.kozkincsker.views.helpers.AccordionModel
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.ChangingIconButton
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.ComboBox
-import hu.bme.aut.szoftarch.kozkincsker.views.helpers.SegmentedControl
 import java.util.Date
+import hu.bme.aut.szoftarch.kozkincsker.R
+import hu.bme.aut.szoftarch.kozkincsker.data.model.User
 
 @Composable
 fun NewMission(
+    designer: User,
     mission: Mission,
     onNewTask: (Mission, Level) -> Unit,
     onTaskClicked: (Task) -> Unit,
@@ -61,10 +66,13 @@ fun NewMission(
     onBackClick: () -> Unit = {}
 ) {
     var titleInput by remember { mutableStateOf(mission.name) }
-    var descriptionInput by remember { mutableStateOf("") }
+    var descriptionInput by remember { mutableStateOf(mission.description) }
     var privacySwitchState by remember { mutableIntStateOf(mission.visibility.ordinal) }
-
+    var hoursToSolveInput by remember { mutableIntStateOf(mission.hoursToSolve) }
+    var daysToSolveInput by remember { mutableIntStateOf(mission.daysToSolve) }
+    var missionTags by remember { mutableStateOf("mission.missionTagIds") }
     val levels = mission.levelList
+    mission.designerId = designer.id
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -100,7 +108,7 @@ fun NewMission(
                     singleLine = true,
                     placeholder = {
                         Text(
-                            text = "Title",
+                            text = stringResource(R.string.new_mission_title),
                             color = Color.Gray
                         )
                     },
@@ -109,8 +117,12 @@ fun NewMission(
                         .padding(0.dp, 2.dp, 0.dp, 2.dp)
                         .weight(0.82f, false)
                 )
+                var playablePublic = true
+                //for(level in mission.levelList) for (task in level.taskList) playablePublic=playablePublic and task.taskType.checkable
+                var iconList = mutableListOf(Icons.Filled.VisibilityOff)
+                if(playablePublic) iconList.add(Icons.Filled.Public)
                 ChangingIconButton(
-                    listOf(Icons.Filled.VisibilityOff, Icons.Filled.Public),
+                    iconList,
                     privacySwitchState,
                     modifier= Modifier
                         .weight(0.18f, true)
@@ -124,7 +136,7 @@ fun NewMission(
                 singleLine = false,
                 placeholder = {
                     Text(
-                        text = "Description",
+                        text = stringResource(R.string.new_mission_description),
                         color = Color.Gray
                     )
                 },
@@ -133,10 +145,21 @@ fun NewMission(
                     .padding(0.dp, 2.dp, 0.dp, 2.dp)
             )
 
-            /*SegmentedControl (
-                listOf("Private", "Public"),
-                privacySwitchState
-            ) { privacySwitchState = it }*/
+            var otherSettingsModel= AccordionModel(
+                header = stringResource(R.string.other_settings),
+                rows = mutableListOf(
+                    AccordionModel.Row(AccordionModel.VisibleValue.IntValue, title="Solution days", valueIntToString=daysToSolveInput.toString()),
+                    AccordionModel.Row(AccordionModel.VisibleValue.IntValue, title="Solution hours", valueIntToString=hoursToSolveInput.toString()),
+                    AccordionModel.Row(AccordionModel.VisibleValue.StringValue, title="Mission tags", valueString=missionTags),
+                    AccordionModel.Row(AccordionModel.VisibleValue.BadgeValue, title="Badge", valueString="Default", valueIntToString="0"),
+                )
+            )
+
+            AccordionMenu(
+                modifier = Modifier
+                .fillMaxWidth(),
+                model=otherSettingsModel )
+
             LazyColumn(
                 modifier = Modifier
                     .padding(all = 5.dp)
@@ -154,7 +177,7 @@ fun NewMission(
                                 .height(IntrinsicSize.Min)
                                 .padding(all = 5.dp)
                                 .fillMaxWidth()
-                                .weight(0.1f, false)
+                                .weight(0.1f, true)
                         ) {
                             val typeListNames = mutableListOf<String>()
                             for(type in LevelType.values()) {
@@ -209,6 +232,8 @@ fun NewMission(
                                 onClick = {
                                     mission.name = titleInput
                                     mission.description = descriptionInput
+                                    mission.hoursToSolve = hoursToSolveInput
+                                    mission.daysToSolve = daysToSolveInput
                                     mission.levelList = levels
                                     mission.visibility = if(privacySwitchState==0) Mission.Visibility.PRIVATE else Mission.Visibility.PUBLIC
                                     onNewTask(mission, level) },
@@ -230,6 +255,8 @@ fun NewMission(
                 onClick = {
                     mission.name = titleInput
                     mission.description = descriptionInput
+                    mission.hoursToSolve = hoursToSolveInput
+                    mission.daysToSolve = daysToSolveInput
                     mission.levelList = levels
                     mission.visibility = if(privacySwitchState==0) Mission.Visibility.PRIVATE else Mission.Visibility.PUBLIC
                     val level = Level()
@@ -246,9 +273,15 @@ fun NewMission(
                 onClick = {
                     mission.name = titleInput
                     mission.description = descriptionInput
+                    mission.hoursToSolve = hoursToSolveInput
+                    mission.daysToSolve = daysToSolveInput
                     mission.levelList = levels
                     mission.modificationDate = Date()
+                    var playableWithoutModerator = true
+                    for(level in mission.levelList) for (task in level.taskList) playableWithoutModerator=playableWithoutModerator and task.taskType.checkable
+                    mission.isPlayableWithoutModerator = playableWithoutModerator
                     mission.visibility = if(privacySwitchState==0) Mission.Visibility.PRIVATE else Mission.Visibility.PUBLIC
+                    mission.state = Mission.State.DESIGNING
                     onSaveClick(mission)
                 },
                 modifier = Modifier
@@ -262,9 +295,15 @@ fun NewMission(
                 onClick = {
                     mission.name = titleInput
                     mission.description = descriptionInput
+                    mission.hoursToSolve = hoursToSolveInput
+                    mission.daysToSolve = daysToSolveInput
                     mission.levelList = levels
                     mission.modificationDate = Date()
+                    var playableWithoutModerator = true
+                    for(level in mission.levelList) for (task in level.taskList) playableWithoutModerator=playableWithoutModerator and task.taskType.checkable
+                    mission.isPlayableWithoutModerator = playableWithoutModerator
                     mission.visibility = if(privacySwitchState==0) Mission.Visibility.PRIVATE else Mission.Visibility.PUBLIC
+                    mission.state = Mission.State.FINISHED
                     onPostClick(mission)
                 },
                 modifier = Modifier
@@ -281,6 +320,8 @@ fun NewMission(
 @Preview
 @Composable
 fun NewMissionPreview() {
+    val user = User()
+    user.name = "reka_teszt"
     val mission = Mission()
     val level1 = Level()
     val level2 = Level()
@@ -297,6 +338,7 @@ fun NewMissionPreview() {
     mission.levelList = mutableListOf(level1, level2, level3)
     fun onNewTask(m:Mission, l:Level){}
     NewMission(
+        designer = user,
         mission = mission,
         onNewTask = ::onNewTask,
         onTaskClicked = {},
