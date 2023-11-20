@@ -19,9 +19,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.outlined.ArrowDownward
-import androidx.compose.material.icons.outlined.ArrowDropDown
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -35,9 +33,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import com.google.firebase.firestore.PropertyName
-import hu.bme.aut.szoftarch.kozkincsker.views.theme.Teal200
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun AccordionMenu(modifier: Modifier = Modifier, model: AccordionModel) {
     var expanded by remember { mutableStateOf(false) }
@@ -82,6 +78,7 @@ data class AccordionModel(
         val title: String = "",
         var valueString: String = "",
         var valueIntToString: String = "0"
+
     )
 }
 
@@ -93,7 +90,6 @@ private fun AccordionRow(
         "Accordion Row title",
         "Text separeted, by, résszel",
         "4"),
-
 ) {
     var stringInput by remember { mutableStateOf(model.valueString)}
     var intInput by remember { mutableStateOf(model.valueIntToString)}

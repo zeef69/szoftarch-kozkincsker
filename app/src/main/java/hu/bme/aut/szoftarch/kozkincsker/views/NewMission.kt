@@ -60,7 +60,7 @@ fun NewMission(
     designer: User,
     mission: Mission,
     onNewTask: (Mission, Level) -> Unit,
-    onTaskClicked: (Task) -> Unit,
+    onTaskClicked: (Mission, Level, Task) -> Unit,
     onSaveClick: (Mission) -> Unit,
     onPostClick: (Mission) -> Unit,
     onBackClick: () -> Unit = {}
@@ -216,7 +216,7 @@ fun NewMission(
                                         .background(Color.LightGray)
                                         .padding(5.dp, 5.dp, 5.dp, 5.dp)
                                         .weight(1.0f, true)
-                                        .clickable { onTaskClicked(task) }
+                                        .clickable { onTaskClicked(mission, level, task) }
                                 ) {
                                     Text(
                                         text = task.title, color = Color.Black, fontSize = 18.sp, modifier = Modifier
@@ -337,11 +337,12 @@ fun NewMissionPreview() {
     level3.taskList = mutableListOf(task1, task2, task3)
     mission.levelList = mutableListOf(level1, level2, level3)
     fun onNewTask(m:Mission, l:Level){}
+    fun onTaskClicked(m:Mission, l:Level, t:Task){}
     NewMission(
         designer = user,
         mission = mission,
         onNewTask = ::onNewTask,
-        onTaskClicked = {},
+        onTaskClicked = ::onTaskClicked,
         onPostClick = {},
         onSaveClick = {},
     )

@@ -72,7 +72,7 @@ class NewMissionFragment : RainbowCakeFragment<NewMissionViewState, NewMissionVi
                                 designer = viewState.designer,
                                 mission = viewState.mission,
                                 onNewTask = ::onNewTask,
-                                onTaskClicked = {},
+                                onTaskClicked = ::onTaskClicked,
                                 onPostClick = ::onPostMission,
                                 onSaveClick = ::onSaveMission,
                                 onBackClick = { navigator?.pop() }
@@ -87,7 +87,7 @@ class NewMissionFragment : RainbowCakeFragment<NewMissionViewState, NewMissionVi
     private fun onSaveMission(mission: Mission) {
 
         viewModel.uploadMission(mission)
-        navigator?.replace(NewMissionFragment.newInstance(designer, mission))
+        navigator?.replace(newInstance(designer, mission))
     }
 
     private fun onPostMission(mission: Mission) {
@@ -95,12 +95,19 @@ class NewMissionFragment : RainbowCakeFragment<NewMissionViewState, NewMissionVi
         navigator?.pop()
     }
 
-
     private fun onNewTask(mission:Mission, level: Level){
         var newTask = Task()
-        level.taskList.add(newTask)
+        //level.taskList.add(newTask)
         //navigator?.add(NewTaskFragment.newInstance(mission,newTask))
-        navigator?.replace(NewTaskFragment.newInstance(designer, mission, newTask))
+        navigator?.replace(NewTaskFragment.newInstance(designer, mission, level, newTask))
+        //newTask.title = "task"+level.taskList.size.toString()
+
+    }
+
+    private fun onTaskClicked(mission:Mission, level: Level, task: Task){
+        //level.taskList.add(newTask)
+        //navigator?.add(NewTaskFragment.newInstance(mission,newTask))
+        navigator?.replace(NewTaskFragment.newInstance(designer, mission, level, task))
         //newTask.title = "task"+level.taskList.size.toString()
 
     }
