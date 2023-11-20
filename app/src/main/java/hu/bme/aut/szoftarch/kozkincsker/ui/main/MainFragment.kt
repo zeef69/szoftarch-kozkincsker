@@ -103,14 +103,14 @@ class MainFragment: RainbowCakeFragment<MainViewState, MainViewModel>() {
                     var playerlist = mutableListOf(user, user2)
                     when (viewState) {
                         is Loading -> FullScreenLoading()
-                        is MainContent -> /*ModeratorPlayerList(
+                        is MainContent -> ModeratorPlayerList(
                             session = session,
                             mission = mission,
                             designer = user,
                             players = playerlist,
                             onUserClicked = ::onUserClicked,
                             onBackClick = { navigator?.pop() }
-                        )*/
+                        )
 
 
                         /*Rating(
@@ -132,6 +132,7 @@ class MainFragment: RainbowCakeFragment<MainViewState, MainViewModel>() {
                             onBackClick = { navigator?.pop() }
                         )*/
 
+                        /*
                         Mission(
                             mission = mission,
                             designer = user,
@@ -139,6 +140,7 @@ class MainFragment: RainbowCakeFragment<MainViewState, MainViewModel>() {
                             onStartSession = ::onStartSession,
                             onBackClick = { navigator?.pop() }
                         )
+                        */
 
                         /*NewTask(
                             task = task11,
