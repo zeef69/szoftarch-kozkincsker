@@ -100,6 +100,7 @@ class NewTaskFragment : RainbowCakeFragment<NewTaskViewState,NewTaskViewModel>()
     }
 
     private fun onBackClick(){
+        if(level.taskList.size==0) originalMission.levelList.remove(level)
         navigator?.replace(NewMissionFragment.newInstance(designer, originalMission))
     }
 }

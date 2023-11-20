@@ -43,6 +43,7 @@ import hu.bme.aut.szoftarch.kozkincsker.data.model.Task
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.ComboBox
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.DatePicker
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.SegmentedControl
+import hu.bme.aut.szoftarch.kozkincsker.views.helpers.VerticalReorderList
 import java.util.Date
 import java.util.Locale
 
@@ -77,6 +78,12 @@ fun NewTask(
     var descriptionInput by remember { mutableStateOf(task.description) }
     var scoreInput by remember { mutableStateOf(task.score.toString()) }
 
+    var scrolabblemodifier =
+        if(
+            privacySwitchState == 0 &&
+            typeSelectedIndexAutomatic == typeList.indexOf(TaskType.OrderAnswer)
+            )  Modifier
+        else Modifier.verticalScroll(rememberScrollState())
     /**
      * Answer values
      *
@@ -87,7 +94,7 @@ fun NewTask(
     var answerCInput by remember { mutableStateOf("") }
     var answerDInput by remember { mutableStateOf("") }
     var answerNumberInput by remember { mutableStateOf("0") }
-    var datePickerState by remember { mutableStateOf(true) }
+    var datePickerState by remember { mutableStateOf(false) }
     var dateInput by remember {
         mutableStateOf(SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).format(Date()))
     }
@@ -118,13 +125,14 @@ fun NewTask(
                     Icon(Icons.Filled.Delete, null)
                 }
             }
+
         )
         Column(
-            modifier = Modifier
+            modifier = scrolabblemodifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
                 .padding(12.dp, 12.dp, 12.dp, 25.dp)
                 .weight(1f, false)
+
         ) {
             SegmentedControl (
                 listOf("Automatic", "Human"),
@@ -286,7 +294,7 @@ fun NewTask(
                             )
                         }
                         typeList.indexOf(TaskType.NumberAnswer)->{
-                            Text(text = "Answer")
+                            Text(text = "Number answer")
                             OutlinedTextField(
                                 value = answerNumberInput,
                                 onValueChange = { answerNumberInput = it },
@@ -317,7 +325,7 @@ fun NewTask(
                             //TODO Térkép ide
                         }
                         typeList.indexOf(TaskType.OrderAnswer)->{
-
+                            VerticalReorderList()
                         }
                         else -> {}
                     }

@@ -90,4 +90,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
     implementation("androidx.compose.material:material:1.5.4")
     debugImplementation("androidx.compose.ui:ui-tooling:$composeVersion")
+
+    //Compose LazyList/Grid reorder
+    implementation("org.burnoutcrew.composereorderable:reorderable:0.9.6")
 }
