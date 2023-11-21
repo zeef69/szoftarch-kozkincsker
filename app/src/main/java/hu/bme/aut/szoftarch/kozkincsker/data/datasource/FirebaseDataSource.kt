@@ -153,7 +153,7 @@ class FirebaseDataSource @Inject constructor() {
 
     suspend fun getMissionById(missionId: String): Mission {
         var mission: Mission? = null
-        database.collection("mission").document(missionId).get()
+        database.collection("missions").document(missionId).get()
             .addOnSuccessListener { document ->
                 mission = document.toObject()
             }
