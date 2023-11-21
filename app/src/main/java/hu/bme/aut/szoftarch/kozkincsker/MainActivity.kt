@@ -16,10 +16,10 @@ class MainActivity : SimpleNavActivity() {
         if (savedInstanceState == null) {
             //navigator.add(LoginFragment())
             navigator.add(MainFragment())
-            //var designer_teszt = User()
-            //designer_teszt.id = "HvMMIu5TGso7A1k7rqOc"
-            //designer_teszt.name = "reka_teszt"
-            //navigator.add(NewMissionFragment.newInstance(designer_teszt))
+            var designer_teszt = User()
+            designer_teszt.id = "HvMMIu5TGso7A1k7rqOc"
+            designer_teszt.name = "reka_teszt"
+            navigator.add(NewMissionFragment.newInstance(designer_teszt))
         }
     }
 }
