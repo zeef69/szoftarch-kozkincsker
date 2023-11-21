@@ -12,6 +12,7 @@ import com.google.firebase.firestore.toObject
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Feedback
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
+import hu.bme.aut.szoftarch.kozkincsker.data.model.TaskSolution
 import hu.bme.aut.szoftarch.kozkincsker.data.model.User
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
@@ -164,5 +165,23 @@ class FirebaseDataSource @Inject constructor() {
 
         return if(mission != null) mission as Mission
         else Mission()
+    }
+
+    suspend fun getUserFromId(designerId: String): User {
+        var user: User? = null
+        database.collection("users").document(designerId).get()
+            .addOnSuccessListener { document ->
+                user = document.toObject()
+            }
+            .addOnFailureListener { exception ->
+                Log.d("failure", "Error getting User: ", exception)
+            }
+            .await()
+        return if(user != null) user as User
+        else User()
+    }
+
+    suspend fun setTaskSolution(solution: TaskSolution) {
+
     }
 }
