@@ -82,7 +82,8 @@ class NewTaskFragment : RainbowCakeFragment<NewTaskViewState,NewTaskViewModel>()
 
     private fun onSaveNewTask(task: Task) {
         //viewModel.onSave()
-        level.taskList.add(task)
+        if(!level.taskList.contains(task))
+            level.taskList.add(task)
         navigator?.replace(NewMissionFragment.newInstance(designer, originalMission))
     }
 
