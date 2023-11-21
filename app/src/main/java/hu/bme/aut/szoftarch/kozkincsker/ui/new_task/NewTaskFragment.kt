@@ -14,8 +14,10 @@ import co.zsmb.rainbowcake.hilt.getViewModelFromFactory
 import co.zsmb.rainbowcake.navigation.extensions.applyArgs
 import co.zsmb.rainbowcake.navigation.navigator
 import co.zsmb.rainbowcake.navigation.popUntil
+import hu.bme.aut.szoftarch.kozkincsker.data.model.Level
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Task
+import hu.bme.aut.szoftarch.kozkincsker.data.model.User
 import hu.bme.aut.szoftarch.kozkincsker.ui.new_mission.NewMissionFragment
 import hu.bme.aut.szoftarch.kozkincsker.views.NewTask
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.FullScreenLoading
@@ -23,13 +25,19 @@ import hu.bme.aut.szoftarch.kozkincsker.views.theme.AppUiTheme1
 
 class NewTaskFragment : RainbowCakeFragment<NewTaskViewState,NewTaskViewModel>() {
     override fun provideViewModel() = getViewModelFromFactory()
-    lateinit var originalMission: Mission
+    private lateinit var originalMission: Mission
+    private lateinit var designer: User
+    private lateinit var level: Level
     companion object {
+        private const val NEW_TASK_DESIGNER = "NEW_TASK_DESIGNER"
         private const val NEW_TASK = "NEW_TASK"
+        private const val NEW_TASK_LEVEL = "NEW_TASK_LEVEL"
         private const val EDITED_MISSION = "EDITED_MISSION"
-        fun newInstance(mission: Mission, newTask: Task): NewTaskFragment {
+        fun newInstance(designer: User, mission: Mission, level: Level, newTask: Task): NewTaskFragment {
             return NewTaskFragment().applyArgs {
+                putParcelable(NEW_TASK_DESIGNER, designer)
                 putParcelable(EDITED_MISSION, mission)
+                putParcelable(NEW_TASK_LEVEL, level)
                 putParcelable(NEW_TASK, newTask)
             }
         }
@@ -39,7 +47,9 @@ class NewTaskFragment : RainbowCakeFragment<NewTaskViewState,NewTaskViewModel>()
         viewModel.createNewTask(
             arguments?.getParcelable(NEW_TASK)!!
         )
+        level=arguments?.getParcelable(NEW_TASK_LEVEL)!!
         originalMission = arguments?.getParcelable(EDITED_MISSION)!!
+        designer = arguments?.getParcelable(NEW_TASK_DESIGNER)!!
         return ComposeView(requireContext()).apply {
             setContent {
                 FullScreenLoading()
@@ -59,9 +69,9 @@ class NewTaskFragment : RainbowCakeFragment<NewTaskViewState,NewTaskViewModel>()
                         is NewTaskContent -> viewState.newTask?.let {
                             NewTask(
                                 task = it,
-                                onSaveClick = ::onSaveTask,
+                                onSaveNewClick = ::onSaveNewTask,
                                 onDeleteClick = ::onDeleteTask,
-                                onBackClick = { navigator?.pop() }
+                                onBackClick = ::onBackClick
                             )
                         }
                     }
@@ -70,13 +80,28 @@ class NewTaskFragment : RainbowCakeFragment<NewTaskViewState,NewTaskViewModel>()
         }
     }
 
-    private fun onSaveTask(task: Task) {
+    private fun onSaveNewTask(task: Task) {
         //viewModel.onSave()
-        navigator?.replace(NewMissionFragment.newInstance(originalMission))
+        if(!level.taskList.contains(task))
+            level.taskList.add(task)
+        navigator?.replace(NewMissionFragment.newInstance(designer, originalMission))
+    }
+
+    private fun onEditTask(task: Task) {
+        //viewModel.onSave()
+        navigator?.replace(NewMissionFragment.newInstance(designer, originalMission))
     }
 
     private fun onDeleteTask(task: Task) {
+        level.taskList.remove(task)
+        if(level.taskList.size==0) originalMission.levelList.remove(level)
+        navigator?.replace(NewMissionFragment.newInstance(designer, originalMission))
         //viewModel.onDelete()
         //navigator?.pop()
+    }
+
+    private fun onBackClick(){
+        if(level.taskList.size==0) originalMission.levelList.remove(level)
+        navigator?.replace(NewMissionFragment.newInstance(designer, originalMission))
     }
 }

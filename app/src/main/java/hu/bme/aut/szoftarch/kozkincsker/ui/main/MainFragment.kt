@@ -136,7 +136,6 @@ class MainFragment: RainbowCakeFragment<MainViewState, MainViewModel>() {
                         Mission(
                             mission = mission,
                             designer = user,
-                            feedbacks = feedbacks,
                             onStartSession = ::onStartSession,
                             onBackClick = { navigator?.pop() }
                         )
@@ -177,7 +176,7 @@ class MainFragment: RainbowCakeFragment<MainViewState, MainViewModel>() {
         //navigator?.pop()
     }
 
-    private fun onStartSession(session: Session) {
+    private fun onStartSession(session: Session, checkModerator: Boolean) {
         //viewModel.startSession()
     }
 
