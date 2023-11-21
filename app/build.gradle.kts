@@ -6,6 +6,7 @@ plugins {
     id("dagger.hilt.android.plugin")
     id("com.google.devtools.ksp")
     id("com.google.gms.google-services")
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 android {
@@ -90,6 +91,10 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
     implementation("androidx.compose.material:material:1.5.4")
     debugImplementation("androidx.compose.ui:ui-tooling:$composeVersion")
+    implementation("com.google.maps.android:maps-compose:4.1.1")
+
+    implementation("androidx.navigation:navigation-fragment-ktx:2.7.5")
+    implementation("com.google.android.gms:play-services-maps:18.2.0")
 
     //Compose LazyList/Grid reorder
     implementation("org.burnoutcrew.composereorderable:reorderable:0.9.6")

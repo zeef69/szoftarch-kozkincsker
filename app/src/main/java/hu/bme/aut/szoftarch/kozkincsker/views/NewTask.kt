@@ -37,8 +37,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.rememberCameraPositionState
+import com.google.maps.android.compose.rememberMarkerState
 import hu.bme.aut.szoftarch.kozkincsker.data.enums.TaskType
-import hu.bme.aut.szoftarch.kozkincsker.data.model.Level
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Task
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.ComboBox
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.DatePicker
@@ -46,7 +51,6 @@ import hu.bme.aut.szoftarch.kozkincsker.views.helpers.SegmentedControl
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.VerticalReorderList
 import java.util.Date
 import java.util.Locale
-
 
 @Composable
 fun NewTask(
@@ -81,7 +85,8 @@ fun NewTask(
     var scrolabblemodifier =
         if(
             privacySwitchState == 0 &&
-            typeSelectedIndexAutomatic == typeList.indexOf(TaskType.OrderAnswer)
+            (typeSelectedIndexAutomatic == typeList.indexOf(TaskType.OrderAnswer) ||
+            typeSelectedIndexAutomatic == typeList.indexOf(TaskType.MapAnswer))
             )  Modifier
         else Modifier.verticalScroll(rememberScrollState())
     /**
@@ -98,6 +103,9 @@ fun NewTask(
     var dateInput by remember {
         mutableStateOf(SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).format(Date()))
     }
+    var mapInput by remember { mutableStateOf("") }
+    val markerState = rememberMarkerState(position = LatLng(47.497913, 19.040236))
+    mapInput = markerState.position.latitude.toString() + ", " + markerState.position.longitude.toString()
 
     when(task.taskType){
 
@@ -330,7 +338,24 @@ fun NewTask(
                                 )
                             }
                             typeList.indexOf(TaskType.MapAnswer)->{
-                                //TODO Térkép ide
+                                val cameraPositionState = rememberCameraPositionState {
+                                    position = CameraPosition.fromLatLngZoom(
+                                        LatLng(
+                                            47.497913,
+                                            19.040236
+                                        ),
+                                        10f)
+                                }
+                                GoogleMap(
+                                    modifier = Modifier
+                                        .fillMaxSize(),
+                                    cameraPositionState = cameraPositionState
+                                ) {
+                                    Marker(
+                                        state = markerState,
+                                        draggable = true
+                                    )
+                                }
                             }
                             typeList.indexOf(TaskType.OrderAnswer)->{
                                 Text(text = "Answer options")
@@ -441,7 +466,7 @@ fun NewTask(
 fun NewTaskPreview() {
     val task1 = Task()
     task1.title = "Task1"
-    task1.taskType= TaskType.OrderAnswer
+    task1.taskType= TaskType.MapAnswer
     NewTask(
         task = task1,
         onSaveNewClick = {},
