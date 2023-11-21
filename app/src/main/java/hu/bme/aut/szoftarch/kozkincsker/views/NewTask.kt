@@ -128,219 +128,288 @@ fun NewTask(
 
         )
         Column(
-            modifier = scrolabblemodifier
+            modifier = Modifier
                 .fillMaxSize()
-                .padding(12.dp, 12.dp, 12.dp, 25.dp)
-                .weight(1f, false)
+                .background(MaterialTheme.colors.background),
+            verticalArrangement = Arrangement.SpaceBetween
+        ){
+            Column(
+                modifier = scrolabblemodifier
+                    .fillMaxSize()
+                    .padding(12.dp, 12.dp, 12.dp, 25.dp)
+                    .weight(1f, false)
 
-        ) {
-            SegmentedControl (
-                listOf("Automatic", "Human"),
-                privacySwitchState
-            ) { privacySwitchState = it }
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .padding(0.dp, 2.dp, 0.dp, 2.dp)
-            ){
-                Box(
-                    modifier=Modifier
-                        .weight(0.5f, true)
-                ) {
-                    if(privacySwitchState == 0) {
-                        ComboBox(
-                            list = typeListNames,
-                            selectedIndex = typeSelectedIndexAutomatic,
-                            onIndexChanged = { typeSelectedIndexAutomatic = it },
-                            isExpanded = typeExpanded,
-                            onExpandedChanged = { typeExpanded = it },
-                            textWidth = 130.dp
-                        )
-                    } else if(privacySwitchState == 1) {
-                        ComboBox(
-                            list = typeListNames,
-                            selectedIndex = typeSelectedIndexHuman,
-                            onIndexChanged = { typeSelectedIndexHuman = it },
-                            isExpanded = typeExpanded,
-                            onExpandedChanged = { typeExpanded = it },
-                            textWidth = 130.dp
-                        )
+            ) {
+                SegmentedControl (
+                    listOf("Automatic", "Human"),
+                    privacySwitchState
+                ) { privacySwitchState = it }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .padding(0.dp, 2.dp, 0.dp, 2.dp)
+                ){
+                    Box(
+                        modifier=Modifier
+                            .weight(0.5f, true)
+                    ) {
+                        if(privacySwitchState == 0) {
+                            ComboBox(
+                                list = typeListNames,
+                                selectedIndex = typeSelectedIndexAutomatic,
+                                onIndexChanged = { typeSelectedIndexAutomatic = it },
+                                isExpanded = typeExpanded,
+                                onExpandedChanged = { typeExpanded = it },
+                                textWidth = 130.dp
+                            )
+                        } else if(privacySwitchState == 1) {
+                            ComboBox(
+                                list = typeListNames,
+                                selectedIndex = typeSelectedIndexHuman,
+                                onIndexChanged = { typeSelectedIndexHuman = it },
+                                isExpanded = typeExpanded,
+                                onExpandedChanged = { typeExpanded = it },
+                                textWidth = 130.dp
+                            )
+                        }
                     }
+                    OutlinedTextField(
+                        value = scoreInput,
+                        onValueChange = { scoreInput = it },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        singleLine = true,
+                        label = {Text(text = "Score")},
+                        placeholder = {
+                            Text(
+                                text = "",
+                                color = Color.Gray
+                            )
+                        },
+                        modifier = Modifier
+                            .weight(0.5f, true)
+                            .padding(0.dp, 2.dp, 0.dp, 2.dp)
+                    )
                 }
+
                 OutlinedTextField(
-                    value = scoreInput,
-                    onValueChange = { scoreInput = it },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    value = titleInput,
+                    onValueChange = { titleInput = it },
                     singleLine = true,
-                    label = {Text(text = "Score")},
                     placeholder = {
                         Text(
-                            text = "",
+                            text = "Title",
                             color = Color.Gray
                         )
                     },
                     modifier = Modifier
-                        .weight(0.5f, true)
+                        .fillMaxWidth()
                         .padding(0.dp, 2.dp, 0.dp, 2.dp)
                 )
-            }
 
-            OutlinedTextField(
-                value = titleInput,
-                onValueChange = { titleInput = it },
-                singleLine = true,
-                placeholder = {
-                    Text(
-                        text = "Title",
-                        color = Color.Gray
-                    )
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(0.dp, 2.dp, 0.dp, 2.dp)
-            )
+                OutlinedTextField(
+                    value = descriptionInput,
+                    onValueChange = { descriptionInput = it },
+                    singleLine = false,
+                    placeholder = {
+                        Text(
+                            text = "Description",
+                            color = Color.Gray
+                        )
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(0.dp, 2.dp, 0.dp, 2.dp)
+                )
+                Column(
+                    modifier= Modifier
+                        .fillMaxWidth()
+                        .padding(12.dp, 12.dp, 12.dp, 25.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ){
+                    if(privacySwitchState == 0) {
+                        when(typeSelectedIndexAutomatic){
+                            typeList.indexOf(TaskType.ListedAnswer)->{
+                                Text(text = "Answer options")
+                                OutlinedTextField(
+                                    value = answerAInput,
+                                    onValueChange = { answerAInput = it },
+                                    singleLine = false,
+                                    placeholder = {
+                                        Text(
+                                            text = "Answer A",
+                                            color = Color.Gray
+                                        )
+                                    },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(0.dp, 2.dp, 0.dp, 2.dp)
+                                )
+                                OutlinedTextField(
+                                    value = answerBInput,
+                                    onValueChange = { answerBInput = it },
+                                    singleLine = false,
+                                    placeholder = {
+                                        Text(
+                                            text = "Answer B",
+                                            color = Color.Gray
+                                        )
+                                    },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(0.dp, 2.dp, 0.dp, 2.dp)
+                                )
+                                OutlinedTextField(
+                                    value = answerCInput,
+                                    onValueChange = { answerCInput = it },
+                                    singleLine = false,
+                                    placeholder = {
+                                        Text(
+                                            text = "Answer C",
+                                            color = Color.Gray
+                                        )
+                                    },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(0.dp, 2.dp, 0.dp, 2.dp)
+                                )
+                                OutlinedTextField(
+                                    value = answerDInput,
+                                    onValueChange = { answerDInput = it },
+                                    singleLine = false,
+                                    placeholder = {
+                                        Text(
+                                            text = "Answer D",
+                                            color = Color.Gray
+                                        )
+                                    },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(0.dp, 2.dp, 0.dp, 2.dp)
+                                )
+                                OutlinedTextField(
+                                    value = answerAInput,
+                                    onValueChange = { answerAInput = it },
+                                    singleLine = false,
+                                    placeholder = {
+                                        Text(
+                                            text = "Answer A",
+                                            color = Color.Gray
+                                        )
+                                    },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(0.dp, 2.dp, 0.dp, 2.dp)
+                                )
+                            }
+                            typeList.indexOf(TaskType.NumberAnswer)->{
+                                Text(text = "Number answer")
+                                OutlinedTextField(
+                                    value = answerNumberInput,
+                                    onValueChange = { answerNumberInput = it },
+                                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                                    singleLine = true,
+                                    placeholder = {
+                                        Text(
+                                            text = "0",
+                                            color = Color.Gray
+                                        )
+                                    },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(0.dp, 2.dp, 0.dp, 2.dp)
+                                )
+                            }
+                            typeList.indexOf(TaskType.DateAnswer)->{
+                                DatePicker(
+                                    fromToday = false,
+                                    context = context,
+                                    datePickerState = datePickerState,
+                                    setDatePickerState = { datePickerState = it },
+                                    dateInput = dateInput,
+                                    onValueChange = { dateInput = it }
+                                )
+                            }
+                            typeList.indexOf(TaskType.MapAnswer)->{
+                                //TODO Térkép ide
+                            }
+                            typeList.indexOf(TaskType.OrderAnswer)->{
+                                Text(text = "Answer options")
+                                VerticalReorderList(
+                                /*    listElements = mutableListOf(
+                                            OutlinedTextField(
+                                                value = answerAInput,
+                                                onValueChange = { answerAInput = it },
+                                                singleLine = false,
+                                                placeholder = {
+                                                    Text(
+                                                        text = "Answer A",
+                                                        color = Color.Gray
+                                                    )
+                                                },
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .padding(0.dp, 2.dp, 0.dp, 2.dp)
+                                            ),
+                                            OutlinedTextField(
+                                                value = answerBInput,
+                                                onValueChange = { answerBInput = it },
+                                                singleLine = false,
+                                                placeholder = {
+                                                    Text(
+                                                        text = "Answer B",
+                                                        color = Color.Gray
+                                                    )
+                                                },
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .padding(0.dp, 2.dp, 0.dp, 2.dp)
+                                            ),
+                                            OutlinedTextField(
+                                                value = answerCInput,
+                                                onValueChange = { answerCInput = it },
+                                                singleLine = false,
+                                                placeholder = {
+                                                    Text(
+                                                        text = "Answer C",
+                                                        color = Color.Gray
+                                                    )
+                                                },
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .padding(0.dp, 2.dp, 0.dp, 2.dp)
+                                            ),
+                                                    OutlinedTextField(
+                                                    value = answerDInput,
+                                            onValueChange = { answerDInput = it },
+                                            singleLine = false,
+                                            placeholder = {
+                                                Text(
+                                                    text = "Answer D",
+                                                    color = Color.Gray
+                                                )
+                                            },
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(0.dp, 2.dp, 0.dp, 2.dp)
+                                        )
+                                    )
+                                */
+                                )
+                            }
+                            else -> {}
+                        }
 
-            OutlinedTextField(
-                value = descriptionInput,
-                onValueChange = { descriptionInput = it },
-                singleLine = false,
-                placeholder = {
-                    Text(
-                        text = "Description",
-                        color = Color.Gray
-                    )
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(0.dp, 2.dp, 0.dp, 2.dp)
-            )
-            Column(
-                modifier= Modifier
-                    .padding(12.dp, 12.dp, 12.dp, 25.dp)
-            ){
-                if(privacySwitchState == 0) {
-                    when(typeSelectedIndexAutomatic){
-                        typeList.indexOf(TaskType.ListedAnswer)->{
-                            Text(text = "Answer options")
-                            OutlinedTextField(
-                                value = answerAInput,
-                                onValueChange = { answerAInput = it },
-                                singleLine = false,
-                                placeholder = {
-                                    Text(
-                                        text = "Answer A",
-                                        color = Color.Gray
-                                    )
-                                },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(0.dp, 2.dp, 0.dp, 2.dp)
-                            )
-                            OutlinedTextField(
-                                value = answerBInput,
-                                onValueChange = { answerBInput = it },
-                                singleLine = false,
-                                placeholder = {
-                                    Text(
-                                        text = "Answer B",
-                                        color = Color.Gray
-                                    )
-                                },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(0.dp, 2.dp, 0.dp, 2.dp)
-                            )
-                            OutlinedTextField(
-                                value = answerCInput,
-                                onValueChange = { answerCInput = it },
-                                singleLine = false,
-                                placeholder = {
-                                    Text(
-                                        text = "Answer C",
-                                        color = Color.Gray
-                                    )
-                                },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(0.dp, 2.dp, 0.dp, 2.dp)
-                            )
-                            OutlinedTextField(
-                                value = answerDInput,
-                                onValueChange = { answerDInput = it },
-                                singleLine = false,
-                                placeholder = {
-                                    Text(
-                                        text = "Answer D",
-                                        color = Color.Gray
-                                    )
-                                },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(0.dp, 2.dp, 0.dp, 2.dp)
-                            )
-                            OutlinedTextField(
-                                value = answerAInput,
-                                onValueChange = { answerAInput = it },
-                                singleLine = false,
-                                placeholder = {
-                                    Text(
-                                        text = "Answer A",
-                                        color = Color.Gray
-                                    )
-                                },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(0.dp, 2.dp, 0.dp, 2.dp)
-                            )
-                        }
-                        typeList.indexOf(TaskType.NumberAnswer)->{
-                            Text(text = "Number answer")
-                            OutlinedTextField(
-                                value = answerNumberInput,
-                                onValueChange = { answerNumberInput = it },
-                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                                singleLine = true,
-                                placeholder = {
-                                    Text(
-                                        text = "0",
-                                        color = Color.Gray
-                                    )
-                                },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(0.dp, 2.dp, 0.dp, 2.dp)
-                            )
-                        }
-                        typeList.indexOf(TaskType.DateAnswer)->{
-                            DatePicker(
-                                fromToday = false,
-                                context = context,
-                                datePickerState = datePickerState,
-                                setDatePickerState = { datePickerState = it },
-                                dateInput = dateInput,
-                                onValueChange = { dateInput = it }
-                            )
-                        }
-                        typeList.indexOf(TaskType.MapAnswer)->{
-                            //TODO Térkép ide
-                        }
-                        typeList.indexOf(TaskType.OrderAnswer)->{
-                            VerticalReorderList()
-                        }
+                    }
+                    else if(privacySwitchState == 1) {
+                    when (typeSelectedIndexHuman) {
+                        typeList.indexOf(TaskType.TextAnswer) -> {}
+                        typeList.indexOf(TaskType.ImageAnswer) -> {}
                         else -> {}
                     }
-
                 }
-                else if(privacySwitchState == 1) {
-                when (typeSelectedIndexHuman) {
-                    typeList.indexOf(TaskType.TextAnswer) -> {}
-                    typeList.indexOf(TaskType.ImageAnswer) -> {}
-                    else -> {}
                 }
             }
-            }
-        }
-        Column( ) {
+            Column( ) {
             Button(
                 onClick = {
                     val newTask = task
@@ -363,6 +432,7 @@ fun NewTask(
                 Text("Save")
             }
         }
+        }
     }
 }
 
@@ -371,7 +441,7 @@ fun NewTask(
 fun NewTaskPreview() {
     val task1 = Task()
     task1.title = "Task1"
-    task1.taskType= TaskType.TextAnswer
+    task1.taskType= TaskType.OrderAnswer
     NewTask(
         task = task1,
         onSaveNewClick = {},
