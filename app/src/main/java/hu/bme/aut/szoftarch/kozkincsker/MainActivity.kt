@@ -16,6 +16,7 @@ import hu.bme.aut.szoftarch.kozkincsker.ui.mission_start.MissionStartFragment
 import hu.bme.aut.szoftarch.kozkincsker.ui.new_mission.NewMissionFragment
 import hu.bme.aut.szoftarch.kozkincsker.ui.new_task.NewTaskFragment
 import hu.bme.aut.szoftarch.kozkincsker.ui.rating.RatingFragment
+import hu.bme.aut.szoftarch.kozkincsker.ui.session_moderator.SessionModeratorFragment
 import hu.bme.aut.szoftarch.kozkincsker.views.NewTask
 
 @AndroidEntryPoint
@@ -27,14 +28,22 @@ class MainActivity : SimpleNavActivity() {
             //navigator.add(LoginFragment())
             //navigator.add(MainFragment())
             //navigator.add(NewMissionFragment.newInstance())
-            /*val session = Session()
-            session.missionId = "OM41UfBlMQiHsG9qbV8u"
-            navigator.add(RatingFragment.newInstance(session))*/
+            //val session = Session()
+            //session.missionId = "OM41UfBlMQiHsG9qbV8u"
+            /*navigator.add(RatingFragment.newInstance(session))*/
             navigator.add(MainFragment())
-            var designer_teszt = User()
+            /*var designer_teszt = User()
             designer_teszt.id = "HvMMIu5TGso7A1k7rqOc"
             designer_teszt.name = "reka_teszt"
-            navigator.add(NewMissionFragment.newInstance(designer_teszt))
+            navigator.add(NewMissionFragment.newInstance(designer_teszt))*/
+            val session = Session(
+                id = "2jD6dz6GkfmgQPXZ17Lu",
+                accessCode = "123456",
+                name="okok",
+                missionId = "OM41UfBlMQiHsG9qbV8u",
+                playerIds = mutableListOf("DTwjwTSYDsWxlrEe65jn", "rQqkHjGRxkzsqRzBUz5n")
+            )
+            navigator.add(SessionModeratorFragment.newInstance(session))
             /*val mission = Mission()
             mission.name = "Legjobb Mission"
             mission.description = "WOW Legjobb"

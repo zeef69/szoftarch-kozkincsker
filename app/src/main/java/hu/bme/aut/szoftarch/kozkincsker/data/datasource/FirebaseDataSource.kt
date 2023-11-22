@@ -124,6 +124,19 @@ class FirebaseDataSource @Inject constructor() {
         return sessions
     }
 
+    suspend fun getUsersFromSession(sessionId: String): List<User>{
+        val users = mutableListOf<User>()
+        database.collection("users").whereArrayContains("currentSessionIds", sessionId).get()
+            .addOnSuccessListener { documents ->
+                for(document in documents)
+                    users.add(document.toObject())
+            }
+            .addOnFailureListener { exception ->
+                Log.d("failure", "Error getting documents: ", exception)
+            }
+            .await()
+        return users
+    }
     suspend fun addSession(newSession: Session){
         database.collection("sessions").add(newSession)
             .addOnSuccessListener { documentReference ->
