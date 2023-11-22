@@ -1,27 +1,34 @@
 package hu.bme.aut.szoftarch.kozkincsker.ui.session_moderator
 
+import androidx.lifecycle.viewModelScope
 import co.zsmb.rainbowcake.base.RainbowCakeViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
 import hu.bme.aut.szoftarch.kozkincsker.data.model.User
+import hu.bme.aut.szoftarch.kozkincsker.ui.missions.MissionsContent
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SessionModeratorViewModel @Inject constructor(
     private val sessionModeratorPresenter: SessionModeratorPresenter
 ) : RainbowCakeViewModel<SessionModeratorViewState>(Loading) {
-    fun load(session: Session) = execute {
+
+    fun addListener(session: Session) = execute {
 
         val mission = sessionModeratorPresenter.getMissionFromSession(session)
         val designer = sessionModeratorPresenter.getDesignerFromMission(mission)
-        val players = sessionModeratorPresenter.getPlayersFromSession(session).toMutableList()
-
-        viewState = SessionModeratorContent(
-            session = session,
-            mission = mission,
-            designer = designer,
-            players = players,
-            isLoading = false
-        )
+        viewModelScope.launch {
+            sessionModeratorPresenter.addListener(session ).collect {
+                viewState = SessionModeratorContent(
+                    session = session,
+                    mission = mission,
+                    designer = designer,
+                    players = it.toMutableList(),
+                    isLoading = false
+                )
+            }
+        }
     }
 }
