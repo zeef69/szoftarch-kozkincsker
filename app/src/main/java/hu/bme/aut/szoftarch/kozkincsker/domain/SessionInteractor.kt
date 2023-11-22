@@ -15,10 +15,15 @@ class SessionInteractor @Inject constructor(
     }
 
     suspend fun getMissionFromSession(session: Session): Mission {
+        print("reka" + session.missionId.toString())
         return firebaseDataSource.getMissionById(session.missionId)
     }
 
     suspend fun getDesignerFromMission(mission: Mission): User {
         return firebaseDataSource.getUserFromId(mission.designerId!!)
+    }
+
+    suspend fun getPlayersFromSession(session: Session): List<User> {
+        return firebaseDataSource.getUsersFromIds(session.playerIds)
     }
 }
