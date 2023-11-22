@@ -6,13 +6,17 @@ import co.zsmb.rainbowcake.navigation.Navigator
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
+import hu.bme.aut.szoftarch.kozkincsker.data.datasource.FirebaseDataSource
 import hu.bme.aut.szoftarch.kozkincsker.ui.main.MainFragment
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-class AuthInteractor @Inject constructor() {
+class AuthInteractor @Inject constructor(
+    private val firebaseDataSource: FirebaseDataSource
+) {
     private var firebaseAuth = FirebaseAuth.getInstance()
 
-    fun registerClick(context: Context, mail: String, pass: String) {
+    suspend fun registerClick(context: Context, mail: String, pass: String, name: String) {
         firebaseAuth
             .createUserWithEmailAndPassword(mail, pass)
             .addOnSuccessListener { result ->
@@ -23,11 +27,13 @@ class AuthInteractor @Inject constructor() {
                 firebaseUser?.updateProfile(profileChangeRequest)
                 firebaseUser?.sendEmailVerification()
 
+                firebaseDataSource.addUser(firebaseUser?.uid, name)
                 Toast.makeText(context, "Registration was successful\nVerification email has been sent", Toast.LENGTH_SHORT).show()
             }
             .addOnFailureListener { exception ->
                 Toast.makeText(context, exception.message, Toast.LENGTH_SHORT).show()
             }
+            .await()
     }
 
     fun loginClick(navigator: Navigator?, context: Context, mail: String, pass: String) {
@@ -51,7 +57,7 @@ class AuthInteractor @Inject constructor() {
             }
     }
 
-    /*fun signOut() {
+    fun signOut() {
         firebaseAuth.signOut()
     }
 
@@ -92,5 +98,5 @@ class AuthInteractor @Inject constructor() {
                     Toast.makeText(context, exception.localizedMessage, Toast.LENGTH_SHORT).show()
                 }
         }
-    }*/
+    }
 }

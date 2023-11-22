@@ -24,30 +24,34 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
 import hu.bme.aut.szoftarch.kozkincsker.R
+import hu.bme.aut.szoftarch.kozkincsker.views.helpers.SegmentedControl
 
 @Composable
 fun Login(
     onLoginClick: (String, String, Context) -> Unit,
-    onRegisterClick: (String, String, Context) -> Unit
+    onRegisterClick: (String, String, String, Context) -> Unit
 ) {
     var emailInput by remember { mutableStateOf("") }
     var passInput by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
+    var nameInput by remember { mutableStateOf("") }
+
+    var switchState by remember { mutableIntStateOf(0) }
 
     val context = LocalContext.current
 
@@ -64,90 +68,79 @@ fun Login(
             modifier = Modifier
                 .fillMaxWidth()
                 .verticalScroll(rememberScrollState())
-                .padding(12.dp, 25.dp, 12.dp, 100.dp)
+                .padding(12.dp, 25.dp, 12.dp, 100.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            ConstraintLayout(
+            SegmentedControl(
+                listOf("Login", "Register"),
+                switchState
+            ) { switchState = it }
+
+            OutlinedTextField(
+                value = emailInput,
+                onValueChange = { emailInput = it },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                leadingIcon = {
+                    Icon(imageVector  = Icons.Filled.Email, null)
+                },
+                label = {
+                    Text(
+                        text = stringResource(R.string.title_email),
+                        color = Color.Gray
+                    )
+                },
                 modifier = Modifier
                     .fillMaxWidth()
-            ) {
-                val (
-                    icon,
-                    email,
-                    password,
-                    loginButton,
-                    registerButton
-                ) = createRefs()
+                    .padding(0.dp, 2.dp, 0.dp, 0.dp)
+            )
 
-                /*Image(
-                    painter = painterResource(id = R.drawable.icon),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(128.dp)
-                        .constrainAs(icon) {
-                            top.linkTo(parent.top)
-                            start.linkTo(parent.start)
-                            end.linkTo(parent.end)
-                        }
-                )*/
+            OutlinedTextField(
+                value = passInput,
+                onValueChange = { passInput = it },
+                singleLine = true,
+                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                leadingIcon = {
+                    Icon(imageVector  = Icons.Filled.Key, null)
+                },
+                trailingIcon = {
+                    val image = if (passwordVisible)
+                        Icons.Filled.Visibility
+                    else Icons.Filled.VisibilityOff
 
+                    IconButton(onClick = {passwordVisible = !passwordVisible}){
+                        Icon(imageVector  = image, null)
+                    }
+                },
+                label = {
+                    Text(
+                        text = stringResource(R.string.title_password),
+                        color = Color.Gray
+                    )
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(0.dp, 2.dp, 0.dp, 0.dp)
+            )
+
+            if(switchState == 1)
                 OutlinedTextField(
-                    value = emailInput,
-                    onValueChange = { emailInput = it },
+                    value = nameInput,
+                    onValueChange = { nameInput = it },
                     singleLine = true,
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                    leadingIcon = {
-                        Icon(imageVector  = Icons.Filled.Email, null)
-                    },
                     label = {
                         Text(
-                            text = stringResource(R.string.title_email),
+                            text = "Name",
                             color = Color.Gray
                         )
                     },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(0.dp, 2.dp, 0.dp, 0.dp)
-                        .constrainAs(email) {
-                            top.linkTo(icon.bottom)
-                            start.linkTo(parent.start)
-                            end.linkTo(parent.end)
-                        }
                 )
 
-                OutlinedTextField(
-                    value = passInput,
-                    onValueChange = { passInput = it },
-                    singleLine = true,
-                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                    leadingIcon = {
-                        Icon(imageVector  = Icons.Filled.Key, null)
-                    },
-                    trailingIcon = {
-                        val image = if (passwordVisible)
-                            Icons.Filled.Visibility
-                        else Icons.Filled.VisibilityOff
-
-                        IconButton(onClick = {passwordVisible = !passwordVisible}){
-                            Icon(imageVector  = image, null)
-                        }
-                    },
-                    label = {
-                        Text(
-                            text = stringResource(R.string.title_password),
-                            color = Color.Gray
-                        )
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(0.dp, 2.dp, 0.dp, 0.dp)
-                        .constrainAs(password) {
-                            top.linkTo(email.bottom)
-                            start.linkTo(parent.start)
-                            end.linkTo(parent.end)
-                        }
-                )
-
+            if(switchState == 0)
                 Button(
                     content = {
                         Text(
@@ -168,13 +161,9 @@ fun Login(
                     },
                     modifier = Modifier
                         .padding(0.dp, 25.dp, 0.dp, 0.dp)
-                        .constrainAs(loginButton) {
-                            top.linkTo(password.bottom)
-                            start.linkTo(parent.start)
-                            end.linkTo(parent.end)
-                        }
                 )
 
+            if(switchState == 1)
                 Button(
                     content = {
                         Text(
@@ -190,18 +179,12 @@ fun Login(
                         } else if(passInput == "") {
                             Toast.makeText(context, R.string.missing_password, Toast.LENGTH_SHORT).show()
                         } else {
-                            onRegisterClick(emailInput, passInput, context)
+                            onRegisterClick(nameInput, emailInput, passInput, context)
                         }
                     },
                     modifier = Modifier
                         .padding(0.dp, 5.dp, 0.dp, 0.dp)
-                        .constrainAs(registerButton) {
-                            top.linkTo(loginButton.bottom)
-                            start.linkTo(parent.start)
-                            end.linkTo(parent.end)
-                        }
                 )
-            }
         }
     }
 }

@@ -1,9 +1,9 @@
 package hu.bme.aut.szoftarch.kozkincsker.domain
 
+import com.google.firebase.firestore.toObject
 import hu.bme.aut.szoftarch.kozkincsker.data.datasource.FirebaseDataSource
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
-import hu.bme.aut.szoftarch.kozkincsker.data.model.TaskSolution
 import hu.bme.aut.szoftarch.kozkincsker.data.model.User
 import javax.inject.Inject
 
@@ -25,5 +25,18 @@ class SessionInteractor @Inject constructor(
 
     suspend fun getPlayersFromSession(session: Session): List<User> {
         return firebaseDataSource.getUsersFromSession(session.id)
+    }
+
+    suspend fun joinWithCode(code: String): Session? {
+        val sessions = mutableListOf<Session>()
+        val documents = firebaseDataSource.joinWithCode(code)
+        for(document in documents)
+            sessions.add(document.toObject())
+
+        if(sessions.isNotEmpty())
+            firebaseDataSource.addPlayerToSession(sessions[0])
+
+        return if(sessions.isNotEmpty()) sessions[0]
+        else null
     }
 }

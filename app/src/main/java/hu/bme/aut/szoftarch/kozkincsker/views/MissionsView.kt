@@ -4,22 +4,29 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
+import androidx.compose.material.Card
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
-import androidx.compose.material.LocalTextStyle
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.BorderColor
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -29,41 +36,35 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
+import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.SegmentedControl
 
 @Composable
 fun MissionsView(
-    onJoinWithCodeButtonClicked: () -> Unit,
-    onModifyOwnMissionClicked: () -> Unit,
-    onAddOwnMissionFloatingActionButtonClicked:() -> Unit
+    missions: List<Mission>,
+    uid: String?,
+    onJoinWithCode: (String) -> Unit,
+    onModifyMission: (Mission) -> Unit,
+    onDeleteMission: (Mission) -> Unit,
+    onAddMission: () -> Unit,
+    onItemClicked: (Mission) -> Unit,
+    onSessionClicked: (Session) -> Unit
 ) {
-
     var privacySwitchState by remember { mutableIntStateOf(0) }
-    var generalMissions : MutableList<Mission> = ArrayList()
-    var runningMissions : MutableList<Mission> = ArrayList()
-    var ownMissions : MutableList<Mission> = ArrayList()
+    var showDialog by remember { mutableStateOf(false) }
 
-
-    for (i in 1..3) {
-        val generalMission = Mission()
-        generalMission.name = "General Mission $i"
-        val runningMission = Mission()
-        runningMission.name = "Running Mission $i"
-        val ownMission = Mission()
-        ownMission.name = "Own Mission $i"
-        generalMissions.add(generalMission)
-        runningMissions.add(runningMission)
-        ownMissions.add(ownMission)
-    }
+    var searchedMissions = missions
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.background),
+            .background(MaterialTheme.colors.background)
+            .padding(0.dp, 0.dp, 0.dp, 70.dp),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         TopAppBar(
@@ -72,19 +73,23 @@ fun MissionsView(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                //.verticalScroll(rememberScrollState())
                 .padding(12.dp, 12.dp, 12.dp, 25.dp)
                 .weight(1f, false)
         ) {
             var text by remember { mutableStateOf("") }
+
+            searchedMissions = searchedMissions.filter { it.name.contains(text, true) }
+            val generalMissions = searchedMissions.filter { it.visibility == Mission.Visibility.PUBLIC }
+            val runningMissions = searchedMissions.filter { it.visibility == Mission.Visibility.PUBLIC }
+            val ownMissions = searchedMissions.filter { it.visibility == Mission.Visibility.PUBLIC && it.designerId == uid }
 
             SegmentedControl (
                 listOf("General", "Running", "Own"),
                 privacySwitchState
             ) { privacySwitchState = it }
 
+
             OutlinedTextField(
-                modifier = Modifier.fillMaxWidth(),
                 value = text,
                 onValueChange = { text = it },
                 leadingIcon = {
@@ -93,72 +98,195 @@ fun MissionsView(
                         contentDescription = null
                     )
                 },
+                /*trailingIcon = {
+                    if (!typeSwitchState) {
+                        IconButton(
+                            onClick = { showMenu = !showMenu }
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_filter_alt_24),
+                                contentDescription = null
+                            )
+                        }
+                    }
+                },*/
+                label = { Text("Kereső") },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth()
             )
 
             LazyColumn(){
                 if (privacySwitchState == 0) {
-                    items(generalMissions) {
-                        mission -> OutlinedTextField(
-                        modifier = Modifier.fillMaxWidth(),
-                        value = mission.name,
-                        onValueChange = {mission.name = it},
-                        textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center)
-                        )
+                    items(generalMissions) {mission ->
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(1.dp)
+                                .clickable(onClick = {
+                                    onItemClicked(mission)
+                                }),
+                            shape = RoundedCornerShape(20),
+                            elevation = 1.dp,
+                            backgroundColor = Color.LightGray
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.padding(vertical = 5.dp)
+                            ) {
+                                Column(
+                                    modifier = Modifier
+                                        .padding(horizontal = 10.dp, vertical = 5.dp)
+                                        .width(90.dp)
+                                ) {
+                                    Text(
+                                        text = mission.name, color = Color.Black, fontSize = 24.sp, maxLines = 1
+                                    )
+                                }
+                            }
+                        }
                     }
 
                 } else if (privacySwitchState == 1) {
-                    items(runningMissions) {
-                            mission -> OutlinedTextField(
-                        modifier = Modifier.fillMaxWidth(),
-                        value = mission.name,
-                        onValueChange = {mission.name = it},
-                        textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center)
-                        )
+                    items(runningMissions) {mission ->
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(1.dp)
+                                .clickable(onClick = {
+                                    //onSessionClicked(Session())
+                                }),
+                            shape = RoundedCornerShape(20),
+                            elevation = 1.dp,
+                            backgroundColor = Color.LightGray
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.padding(vertical = 5.dp)
+                            ) {
+                                Column(
+                                    modifier = Modifier
+                                        .padding(horizontal = 10.dp, vertical = 5.dp)
+                                        .width(90.dp)
+                                ) {
+                                    Text(
+                                        text = mission.name, color = Color.Black, fontSize = 24.sp, maxLines = 1
+                                    )
+                                }
+                            }
+                        }
                     }
                 } else {
-                    items(ownMissions) {
-                            mission -> OutlinedTextField(
-                        modifier = Modifier.fillMaxWidth(),
-                        value = mission.name,
-                        onValueChange = {mission.name = it},
-                        textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center),
-                        trailingIcon = {
-                            Icon(
-                                Icons.Filled.BorderColor,
-                                contentDescription = null,
-                                modifier = Modifier.clickable { onModifyOwnMissionClicked() }
-                            )
+                    items(ownMissions) {mission ->
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(1.dp)
+                                .clickable(onClick = {
+                                    onItemClicked(mission)
+                                }),
+                            shape = RoundedCornerShape(20),
+                            elevation = 1.dp,
+                            backgroundColor = Color.LightGray
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                modifier = Modifier.padding(vertical = 5.dp)
+                            ) {
+                                Column(
+                                    modifier = Modifier
+                                        .padding(horizontal = 10.dp, vertical = 5.dp)
+                                ) {
+                                    Text(
+                                        text = mission.name, color = Color.Black, fontSize = 24.sp, maxLines = 1
+                                    )
+                                }
+                                Row(
+                                    horizontalArrangement = Arrangement.End
+                                ) {
+                                    if(mission.state == Mission.State.DESIGNING)
+                                        IconButton(
+                                            onClick = {onModifyMission(mission)}
+                                        ) {
+                                            Icon(imageVector  = Icons.Filled.Edit, "")
+                                        }
+                                    IconButton(
+                                        onClick = {onDeleteMission(mission)}
+                                    ) {
+                                        Icon(imageVector  = Icons.Filled.Delete, "")
+                                    }
+                                }
+                            }
                         }
-                        )
                     }
                 }
             }
         }
         if (privacySwitchState == 0) {
             Button(
-                onClick = { onJoinWithCodeButtonClicked() },
+                onClick = {
+                    showDialog = showDialog.not()
+                },
                 modifier = Modifier.align(alignment = Alignment.CenterHorizontally)
             ) {
                 Text(text = "Join with code")
             }
         } else if (privacySwitchState == 2) {
             FloatingActionButton(
-                onClick = { onAddOwnMissionFloatingActionButtonClicked() },
+                onClick = { onAddMission() },
                 modifier = Modifier
                     .align(Alignment.End)
                     .padding(all = 16.dp)) {
-                Icon(Icons.Filled.Add, "Create new Own Mission")
+                Icon(Icons.Filled.Add, "Create Mission")
             }
         }
     }
-}
 
-@Preview
-@Composable
-fun MissionViewPreview() {
-    MissionsView (
-        onJoinWithCodeButtonClicked = {},
-        onModifyOwnMissionClicked = {},
-        onAddOwnMissionFloatingActionButtonClicked = {}
-    )
+
+    if (showDialog) {
+        Dialog(onDismissRequest = { showDialog = false }) {
+            var text by remember { mutableStateOf("") }
+
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp)
+                    .padding(16.dp),
+                shape = RoundedCornerShape(16.dp),
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    OutlinedTextField(
+                        value = text,
+                        onValueChange = { text = it },
+                        label = { Text("Code") },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
+                    ) {
+                        TextButton(
+                            onClick = { showDialog = false },
+                            modifier = Modifier.padding(8.dp),
+                        ) {
+                            Text("Dismiss")
+                        }
+                        TextButton(
+                            onClick = { onJoinWithCode(text) },
+                            modifier = Modifier.padding(8.dp),
+                        ) {
+                            Text("Confirm")
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

@@ -2,22 +2,8 @@ package hu.bme.aut.szoftarch.kozkincsker
 
 import android.os.Bundle
 import co.zsmb.rainbowcake.navigation.SimpleNavActivity
-import co.zsmb.rainbowcake.navigation.navigator
 import dagger.hilt.android.AndroidEntryPoint
-import hu.bme.aut.szoftarch.kozkincsker.data.enums.TaskType
-import hu.bme.aut.szoftarch.kozkincsker.data.model.Feedback
-import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
-import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
-import hu.bme.aut.szoftarch.kozkincsker.data.model.Task
-import hu.bme.aut.szoftarch.kozkincsker.data.model.User
 import hu.bme.aut.szoftarch.kozkincsker.ui.login.LoginFragment
-import hu.bme.aut.szoftarch.kozkincsker.ui.main.MainFragment
-import hu.bme.aut.szoftarch.kozkincsker.ui.mission_start.MissionStartFragment
-import hu.bme.aut.szoftarch.kozkincsker.ui.new_mission.NewMissionFragment
-import hu.bme.aut.szoftarch.kozkincsker.ui.new_task.NewTaskFragment
-import hu.bme.aut.szoftarch.kozkincsker.ui.rating.RatingFragment
-import hu.bme.aut.szoftarch.kozkincsker.ui.session_moderator.SessionModeratorFragment
-import hu.bme.aut.szoftarch.kozkincsker.views.NewTask
 
 @AndroidEntryPoint
 class MainActivity : SimpleNavActivity() {
@@ -25,25 +11,17 @@ class MainActivity : SimpleNavActivity() {
         super.onCreate(savedInstanceState)
 
         if (savedInstanceState == null) {
-            //navigator.add(LoginFragment())
+            navigator.add(LoginFragment())
             //navigator.add(MainFragment())
             //navigator.add(NewMissionFragment.newInstance())
-            //val session = Session()
-            //session.missionId = "OM41UfBlMQiHsG9qbV8u"
-            /*navigator.add(RatingFragment.newInstance(session))*/
-            navigator.add(MainFragment())
-            /*var designer_teszt = User()
+            /*val session = Session()
+            session.missionId = "OM41UfBlMQiHsG9qbV8u"
+            navigator.add(RatingFragment.newInstance(session))*/
+            /*navigator.add(MainFragment())
+            var designer_teszt = User()
             designer_teszt.id = "HvMMIu5TGso7A1k7rqOc"
             designer_teszt.name = "reka_teszt"
             navigator.add(NewMissionFragment.newInstance(designer_teszt))*/
-            val session = Session(
-                id = "2jD6dz6GkfmgQPXZ17Lu",
-                accessCode = "123456",
-                name="okok",
-                missionId = "OM41UfBlMQiHsG9qbV8u",
-                playerIds = mutableListOf("DTwjwTSYDsWxlrEe65jn", "rQqkHjGRxkzsqRzBUz5n")
-            )
-            navigator.add(SessionModeratorFragment.newInstance(session))
             /*val mission = Mission()
             mission.name = "Legjobb Mission"
             mission.description = "WOW Legjobb"
@@ -65,6 +43,9 @@ class MainActivity : SimpleNavActivity() {
             feedback3.missionId = mission.id
             mission.feedbackIds = mutableListOf(feedback,feedback2,feedback3)
             navigator.add(MissionStartFragment.newInstance(mission))*/
+            //navigator.add(AccountFragment())
+            //navigator.add(MissionsFragment())
+            //navigator.add(MainFragment())
         }
     }
 }

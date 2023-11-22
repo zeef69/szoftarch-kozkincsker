@@ -5,8 +5,7 @@ import co.zsmb.rainbowcake.base.RainbowCakeViewModel
 class MainViewModel : RainbowCakeViewModel<MainViewState>(
     Loading
 ) {
-
-    fun load() = execute {
+    fun setNav() = execute {
         viewState = MainContent(loading = true)
         viewState = MainContent(loading = false)
     }

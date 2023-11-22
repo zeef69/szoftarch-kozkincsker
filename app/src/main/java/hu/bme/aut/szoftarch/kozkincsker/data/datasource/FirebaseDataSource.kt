@@ -112,7 +112,7 @@ class FirebaseDataSource @Inject constructor() {
 
     suspend fun getSessionsFromMission(mission: Mission): List<Session>{
         val sessions = mutableListOf<Session>()
-        database.collection("sessions").whereEqualTo("mission", mission).get()
+        database.collection("sessions").whereEqualTo("mission", mission.id).get()
             .addOnSuccessListener { documents ->
                 for(document in documents)
                     sessions.add(document.toObject())
@@ -196,5 +196,52 @@ class FirebaseDataSource @Inject constructor() {
 
     suspend fun setTaskSolution(solution: TaskSolution) {
 
+    }
+
+    suspend fun joinWithCode(code: String): QuerySnapshot {
+        return database.collection("sessions").whereEqualTo("accessCode", code).limit(1).get()
+            .addOnSuccessListener { }
+            .addOnFailureListener { exception ->
+                Log.d("failure", "Error getting documents: ", exception)
+            }
+            .await()
+    }
+
+    suspend fun addPlayerToSession(session: Session?) {
+        if (uid != null && session != null) {
+            val addUser : HashMap<String, Any> = HashMap()
+            addUser["playerIds"] = FieldValue.arrayUnion(uid)
+
+            database.collection("sessions").document(session.id).update(addUser)
+                .addOnSuccessListener { documentReference ->
+                    Log.d("success", "DocumentSnapshot written with ID: $documentReference.")
+                }
+                .addOnFailureListener { exception ->
+                    Log.d("failure", "Error getting documents: ", exception)
+                }.await()
+        }
+    }
+
+    suspend fun getCurrentUser(): QuerySnapshot {
+        return database.collection("users").whereEqualTo("uid", uid).limit(1).get()
+            .addOnSuccessListener { }
+            .addOnFailureListener { exception ->
+                Log.d("failure", "Error getting documents: ", exception)
+            }
+            .await()
+    }
+
+    fun addUser(uid: String?, name: String) {
+        val newUser = User(name = name)
+        if(uid != null)
+            newUser.uid = uid
+
+        database.collection("users").add(newUser)
+            .addOnSuccessListener { documentReference ->
+                Log.d("success", "DocumentSnapshot written with ID: $documentReference.")
+            }
+            .addOnFailureListener { exception ->
+                Log.d("failure", "Error getting documents: ", exception)
+            }
     }
 }

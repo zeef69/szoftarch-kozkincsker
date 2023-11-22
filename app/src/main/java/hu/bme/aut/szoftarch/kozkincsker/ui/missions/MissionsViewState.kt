@@ -8,5 +8,6 @@ data object Loading : MissionsViewState()
 
 data class MissionsContent(
     var isListed: Boolean = false,
-    var missions: List<Mission> = ArrayList()
+    var missions: List<Mission> = emptyList(),
+    var uid: String? = ""
 ) : MissionsViewState()

@@ -7,6 +7,7 @@ import kotlinx.parcelize.Parcelize
 data class User(
     @DocumentId
     var id: String = "",
+    var uid: String = "",
     var name: String = "",
     var score: Int = 0,
     var actualLanguage: String = "English",
