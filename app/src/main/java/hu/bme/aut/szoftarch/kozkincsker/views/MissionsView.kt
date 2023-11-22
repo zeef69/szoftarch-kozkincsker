@@ -81,7 +81,7 @@ fun MissionsView(
             searchedMissions = searchedMissions.filter { it.name.contains(text, true) }
             val generalMissions = searchedMissions.filter { it.visibility == Mission.Visibility.PUBLIC }
             val runningMissions = searchedMissions.filter { it.visibility == Mission.Visibility.PUBLIC }
-            val ownMissions = searchedMissions.filter { it.visibility == Mission.Visibility.PUBLIC && it.designerId == uid }
+            val ownMissions = searchedMissions.filter { it.designerId == uid }
 
             SegmentedControl (
                 listOf("General", "Running", "Own"),

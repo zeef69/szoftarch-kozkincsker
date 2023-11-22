@@ -11,10 +11,9 @@ import co.zsmb.rainbowcake.hilt.getViewModelFromFactory
 import co.zsmb.rainbowcake.navigation.extensions.applyArgs
 import co.zsmb.rainbowcake.navigation.navigator
 import dagger.hilt.android.AndroidEntryPoint
-import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Task
-import hu.bme.aut.szoftarch.kozkincsker.ui.mission_start.MissionStartFragment
+import hu.bme.aut.szoftarch.kozkincsker.ui.task.TaskFragment
 import hu.bme.aut.szoftarch.kozkincsker.views.Session
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.FullScreenLoading
 import hu.bme.aut.szoftarch.kozkincsker.views.theme.AppUiTheme1
@@ -57,14 +56,12 @@ class SessionPlayerFragment : RainbowCakeFragment<SessionPlayerViewState, Sessio
                         onBackClick = { navigator?.pop() },
                         onTaskClicked = ::onTaskClicked
                     )
-
-                    else -> {}
                 }.exhaustive
             }
         }
     }
 
     private fun onTaskClicked(task : Task) {
-
+        navigator?.add(TaskFragment.newInstance(task))
     }
 }

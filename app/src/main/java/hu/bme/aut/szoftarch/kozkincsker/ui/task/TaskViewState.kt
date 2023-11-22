@@ -8,5 +8,5 @@ object Loading : TaskViewState()
 
 data class TaskContent(
     val task: Task,
-    val loading : Boolean = false
+    val loading : Boolean = true
 ) : TaskViewState()

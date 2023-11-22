@@ -13,6 +13,8 @@ import co.zsmb.rainbowcake.navigation.navigator
 import dagger.hilt.android.AndroidEntryPoint
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
+import hu.bme.aut.szoftarch.kozkincsker.ui.session_moderator.SessionModeratorFragment
+import hu.bme.aut.szoftarch.kozkincsker.ui.session_player.SessionPlayerFragment
 import hu.bme.aut.szoftarch.kozkincsker.views.Mission
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.FullScreenLoading
 import hu.bme.aut.szoftarch.kozkincsker.views.theme.AppUiTheme1
@@ -59,6 +61,11 @@ class MissionStartFragment : RainbowCakeFragment<MissionViewState, MissionStartV
     }
 
     private fun onStartSession(session: Session, asModerator: Boolean) {
+        //TODO
         viewModel.onStartSession(session, asModerator)
+        if(asModerator)
+            navigator?.add(SessionModeratorFragment.newInstance(session))
+        else
+            navigator?.add(SessionPlayerFragment.newInstance(session))
     }
 }

@@ -12,5 +12,5 @@ data class SessionPlayerContent(
     var session : Session,
     var mission : Mission,
     var designer : User,
-    val loading : Boolean = false
+    val loading : Boolean = true
 ) : SessionPlayerViewState()

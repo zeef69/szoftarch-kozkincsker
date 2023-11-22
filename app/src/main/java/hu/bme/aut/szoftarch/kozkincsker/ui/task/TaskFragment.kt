@@ -9,9 +9,9 @@ import co.zsmb.rainbowcake.base.RainbowCakeFragment
 import co.zsmb.rainbowcake.extensions.exhaustive
 import co.zsmb.rainbowcake.hilt.getViewModelFromFactory
 import co.zsmb.rainbowcake.navigation.extensions.applyArgs
+import co.zsmb.rainbowcake.navigation.navigator
 import dagger.hilt.android.AndroidEntryPoint
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Task
-import hu.bme.aut.szoftarch.kozkincsker.data.model.TaskSolution
 import hu.bme.aut.szoftarch.kozkincsker.views.Task
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.FullScreenLoading
 import hu.bme.aut.szoftarch.kozkincsker.views.theme.AppUiTheme1
@@ -49,9 +49,9 @@ class TaskFragment : RainbowCakeFragment<TaskViewState, TaskViewModel>(){
                     is Loading -> FullScreenLoading()
                     is TaskContent -> Task(
                         task = viewState.task,
-                        onSaveClicked = ::onSaveClicked
+                        onSaveClicked = ::onSaveClicked,
+                        onBackClick = { navigator?.pop() }
                     )
-                    else -> {}
                 }.exhaustive
             }
         }

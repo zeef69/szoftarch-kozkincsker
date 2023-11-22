@@ -16,6 +16,7 @@ class SessionPlayerViewModel @Inject constructor(
             session = session,
             mission = mission,
             designer = designer,
-            loading = false)
+            loading = false
+        )
     }
 }

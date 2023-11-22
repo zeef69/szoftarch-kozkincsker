@@ -148,6 +148,7 @@ class FirebaseDataSource @Inject constructor() {
     }
 
     suspend fun onStartSession(session: Session, asModerator: Boolean) {
+        //TODO add player list, return
         if(asModerator && uid != null) {
             session.moderator = uid
         }
@@ -208,6 +209,7 @@ class FirebaseDataSource @Inject constructor() {
     }
 
     suspend fun addPlayerToSession(session: Session?) {
+        //TODO uid
         if (uid != null && session != null) {
             val addUser : HashMap<String, Any> = HashMap()
             addUser["playerIds"] = FieldValue.arrayUnion(uid)

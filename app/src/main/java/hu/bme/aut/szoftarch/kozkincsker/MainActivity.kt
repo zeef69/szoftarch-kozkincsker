@@ -4,6 +4,7 @@ import android.os.Bundle
 import co.zsmb.rainbowcake.navigation.SimpleNavActivity
 import dagger.hilt.android.AndroidEntryPoint
 import hu.bme.aut.szoftarch.kozkincsker.ui.login.LoginFragment
+import hu.bme.aut.szoftarch.kozkincsker.ui.main.MainFragment
 
 @AndroidEntryPoint
 class MainActivity : SimpleNavActivity() {
@@ -11,8 +12,8 @@ class MainActivity : SimpleNavActivity() {
         super.onCreate(savedInstanceState)
 
         if (savedInstanceState == null) {
-            navigator.add(LoginFragment())
-            //navigator.add(MainFragment())
+            //navigator.add(LoginFragment())
+            navigator.add(MainFragment())
             //navigator.add(NewMissionFragment.newInstance())
             /*val session = Session()
             session.missionId = "OM41UfBlMQiHsG9qbV8u"
