@@ -81,6 +81,7 @@ class NewTaskFragment : RainbowCakeFragment<NewTaskViewState,NewTaskViewModel>()
     }
 
     private fun onSaveNewTask(task: Task) {
+        task.levelId=level.id
         if(!level.taskList.contains(task))
             level.taskList.add(task)
         if(!originalMission.levelList.contains(level)) originalMission.levelList.add(level)

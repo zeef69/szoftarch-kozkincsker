@@ -27,6 +27,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
@@ -118,6 +119,12 @@ fun NewTask(
     var answerDInput by remember { mutableStateOf("") }
     var answerEInput by remember { mutableStateOf("") }
     var answerFInput by remember { mutableStateOf("") }
+    //var choiceAnswerInputList = arrayOf<MutableState<String>>()
+    /*for (i in 0..<6){
+        choiceAnswerInputList[i] = remember { mutableStateOf("") }
+    }*/
+    //listOf(answerAInput, answerBInput, answerCInput)
+
     /**
      * Choice answers by designer
      * */
@@ -184,7 +191,6 @@ fun NewTask(
                     .fillMaxSize()
                     .padding(12.dp, 12.dp, 12.dp, 25.dp)
                     .weight(1f, false)
-
             ) {
                 SegmentedControl (
                     listOf("Automatic", "Human"),
@@ -743,13 +749,33 @@ fun NewTask(
             Button(
                 onClick = {
                     task.title = titleInput
+                    task.description = descriptionInput
                     if(privacySwitchState == 0) {
                         task.taskType = typeList[typeSelectedIndexAutomatic]
                     } else if(privacySwitchState == 1) {
                         task.taskType = typeList[typeSelectedIndexHuman]
                     }
-                    task.description = descriptionInput
-                    task.answers = answerAInput
+                    /**
+                     * Answers save ->
+                     * depends on the taskType
+                     * */
+                    var answersStringList=""
+                    if(privacySwitchState == 0 && typeList[typeSelectedIndexAutomatic]==TaskType.ListedAnswer) {
+                        for(i in 0..<answerNumberList[answersChoiceSelectedIndex].toInt()){
+
+                        }
+                    } else if(privacySwitchState == 1) {
+                        task.taskType = typeList[typeSelectedIndexHuman]
+                    }
+                    task.answers = when(task.taskType){
+                        TaskType.ListedAnswer -> ""
+                        TaskType.NumberAnswer -> ""
+                        TaskType.DateAnswer -> ""
+                        TaskType.MapAnswer -> ""
+                        TaskType.OrderAnswer -> ""
+                        TaskType.TextAnswer -> ""
+                        TaskType.ImageAnswer -> ""
+                    }
                     task.score = if(scoreInput!="") scoreInput.toInt() else 0
                     onSaveNewClick(task)
                 },
@@ -770,7 +796,7 @@ fun NewTask(
 fun NewTaskPreview() {
     val task1 = Task()
     task1.title = "Task1"
-    task1.taskType= TaskType.MapAnswer
+    task1.taskType= TaskType.ListedAnswer
     NewTask(
         task = task1,
         onSaveNewClick = {},
