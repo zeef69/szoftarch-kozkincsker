@@ -260,7 +260,7 @@ fun NewMission(
                     mission.levelList = levels
                     mission.visibility = if(privacySwitchState==0) Mission.Visibility.PRIVATE else Mission.Visibility.PUBLIC
                     val level = Level()
-                    levels.add(level)
+                    //levels.add(level)
                     onNewTask(mission, level)
                 },
                 modifier = Modifier

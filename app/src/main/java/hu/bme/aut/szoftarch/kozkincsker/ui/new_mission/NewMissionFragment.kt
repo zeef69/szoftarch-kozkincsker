@@ -99,7 +99,7 @@ class NewMissionFragment : RainbowCakeFragment<NewMissionViewState, NewMissionVi
         var newTask = Task()
         //level.taskList.add(newTask)
         //navigator?.add(NewTaskFragment.newInstance(mission,newTask))
-        navigator?.replace(NewTaskFragment.newInstance(designer, mission, level, newTask))
+        navigator?.add(NewTaskFragment.newInstance(designer, mission, level, newTask))
         //newTask.title = "task"+level.taskList.size.toString()
 
     }
@@ -107,7 +107,7 @@ class NewMissionFragment : RainbowCakeFragment<NewMissionViewState, NewMissionVi
     private fun onTaskClicked(mission:Mission, level: Level, task: Task){
         //level.taskList.add(newTask)
         //navigator?.add(NewTaskFragment.newInstance(mission,newTask))
-        navigator?.replace(NewTaskFragment.newInstance(designer, mission, level, task))
+        navigator?.add(NewTaskFragment.newInstance(designer, mission, level, task))
         //newTask.title = "task"+level.taskList.size.toString()
 
     }

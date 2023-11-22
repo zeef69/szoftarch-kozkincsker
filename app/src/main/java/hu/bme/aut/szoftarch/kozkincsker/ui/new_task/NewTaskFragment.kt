@@ -71,7 +71,7 @@ class NewTaskFragment : RainbowCakeFragment<NewTaskViewState,NewTaskViewModel>()
                                 task = it,
                                 onSaveNewClick = ::onSaveNewTask,
                                 onDeleteClick = ::onDeleteTask,
-                                onBackClick = ::onBackClick
+                                onBackClick = { navigator?.pop() }
                             )
                         }
                     }
@@ -81,27 +81,25 @@ class NewTaskFragment : RainbowCakeFragment<NewTaskViewState,NewTaskViewModel>()
     }
 
     private fun onSaveNewTask(task: Task) {
-        //viewModel.onSave()
         if(!level.taskList.contains(task))
             level.taskList.add(task)
-        navigator?.replace(NewMissionFragment.newInstance(designer, originalMission))
+        if(!originalMission.levelList.contains(level)) originalMission.levelList.add(level)
+        navigator?.pop()
+        //navigator?.replace(NewMissionFragment.newInstance(designer, originalMission))
     }
 
-    private fun onEditTask(task: Task) {
-        //viewModel.onSave()
-        navigator?.replace(NewMissionFragment.newInstance(designer, originalMission))
-    }
 
     private fun onDeleteTask(task: Task) {
         level.taskList.remove(task)
         if(level.taskList.size==0) originalMission.levelList.remove(level)
-        navigator?.replace(NewMissionFragment.newInstance(designer, originalMission))
-        //viewModel.onDelete()
+        navigator?.pop()
+        //navigator?.replace(NewMissionFragment.newInstance(designer, originalMission))
         //navigator?.pop()
     }
 
     private fun onBackClick(){
         if(level.taskList.size==0) originalMission.levelList.remove(level)
-        navigator?.replace(NewMissionFragment.newInstance(designer, originalMission))
+        navigator?.pop()
+        //navigator?.replace(NewMissionFragment.newInstance(designer, originalMission))
     }
 }
