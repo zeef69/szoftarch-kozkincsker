@@ -3,6 +3,7 @@ package hu.bme.aut.szoftarch.kozkincsker.ui.session_moderator
 import co.zsmb.rainbowcake.base.RainbowCakeViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
+import hu.bme.aut.szoftarch.kozkincsker.data.model.User
 import javax.inject.Inject
 
 @HiltViewModel
@@ -13,13 +14,14 @@ class SessionModeratorViewModel @Inject constructor(
 
         val mission = sessionModeratorPresenter.getMissionFromSession(session)
         val designer = sessionModeratorPresenter.getDesignerFromMission(mission)
-        val players = sessionModeratorPresenter.getPlayersFromSession(session)
+        val players = sessionModeratorPresenter.getPlayersFromSession(session).toMutableList()
 
         viewState = SessionModeratorContent(
             session = session,
             mission = mission,
             designer = designer,
             players = players,
-            loading = false)
+            isLoading = false
+        )
     }
 }

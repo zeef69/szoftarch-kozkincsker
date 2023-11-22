@@ -17,7 +17,7 @@ class SessionModeratorPresenter @Inject constructor(
         return sessionInteractor.getDesignerFromMission(mission)
     }
 
-    suspend fun getPlayersFromSession(session: Session): MutableList<User> {
-        return sessionInteractor.getPlayersFromSession(session).toMutableList()
+    suspend fun getPlayersFromSession(session: Session): List<User> {
+        return sessionInteractor.getPlayersFromSession(session)
     }
 }

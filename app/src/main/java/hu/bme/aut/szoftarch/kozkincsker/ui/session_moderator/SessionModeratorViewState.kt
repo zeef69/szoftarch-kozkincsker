@@ -12,5 +12,5 @@ data class SessionModeratorContent(
     var mission : Mission,
     var designer : User,
     var players : MutableList<User>,
-    val loading : Boolean = false
+    val isLoading : Boolean = true
 ) : SessionModeratorViewState()

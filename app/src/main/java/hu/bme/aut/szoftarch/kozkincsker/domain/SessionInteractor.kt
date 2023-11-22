@@ -24,6 +24,6 @@ class SessionInteractor @Inject constructor(
     }
 
     suspend fun getPlayersFromSession(session: Session): List<User> {
-        return firebaseDataSource.getUsersFromIds(session.playerIds)
+        return firebaseDataSource.getUsersFromSession(session.id)
     }
 }

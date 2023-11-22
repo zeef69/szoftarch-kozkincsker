@@ -27,11 +27,14 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Feedback
+import hu.bme.aut.szoftarch.kozkincsker.data.model.Level
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
+import hu.bme.aut.szoftarch.kozkincsker.data.model.Task
 import hu.bme.aut.szoftarch.kozkincsker.data.model.User
 
 @Composable
@@ -122,11 +125,63 @@ fun ModeratorPlayerList(
                             text = item.name,
                             color = Color.Black,
                             fontSize = 18.sp,
-                            modifier = Modifier.padding(all = 2.dp).weight(0.6f, true)
+                            modifier = Modifier
+                                .padding(all = 2.dp)
+                                .weight(0.6f, true)
                         )
                     }
                 }
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun ModeratorPlayerListPreview(){
+    val designer = User(
+        id="user_id_12345",
+        name="reka_teszt"
+    )
+    val mission = Mission(
+        id = "mission_id_9876",
+        designerId = designer.id,
+    )
+    val player1 = User(
+        id="player1_id_125",
+        name="player1_teszt"
+    )
+
+    val player2 = User(
+        id="player2_id_45",
+        name="player2_teszt"
+    )
+    val players = mutableListOf(player1, player2)
+    val session = Session(
+        id = "sessin_id_9876",
+        missionId = "mission_id_9876",
+        playerIds = mutableListOf(player1.id, player2.id)
+    )
+    val level1 = Level()
+    val level2 = Level()
+    val level3 = Level()
+    val task1 = Task()
+    val task2 = Task()
+    val task3 = Task()
+    task1.title = "Task1"
+    task2.title = "Task2"
+    task3.title = "Task3"
+    level1.taskList = mutableListOf(task1, task2)
+    level2.taskList = mutableListOf(task1)
+    level3.taskList = mutableListOf(task1, task2, task3)
+    mission.levelList = mutableListOf(level1, level2, level3)
+    fun onUserClicked(u:User){}
+    ModeratorPlayerList(
+        session = session,
+        mission = mission,
+        designer = designer,
+        players = players,
+        onUserClicked = ::onUserClicked,
+        onBackClick = {}
+    )
 }
