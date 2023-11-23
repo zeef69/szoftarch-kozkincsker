@@ -6,11 +6,11 @@ import hu.bme.aut.szoftarch.kozkincsker.data.model.User
 
 sealed class SessionModeratorViewState
 
-object Loading : SessionModeratorViewState()
+data object Loading : SessionModeratorViewState()
 data class SessionModeratorContent(
-    var session : Session,
-    var mission : Mission,
-    var designer : User?,
-    var players : MutableList<User>,
-    val isLoading : Boolean = true
+    var session: Session? = null,
+    var mission: Mission? = null,
+    var designer: User? = null,
+    var players: List<User> = emptyList(),
+    val isLoading: Boolean = false
 ) : SessionModeratorViewState()
