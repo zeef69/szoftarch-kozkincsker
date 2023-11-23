@@ -47,7 +47,8 @@ import hu.bme.aut.szoftarch.kozkincsker.views.helpers.SegmentedControl
 @Composable
 fun MissionsView(
     missions: List<Mission>,
-    uid: String?,
+    sessions: List<Session>,
+    id: String?,
     onJoinWithCode: (String) -> Unit,
     onModifyMission: (Mission) -> Unit,
     onDeleteMission: (Mission) -> Unit,
@@ -57,7 +58,6 @@ fun MissionsView(
 ) {
     var privacySwitchState by remember { mutableIntStateOf(0) }
     var showDialog by remember { mutableStateOf(false) }
-
     var searchedMissions = missions
 
     Column(
@@ -80,8 +80,8 @@ fun MissionsView(
 
             searchedMissions = searchedMissions.filter { it.name.contains(text, true) }
             val generalMissions = searchedMissions.filter { it.visibility == Mission.Visibility.PUBLIC }
-            val runningMissions = searchedMissions.filter { it.visibility == Mission.Visibility.PUBLIC }
-            val ownMissions = searchedMissions.filter { it.designerId == uid }
+            val runningSessions = sessions.filter { it.name.contains(text, true) }
+            val ownMissions = searchedMissions.filter { it.designerId == id }
 
             SegmentedControl (
                 listOf("General", "Running", "Own"),
@@ -147,7 +147,7 @@ fun MissionsView(
                     }
 
                 } else if (privacySwitchState == 1) {
-                    items(runningMissions) {mission ->
+                    items(runningSessions) {session ->
                         Card(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -169,7 +169,7 @@ fun MissionsView(
                                         .width(90.dp)
                                 ) {
                                     Text(
-                                        text = mission.name, color = Color.Black, fontSize = 24.sp, maxLines = 1
+                                        text = session.name, color = Color.Black, fontSize = 24.sp, maxLines = 1
                                     )
                                 }
                             }

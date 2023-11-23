@@ -10,7 +10,9 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class MissionsPresenter @Inject constructor(
-    private val missionInteractor: MissionInteractor, private val authInteractor: AuthInteractor, private val sessionInteractor: SessionInteractor
+    private val missionInteractor: MissionInteractor,
+    private val authInteractor: AuthInteractor,
+    private val sessionInteractor: SessionInteractor
 ) {
     suspend fun addListener(): Flow<List<Mission>> = withIOContext {
         missionInteractor.getMissionsListener()
@@ -20,11 +22,19 @@ class MissionsPresenter @Inject constructor(
         authInteractor.getCurrentUser()
     }
 
+    suspend fun getId(): String? = withIOContext {
+        authInteractor.getCurrentUserId()
+    }
+
     suspend fun deleteMission(mission: Mission) = withIOContext {
         missionInteractor.deleteMission(mission)
     }
 
     suspend fun joinWithCode(code: String): Session? = withIOContext {
         return@withIOContext sessionInteractor.joinWithCode(code)
+    }
+
+    suspend fun getSessionsFromUser(userId: String): List<Session> = withIOContext {
+        sessionInteractor.getSessionsFromUser(userId)
     }
 }

@@ -45,7 +45,8 @@ class MissionsFragment : RainbowCakeFragment<MissionsViewState, MissionsViewMode
                     is Loading -> FullScreenLoading()
                     is MissionsContent -> MissionsView(
                         missions = viewState.missions,
-                        uid = viewState.uid,
+                        sessions = viewState.sessions,
+                        id = viewState.id,
                         onJoinWithCode = ::onJoinWithCode,
                         onModifyMission = ::onModifyMission,
                         onDeleteMission = ::onDeleteMission,

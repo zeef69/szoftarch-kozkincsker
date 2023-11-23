@@ -10,17 +10,21 @@ import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
-class MissionsViewModel @Inject constructor(private val missionStartPresenter: MissionsPresenter) : RainbowCakeViewModel<MissionsViewState>(
+class MissionsViewModel @Inject constructor(
+    private val missionsPresenter: MissionsPresenter
+) : RainbowCakeViewModel<MissionsViewState>(
     Loading
 ) {
     fun addListener() = execute {
-        val uid = missionStartPresenter.getUid()
+        val id = missionsPresenter.getId()
+        val sessions = missionsPresenter.getSessionsFromUser(id!!)
         viewModelScope.launch {
-            missionStartPresenter.addListener().collect {
+            missionsPresenter.addListener().collect {
                 viewState = MissionsContent(isListed = true)
                 viewState = MissionsContent(
                     missions = it,
-                    uid = uid,
+                    sessions = sessions,
+                    id = id,
                     isListed = false
                 )
             }
@@ -28,10 +32,10 @@ class MissionsViewModel @Inject constructor(private val missionStartPresenter: M
     }
 
     fun deleteMission(mission: Mission) = execute {
-        missionStartPresenter.deleteMission(mission)
+        missionsPresenter.deleteMission(mission)
     }
 
     fun joinWithCode(code: String): Session? = runBlocking {
-        return@runBlocking missionStartPresenter.joinWithCode(code)
+        return@runBlocking missionsPresenter.joinWithCode(code)
     }
 }

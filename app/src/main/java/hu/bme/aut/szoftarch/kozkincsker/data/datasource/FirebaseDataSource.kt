@@ -9,6 +9,7 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObject
+import com.google.firebase.firestore.toObjects
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Feedback
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
@@ -124,6 +125,20 @@ class FirebaseDataSource @Inject constructor() {
         return sessions
     }
 
+    suspend fun getSessionsFromUserId(id: String): List<Session>{
+        val sessions = mutableListOf<Session>()
+        database.collection("sessions").whereArrayContains("playerIds", id).get()
+            .addOnSuccessListener { documents ->
+                for(document in documents)
+                    sessions.add(document.toObject())
+            }
+            .addOnFailureListener { exception ->
+                Log.d("failure", "Error getting documents: ", exception)
+            }
+            .await()
+        return sessions
+    }
+
     suspend fun getUsersFromSessionListener(sessionId: String): Flow<List<User>> = callbackFlow {
         val listenerRegistration = database.collection("users").whereArrayContains("currentSessionIds", sessionId)
             .addSnapshotListener { querySnapshot: QuerySnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
@@ -204,6 +219,19 @@ class FirebaseDataSource @Inject constructor() {
         else User()
     }
 
+    suspend fun getUserFromUId(): User {
+        var user: User? = null
+        database.collection("users").whereEqualTo("uid", uid).limit(1).get()
+            .addOnSuccessListener { documents ->
+                user = documents.toObjects<User>()[0]
+            }
+            .addOnFailureListener { exception ->
+                Log.d("failure", "Error getting User: ", exception)
+            }
+            .await()
+        return if(user != null) user as User
+        else User()
+    }
     suspend fun setTaskSolution(solution: TaskSolution) {
 
     }
