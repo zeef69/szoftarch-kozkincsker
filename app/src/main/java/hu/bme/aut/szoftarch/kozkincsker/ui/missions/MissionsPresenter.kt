@@ -16,12 +16,8 @@ class MissionsPresenter @Inject constructor(
         missionInteractor.getMissionsListener()
     }
 
-    suspend fun getUid(): String? = withIOContext {
-        return@withIOContext userInteractor.getCurrentUser()?.id
-    }
-
     suspend fun getId(): String? = withIOContext {
-        authInteractor.getCurrentUserId()
+        return@withIOContext userInteractor.getCurrentUser()?.id
     }
 
     suspend fun deleteMission(mission: Mission) = withIOContext {

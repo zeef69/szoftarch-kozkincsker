@@ -97,7 +97,7 @@ fun ModeratorPlayerList(
                 Text(
                     buildAnnotatedString {
                         withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                            append(designer!!.name)
+                            append(designer?.name)
                         }
                     },
                     textAlign = TextAlign.Start,
@@ -145,6 +145,8 @@ fun ModeratorPlayerListPreview(){
     val mission = Mission(
         id = "mission_id_9876",
         designerId = designer.id,
+        name = "View teszt mission",
+        description = "Ez egy vies teszt leírása. A nézet teszteléséhez és organikusabbá tételéhez szükséges. Nem baj ha nagyon hosszú, a lényeg, hogy lehessen látni, hogy jelenik meg hosszan."
     )
     val player1 = User(
         id="player1_id_125",

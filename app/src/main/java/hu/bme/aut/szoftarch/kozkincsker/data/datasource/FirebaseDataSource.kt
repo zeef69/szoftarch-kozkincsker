@@ -10,7 +10,6 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObject
-import com.google.firebase.firestore.toObjects
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Feedback
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
@@ -221,19 +220,6 @@ class FirebaseDataSource @Inject constructor() {
         else null
     }
 
-    suspend fun getUserFromUId(): User {
-        var user: User? = null
-        database.collection("users").whereEqualTo("uid", uid).limit(1).get()
-            .addOnSuccessListener { documents ->
-                user = documents.toObjects<User>()[0]
-            }
-            .addOnFailureListener { exception ->
-                Log.d("failure", "Error getting User: ", exception)
-            }
-            .await()
-        return if(user != null) user as User
-        else User()
-    }
     suspend fun setTaskSolution(solution: TaskSolution) {
 
     }

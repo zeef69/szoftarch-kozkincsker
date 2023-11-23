@@ -69,10 +69,6 @@ class AuthInteractor @Inject constructor(
         return firebaseAuth.currentUser?.uid
     }
 
-    suspend fun getCurrentUserId(): String? {
-        return firebaseDataSource.getUserFromUId().id
-    }
-
     fun sendPasswordReset() {
         val mail = getCurrentUserEmail() as String
         firebaseAuth.sendPasswordResetEmail(mail)
