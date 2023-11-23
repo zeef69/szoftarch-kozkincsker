@@ -10,7 +10,7 @@ object Loading : SessionModeratorViewState()
 data class SessionModeratorContent(
     var session : Session,
     var mission : Mission,
-    var designer : User,
+    var designer : User?,
     var players : MutableList<User>,
     val isLoading : Boolean = true
 ) : SessionModeratorViewState()

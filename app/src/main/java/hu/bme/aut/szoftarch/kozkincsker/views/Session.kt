@@ -43,7 +43,7 @@ import hu.bme.aut.szoftarch.kozkincsker.data.model.User
 fun Session(
     session: Session,
     mission: Mission,
-    designer: User,
+    designer: User?,
     onTaskClicked: (Task) -> Unit,
     onBackClick: () -> Unit = {}
 ) {

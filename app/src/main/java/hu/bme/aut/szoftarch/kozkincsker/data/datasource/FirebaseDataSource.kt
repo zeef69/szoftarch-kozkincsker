@@ -3,6 +3,7 @@ package hu.bme.aut.szoftarch.kozkincsker.data.datasource
 import android.util.Log
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.QuerySnapshot
@@ -26,7 +27,7 @@ import javax.inject.Singleton
 class FirebaseDataSource @Inject constructor() {
 
     private val database = Firebase.firestore
-    private val uid = FirebaseAuth.getInstance().currentUser?.uid
+    //private val uid = FirebaseAuth.getInstance().currentUser?.uid
 
     suspend fun getMissionsListener(): Flow<List<Mission>> = callbackFlow {
         val listenerRegistration = database.collection("missions")
@@ -95,8 +96,9 @@ class FirebaseDataSource @Inject constructor() {
     }
 
     suspend fun onAddFeedbackToMission(feedback: Feedback, missionId: String) {
-        if (uid != null) {
-            feedback.writerId = uid
+        val user = getUser()
+        if (user != null) {
+            feedback.writerId = user.id
         }
         val addFeedback : HashMap<String, Any> = HashMap()
         addFeedback["feedbackIds"] = FieldValue.arrayUnion(feedback)
@@ -156,17 +158,17 @@ class FirebaseDataSource @Inject constructor() {
             }.await()
     }
 
-    suspend fun onStartSession(session: Session, asModerator: Boolean) {
-        //TODO add player list, return
-        if(asModerator && uid != null) {
-            session.moderator = uid
+    suspend fun onStartSession(session: Session, asModerator: Boolean): DocumentReference? {
+        val user = getUser()
+        Log.i("dolog", user.toString())
+        if (user != null) {
+            if(asModerator)
+                session.moderator = user.id
+            else
+                session.playerIds.add(user.id)
         }
-        val allowedChars = ('A'..'Z') + ('0'..'9')
-        session.accessCode = (1..6)
-            .map { allowedChars.random() }
-            .joinToString("")
 
-        database.collection("sessions").add(session)
+        return database.collection("sessions").add(session)
             .addOnSuccessListener { documentReference ->
                 Log.d("success", "DocumentSnapshot written with ID: $documentReference.")
             }
@@ -190,7 +192,7 @@ class FirebaseDataSource @Inject constructor() {
         else Mission()
     }
 
-    suspend fun getUserFromId(designerId: String): User {
+    suspend fun getUserFromId(designerId: String): User? {
         var user: User? = null
         database.collection("users").document(designerId).get()
             .addOnSuccessListener { document ->
@@ -201,7 +203,7 @@ class FirebaseDataSource @Inject constructor() {
             }
             .await()
         return if(user != null) user as User
-        else User()
+        else null
     }
 
     suspend fun setTaskSolution(solution: TaskSolution) {
@@ -218,10 +220,10 @@ class FirebaseDataSource @Inject constructor() {
     }
 
     suspend fun addPlayerToSession(session: Session?) {
-        //TODO uid
-        if (uid != null && session != null) {
+        val user = getUser()
+        if (user != null && session != null) {
             val addUser : HashMap<String, Any> = HashMap()
-            addUser["playerIds"] = FieldValue.arrayUnion(uid)
+            addUser["playerIds"] = FieldValue.arrayUnion(user.id)
 
             database.collection("sessions").document(session.id).update(addUser)
                 .addOnSuccessListener { documentReference ->
@@ -234,12 +236,23 @@ class FirebaseDataSource @Inject constructor() {
     }
 
     suspend fun getCurrentUser(): QuerySnapshot {
+        val uid = FirebaseAuth.getInstance().currentUser?.uid
         return database.collection("users").whereEqualTo("uid", uid).limit(1).get()
             .addOnSuccessListener { }
             .addOnFailureListener { exception ->
                 Log.d("failure", "Error getting documents: ", exception)
             }
             .await()
+    }
+
+    private suspend fun getUser(): User? {
+        val users = mutableListOf<User>()
+        val documents = getCurrentUser()
+        for(document in documents)
+            users.add(document.toObject())
+
+        return if(users.isNotEmpty()) users[0]
+        else null
     }
 
     fun addUser(uid: String?, name: String) {
