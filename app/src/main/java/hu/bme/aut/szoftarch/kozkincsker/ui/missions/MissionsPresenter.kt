@@ -10,9 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class MissionsPresenter @Inject constructor(
-    private val missionInteractor: MissionInteractor,
-    private val authInteractor: AuthInteractor,
-    private val sessionInteractor: SessionInteractor
+    private val missionInteractor: MissionInteractor, private val authInteractor: AuthInteractor, private val sessionInteractor: SessionInteractor
 ) {
     suspend fun addListener(): Flow<List<Mission>> = withIOContext {
         missionInteractor.getMissionsListener()
