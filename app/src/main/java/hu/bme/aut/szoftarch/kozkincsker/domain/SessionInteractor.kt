@@ -13,6 +13,10 @@ class SessionInteractor @Inject constructor(
 ) {
     suspend fun startSession(session: Session, asModerator: Boolean): String? {
         val data = firebaseDataSource.onStartSession(session, asModerator)
+        if(data != null && !asModerator) {
+            session.id = data.id
+            firebaseDataSource.addSessionToPlayer(session)
+        }
         return data?.id
     }
 
@@ -36,8 +40,10 @@ class SessionInteractor @Inject constructor(
         for(document in documents)
             sessions.add(document.toObject())
 
-        if(sessions.isNotEmpty())
+        if(sessions.isNotEmpty()) {
             firebaseDataSource.addPlayerToSession(sessions[0])
+            firebaseDataSource.addSessionToPlayer(sessions[0])
+        }
 
         return if(sessions.isNotEmpty()) sessions[0]
         else null

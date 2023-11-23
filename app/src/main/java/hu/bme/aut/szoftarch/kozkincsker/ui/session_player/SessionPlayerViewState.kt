@@ -9,8 +9,8 @@ sealed class SessionPlayerViewState
 object Loading : SessionPlayerViewState()
 
 data class SessionPlayerContent(
-    var session : Session,
-    var mission : Mission,
-    var designer : User?,
+    var session : Session? = null,
+    var mission : Mission? = null,
+    var designer : User? = null,
     val loading : Boolean = true
 ) : SessionPlayerViewState()

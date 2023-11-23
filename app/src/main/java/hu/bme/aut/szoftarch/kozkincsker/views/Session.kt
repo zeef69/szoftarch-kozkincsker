@@ -41,14 +41,14 @@ import hu.bme.aut.szoftarch.kozkincsker.data.model.User
 
 @Composable
 fun Session(
-    session: Session,
-    mission: Mission,
+    session: Session?,
+    mission: Mission?,
     designer: User?,
     onTaskClicked: (Task) -> Unit,
     onBackClick: () -> Unit = {}
 ) {
 
-    val levels = mission.levelList
+    val levels = mission?.levelList
 
     Column(
         modifier = Modifier
@@ -76,7 +76,7 @@ fun Session(
             Text(
                 buildAnnotatedString {
                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append(mission.name)
+                        append(mission?.name)
                     }
                 },
                 textAlign = TextAlign.Start,
@@ -88,7 +88,7 @@ fun Session(
             Text(
                 buildAnnotatedString {
                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append(mission.description)
+                        append(mission?.description)
                     }
                 },
                 textAlign = TextAlign.Start,
@@ -97,11 +97,11 @@ fun Session(
                     .width(((LocalConfiguration.current.screenWidthDp / 2) - 20).dp)
             )
 
-            if(mission.designerId != null && designer?.id == mission.designerId)
+            if(mission?.designerId != null && designer?.id == mission.designerId)
                 Text(
                     buildAnnotatedString {
                         withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                            append(mission!!.name)
+                            append(mission.name)
                         }
                     },
                     textAlign = TextAlign.Start,
@@ -110,48 +110,49 @@ fun Session(
                         .width(((LocalConfiguration.current.screenWidthDp / 2) - 20).dp)
                 )
 
-            LazyColumn(
-                modifier = Modifier
-                    .padding(all = 10.dp)
-                    .fillMaxSize()
-            ) {
-                itemsIndexed(levels) { _, level ->
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .height(IntrinsicSize.Min)
-                            .fillMaxWidth()
-                    ) {
+            if(levels != null)
+                LazyColumn(
+                    modifier = Modifier
+                        .padding(all = 10.dp)
+                        .fillMaxSize()
+                ) {
+                    itemsIndexed(levels) { _, level ->
                         Row(
-                            horizontalArrangement = Arrangement.SpaceEvenly,
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier
                                 .height(IntrinsicSize.Min)
-                                .padding(all = 5.dp)
                                 .fillMaxWidth()
-                                .weight(0.85f, true)
                         ) {
-                            for(task in level.taskList) {
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    modifier = Modifier
-                                        .fillMaxHeight()
-                                        .width(IntrinsicSize.Max)
-                                        .background(Color.LightGray)
-                                        .padding(5.dp, 5.dp, 5.dp, 5.dp)
-                                        .weight(1.0f, true)
-                                        .clickable { onTaskClicked(task) }
-                                ) {
-                                    Text(
-                                        text = task.title, color = Color.Black, fontSize = 18.sp, modifier = Modifier.padding(all = 2.dp).weight(0.6f, true)
-                                    )
+                            Row(
+                                horizontalArrangement = Arrangement.SpaceEvenly,
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier
+                                    .height(IntrinsicSize.Min)
+                                    .padding(all = 5.dp)
+                                    .fillMaxWidth()
+                                    .weight(0.85f, true)
+                            ) {
+                                for(task in level.taskList) {
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        modifier = Modifier
+                                            .fillMaxHeight()
+                                            .width(IntrinsicSize.Max)
+                                            .background(Color.LightGray)
+                                            .padding(5.dp, 5.dp, 5.dp, 5.dp)
+                                            .weight(1.0f, true)
+                                            .clickable { onTaskClicked(task) }
+                                    ) {
+                                        Text(
+                                            text = task.title, color = Color.Black, fontSize = 18.sp, modifier = Modifier.padding(all = 2.dp).weight(0.6f, true)
+                                        )
+                                    }
+                                    Spacer(modifier = Modifier.width(5.dp))
                                 }
-                                Spacer(modifier = Modifier.width(5.dp))
                             }
                         }
                     }
                 }
-            }
         }
     }
 }

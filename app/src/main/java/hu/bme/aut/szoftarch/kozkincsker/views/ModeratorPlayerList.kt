@@ -38,10 +38,10 @@ import hu.bme.aut.szoftarch.kozkincsker.data.model.User
 
 @Composable
 fun ModeratorPlayerList(
-    session: Session,
-    mission: Mission,
+    session: Session?,
+    mission: Mission?,
     designer: User?,
-    players: MutableList<User> = ArrayList(),
+    players: List<User>,
     onUserClicked: (User) -> Unit,
     onBackClick: () -> Unit = {}
 ) {
@@ -72,7 +72,7 @@ fun ModeratorPlayerList(
             Text(
                 buildAnnotatedString {
                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append(mission.name)
+                        append(mission?.name)
                     }
                 },
                 textAlign = TextAlign.Start,
@@ -84,7 +84,7 @@ fun ModeratorPlayerList(
             Text(
                 buildAnnotatedString {
                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append(mission.description)
+                        append(mission?.description)
                     }
                 },
                 textAlign = TextAlign.Start,
@@ -93,7 +93,7 @@ fun ModeratorPlayerList(
                     .width(((LocalConfiguration.current.screenWidthDp / 2) - 20).dp)
             )
 
-            if(mission.designerId != null && designer?.id == mission.designerId)
+            if(mission?.designerId != null && designer?.id == mission.designerId)
                 Text(
                     buildAnnotatedString {
                         withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {

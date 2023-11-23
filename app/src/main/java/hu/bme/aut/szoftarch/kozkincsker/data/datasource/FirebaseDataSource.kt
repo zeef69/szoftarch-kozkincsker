@@ -158,25 +158,6 @@ class FirebaseDataSource @Inject constructor() {
             }.await()
     }
 
-    suspend fun onStartSession(session: Session, asModerator: Boolean): DocumentReference? {
-        val user = getUser()
-        Log.i("dolog", user.toString())
-        if (user != null) {
-            if(asModerator)
-                session.moderator = user.id
-            else
-                session.playerIds.add(user.id)
-        }
-
-        return database.collection("sessions").add(session)
-            .addOnSuccessListener { documentReference ->
-                Log.d("success", "DocumentSnapshot written with ID: $documentReference.")
-            }
-            .addOnFailureListener { exception ->
-                Log.d("failure", "Error getting documents: ", exception)
-            }.await()
-    }
-
     suspend fun getMissionById(missionId: String): Mission {
         var mission: Mission? = null
         database.collection("missions").document(missionId).get()
@@ -206,8 +187,22 @@ class FirebaseDataSource @Inject constructor() {
         else null
     }
 
-    suspend fun setTaskSolution(solution: TaskSolution) {
+    suspend fun onStartSession(session: Session, asModerator: Boolean): DocumentReference? {
+        val user = getUser()
+        if (user != null) {
+            if(asModerator)
+                session.moderator = user.id
+            else
+                session.playerIds.add(user.id)
+        }
 
+        return database.collection("sessions").add(session)
+            .addOnSuccessListener { documentReference ->
+                Log.d("success", "DocumentSnapshot written with ID: $documentReference.")
+            }
+            .addOnFailureListener { exception ->
+                Log.d("failure", "Error getting documents: ", exception)
+            }.await()
     }
 
     suspend fun joinWithCode(code: String): QuerySnapshot {
@@ -226,6 +221,22 @@ class FirebaseDataSource @Inject constructor() {
             addUser["playerIds"] = FieldValue.arrayUnion(user.id)
 
             database.collection("sessions").document(session.id).update(addUser)
+                .addOnSuccessListener { documentReference ->
+                    Log.d("success", "DocumentSnapshot written with ID: $documentReference.")
+                }
+                .addOnFailureListener { exception ->
+                    Log.d("failure", "Error getting documents: ", exception)
+                }.await()
+        }
+    }
+
+    suspend fun addSessionToPlayer(session: Session?) {
+        val user = getUser()
+        if (user != null && session != null) {
+            val addSession : HashMap<String, Any> = HashMap()
+            addSession["currentSessionIds"] = FieldValue.arrayUnion(session.id)
+
+            database.collection("users").document(user.id).update(addSession)
                 .addOnSuccessListener { documentReference ->
                     Log.d("success", "DocumentSnapshot written with ID: $documentReference.")
                 }
@@ -267,5 +278,9 @@ class FirebaseDataSource @Inject constructor() {
             .addOnFailureListener { exception ->
                 Log.d("failure", "Error getting documents: ", exception)
             }
+    }
+
+    fun setTaskSolution(solution: TaskSolution) {
+        TODO("Not yet implemented")
     }
 }
