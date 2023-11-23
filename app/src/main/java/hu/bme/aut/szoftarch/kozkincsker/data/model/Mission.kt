@@ -8,7 +8,7 @@ import java.util.Date
 /**
  * Küldetés osztály
  * @param id
- * @param name Küoldetés neve
+ * @param name Küldetés neve
  * @param description Küldetés leírása
  * @param creationDate Létrehozás dátuma
  * @param modificationDate Utolsó módosítás dátuma
@@ -18,11 +18,11 @@ import java.util.Date
  * @param isPlayableWithoutModerator indítható-e Session a Küldtésből külön Moderátro nélkül
  * @param visibility játék láthatósága
  * @param state játék tervezési-kész állapota
- * @param designer tervező
+ * @param designerId tervező
  * @param levelList küldetészint lista
- * @param missionTags kulcsszavak, jellegzetes leírás lista a küldetésről
- * @param feedbacks játékosok visszajelzései
- * @param badge játékért kapható jelvény
+ * @param missionTagIds kulcsszavak, jellegzetes leírás lista a küldetésről
+ * @param feedbackIds játékosok visszajelzései
+ * @param badgeId játékért kapható jelvény
  */
 @Parcelize
 data class Mission(
