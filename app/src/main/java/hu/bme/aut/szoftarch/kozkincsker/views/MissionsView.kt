@@ -79,7 +79,7 @@ fun MissionsView(
             var text by remember { mutableStateOf("") }
 
             searchedMissions = searchedMissions.filter { it.name.contains(text, true) }
-            val generalMissions = searchedMissions.filter { it.visibility == Mission.Visibility.PUBLIC }
+            val generalMissions = searchedMissions.filter { it.visibility == Mission.Visibility.PUBLIC && it.state == Mission.State.FINISHED }
             val runningSessions = sessions.filter { it.name.contains(text, true) }
             val ownMissions = searchedMissions.filter { it.designerId == id }
 
@@ -131,6 +131,7 @@ fun MissionsView(
                         ) {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween,
                                 modifier = Modifier.padding(vertical = 5.dp)
                             ) {
                                 Column(
@@ -146,7 +147,8 @@ fun MissionsView(
                         }
                     }
 
-                } else if (privacySwitchState == 1) {
+                }
+                else if (privacySwitchState == 1) {
                     items(runningSessions) {session ->
                         Card(
                             modifier = Modifier
@@ -175,7 +177,8 @@ fun MissionsView(
                             }
                         }
                     }
-                } else {
+                }
+                else {
                     items(ownMissions) {mission ->
                         Card(
                             modifier = Modifier
@@ -196,6 +199,7 @@ fun MissionsView(
                                 Column(
                                     modifier = Modifier
                                         .padding(horizontal = 10.dp, vertical = 5.dp)
+                                        .width(90.dp)
                                 ) {
                                     Text(
                                         text = mission.name, color = Color.Black, fontSize = 24.sp, maxLines = 1

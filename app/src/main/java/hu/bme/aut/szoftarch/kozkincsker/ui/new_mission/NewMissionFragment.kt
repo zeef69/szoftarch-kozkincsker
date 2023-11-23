@@ -85,9 +85,9 @@ class NewMissionFragment : RainbowCakeFragment<NewMissionViewState, NewMissionVi
     }
 
     private fun onSaveMission(mission: Mission) {
-
-        viewModel.uploadMission(mission)
-        navigator?.replace(newInstance(designer, mission))
+        if(mission.id == "") viewModel.uploadMission(mission)
+        else viewModel.updateMission(mission)
+        navigator?.pop()
     }
 
     private fun onPostMission(mission: Mission) {

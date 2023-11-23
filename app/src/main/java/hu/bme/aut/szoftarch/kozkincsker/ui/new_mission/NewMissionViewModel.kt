@@ -24,4 +24,7 @@ class NewMissionViewModel
     fun uploadMission(newMission: Mission) = execute{
         newMissionPresenter.uploadMission(newMission)
     }
+    fun updateMission(editedMission: Mission) = execute{
+        newMissionPresenter.updateMission(editedMission)
+    }
 }
