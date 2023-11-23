@@ -66,13 +66,29 @@ class FirebaseDataSource @Inject constructor() {
     }
 
     suspend fun onUploadMission(newMission: Mission) {
+        var newMissionId =""
         database.collection("missions").add(newMission)
             .addOnSuccessListener { documentReference ->
+                newMissionId = documentReference.id
                 Log.d("success", "DocumentSnapshot written with ID: $documentReference.")
             }
             .addOnFailureListener { exception ->
                 Log.d("failure", "Error getting documents: ", exception)
             }.await()
+
+        val user = getUser()
+        if (user != null && newMission.designerId!=null) {
+            val addDesignedMission : HashMap<String, Any> = HashMap()
+            addDesignedMission["designedMissionIds"] = FieldValue.arrayUnion(newMissionId)
+
+            database.collection("users").document(user.id).update(addDesignedMission)
+                .addOnSuccessListener { documentReference ->
+                    Log.d("success", "DocumentSnapshot written with ID: $documentReference.")
+                }
+                .addOnFailureListener { exception ->
+                    Log.d("failure", "Error getting documents: ", exception)
+                }.await()
+        }
     }
 
     suspend fun onEditMission(mission: Mission) {
@@ -86,7 +102,7 @@ class FirebaseDataSource @Inject constructor() {
     }
 
     suspend fun onDeleteMission(mission: Mission) {
-        database.collection("trips").document(mission.id).delete()
+        database.collection("missions").document(mission.id).delete()
             .addOnSuccessListener { documentReference ->
                 Log.d("success", "DocumentSnapshot written with ID: $documentReference.")
             }
@@ -115,6 +131,35 @@ class FirebaseDataSource @Inject constructor() {
     suspend fun getSessionsFromMission(mission: Mission): List<Session>{
         val sessions = mutableListOf<Session>()
         database.collection("sessions").whereEqualTo("mission", mission.id).get()
+            .addOnSuccessListener { documents ->
+                for(document in documents)
+                    sessions.add(document.toObject())
+            }
+            .addOnFailureListener { exception ->
+                Log.d("failure", "Error getting documents: ", exception)
+            }
+            .await()
+        return sessions
+    }
+
+    suspend fun getSessionsFromUserId(id: String): List<Session>{
+        val sessions = mutableListOf<Session>()
+        database.collection("sessions").whereArrayContains("playerIds", id).get()
+            .addOnSuccessListener { documents ->
+                for(document in documents)
+                    sessions.add(document.toObject())
+            }
+            .addOnFailureListener { exception ->
+                Log.d("failure", "Error getting documents: ", exception)
+            }
+            .await()
+        return sessions
+    }
+
+    suspend fun getPlayingOrModeratedSessionsFromUser(id: String): List<Session>{
+        val sessions = mutableListOf<Session>()
+        sessions.addAll(getSessionsFromUserId(id))
+        database.collection("sessions").whereEqualTo("moderator", id).get()
             .addOnSuccessListener { documents ->
                 for(document in documents)
                     sessions.add(document.toObject())

@@ -3,6 +3,7 @@ package hu.bme.aut.szoftarch.kozkincsker.ui.missions
 import co.zsmb.rainbowcake.withIOContext
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
+import hu.bme.aut.szoftarch.kozkincsker.data.model.User
 import hu.bme.aut.szoftarch.kozkincsker.domain.MissionInteractor
 import hu.bme.aut.szoftarch.kozkincsker.domain.SessionInteractor
 import hu.bme.aut.szoftarch.kozkincsker.domain.UserInteractor
@@ -16,8 +17,12 @@ class MissionsPresenter @Inject constructor(
         missionInteractor.getMissionsListener()
     }
 
-    suspend fun getUid(): String? = withIOContext {
+    suspend fun getId(): String? = withIOContext {
         return@withIOContext userInteractor.getCurrentUser()?.id
+    }
+
+    suspend fun getUser(): User? = withIOContext {
+        userInteractor.getCurrentUser()
     }
 
     suspend fun deleteMission(mission: Mission) = withIOContext {
@@ -26,5 +31,9 @@ class MissionsPresenter @Inject constructor(
 
     suspend fun joinWithCode(code: String): Session? = withIOContext {
         return@withIOContext sessionInteractor.joinWithCode(code)
+    }
+
+    suspend fun getPlayingOrModeratedSessionsFromUser(userId: String): List<Session> = withIOContext {
+        sessionInteractor.getPlayingOrModeratedSessionsFromUser(userId)
     }
 }

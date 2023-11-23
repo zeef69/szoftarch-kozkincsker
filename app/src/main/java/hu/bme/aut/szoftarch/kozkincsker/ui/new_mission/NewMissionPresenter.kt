@@ -13,4 +13,7 @@ class NewMissionPresenter
         missionInteractor.uploadMission(newMission)
     }
 
+    suspend fun updateMission(editedMission: Mission): Unit = withIOContext {
+        missionInteractor.editMission(editedMission)
+    }
 }
