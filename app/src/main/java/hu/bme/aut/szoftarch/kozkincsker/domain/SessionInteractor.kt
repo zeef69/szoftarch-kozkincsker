@@ -36,6 +36,10 @@ class SessionInteractor @Inject constructor(
         return firebaseDataSource.getSessionsFromUserId(id)
     }
 
+    suspend fun getPlayingOrModeratedSessionsFromUser(id: String): List<Session>{
+        return firebaseDataSource.getPlayingOrModeratedSessionsFromUser(id)
+    }
+
     suspend fun joinWithCode(code: String): Session? {
         val sessions = mutableListOf<Session>()
         val documents = firebaseDataSource.joinWithCode(code)

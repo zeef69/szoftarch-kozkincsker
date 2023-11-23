@@ -25,6 +25,7 @@ import androidx.compose.material.TextButton
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ContactPage
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Search
@@ -42,6 +43,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
+import hu.bme.aut.szoftarch.kozkincsker.data.model.User
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.SegmentedControl
 
 @Composable
@@ -49,6 +51,7 @@ fun MissionsView(
     missions: List<Mission>,
     sessions: List<Session>,
     id: String?,
+    user: User?,
     onJoinWithCode: (String) -> Unit,
     onModifyMission: (Mission) -> Unit,
     onDeleteMission: (Mission) -> Unit,
@@ -79,7 +82,12 @@ fun MissionsView(
             var text by remember { mutableStateOf("") }
 
             searchedMissions = searchedMissions.filter { it.name.contains(text, true) }
-            val generalMissions = searchedMissions.filter { it.visibility == Mission.Visibility.PUBLIC && it.state == Mission.State.FINISHED }
+            val generalMissions = searchedMissions.filter {
+                (it.state == Mission.State.FINISHED) &&
+                        ((it.visibility == Mission.Visibility.PUBLIC) ||
+                                (it.designerId == id) ||
+                                ((user != null) && user.privatePlayableMissionIds.contains(it.id)))
+            }
             val runningSessions = sessions.filter { it.name.contains(text, true) }
             val ownMissions = searchedMissions.filter { it.designerId == id }
 
@@ -149,33 +157,69 @@ fun MissionsView(
 
                 }
                 else if (privacySwitchState == 1) {
-                    items(runningSessions) {session ->
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(1.dp)
-                                .clickable(onClick = {
-                                    //onSessionClicked(Session())
-                                }),
-                            shape = RoundedCornerShape(20),
-                            elevation = 1.dp,
-                            backgroundColor = Color.LightGray
-                        ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.padding(vertical = 5.dp)
+                    items(runningSessions) {session ->  
+                        if(session.moderator == id)  {
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(1.dp)
+                                    .clickable(onClick = {
+                                        //onSessionClicked(Session())
+                                    }),
+                                shape = RoundedCornerShape(20),
+                                elevation = 1.dp,
+                                backgroundColor = Color.LightGray
                             ) {
-                                Column(
-                                    modifier = Modifier
-                                        .padding(horizontal = 10.dp, vertical = 5.dp)
-                                        .width(90.dp)
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    modifier = Modifier.padding(vertical = 5.dp)
                                 ) {
-                                    Text(
-                                        text = session.name, color = Color.Black, fontSize = 24.sp, maxLines = 1
-                                    )
+                                    Column(
+                                        modifier = Modifier
+                                            .padding(horizontal = 10.dp, vertical = 5.dp)
+                                            .width(90.dp)
+                                    ) {
+                                        Text(
+                                            text = session.name, color = Color.Black, fontSize = 24.sp, maxLines = 1
+                                        )
+                                    }
+                                    Row(
+                                        horizontalArrangement = Arrangement.End
+                                    ) {
+                                        Icon(imageVector = Icons.Filled.ContactPage, "Moderated Sessions")
+                                    }
                                 }
                             }
                         }
+                        else{
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(1.dp)
+                                    .clickable(onClick = {
+                                        //onSessionClicked(Session())
+                                    }),
+                                shape = RoundedCornerShape(20),
+                                elevation = 1.dp,
+                                backgroundColor = Color.LightGray
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.padding(vertical = 5.dp)
+                                ) {
+                                    Column(
+                                        modifier = Modifier
+                                            .padding(horizontal = 10.dp, vertical = 5.dp)
+                                            .width(90.dp)
+                                    ) {
+                                        Text(
+                                            text = session.name, color = Color.Black, fontSize = 24.sp, maxLines = 1
+                                        )
+                                    }
+                                }
+                            }
+                        }                        
                     }
                 }
                 else {

@@ -5,6 +5,7 @@ import co.zsmb.rainbowcake.base.RainbowCakeViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
+import hu.bme.aut.szoftarch.kozkincsker.data.model.User
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
@@ -17,7 +18,7 @@ class MissionsViewModel @Inject constructor(
 ) {
     fun addListener() = execute {
         val id = missionsPresenter.getId()
-        val sessions = missionsPresenter.getSessionsFromUser(id!!)
+        val sessions = missionsPresenter.getPlayingOrModeratedSessionsFromUser(id!!) //TODO Ez is listener kell legyen!
         viewModelScope.launch {
             missionsPresenter.addListener().collect {
                 viewState = MissionsContent(isListed = true)
@@ -33,6 +34,10 @@ class MissionsViewModel @Inject constructor(
 
     fun deleteMission(mission: Mission) = execute {
         missionsPresenter.deleteMission(mission)
+    }
+
+    fun getDesigner(): User? = runBlocking {
+        return@runBlocking missionsPresenter.getUser()
     }
 
     fun joinWithCode(code: String): Session? = runBlocking {

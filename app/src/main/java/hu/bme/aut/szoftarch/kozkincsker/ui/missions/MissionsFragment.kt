@@ -23,6 +23,7 @@ import hu.bme.aut.szoftarch.kozkincsker.views.theme.AppUiTheme1
 @AndroidEntryPoint
 class MissionsFragment : RainbowCakeFragment<MissionsViewState, MissionsViewModel>() {
     override fun provideViewModel() = getViewModelFromFactory()
+    private lateinit var actualUser: User
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return ComposeView(requireContext()).apply {
@@ -36,6 +37,7 @@ class MissionsFragment : RainbowCakeFragment<MissionsViewState, MissionsViewMode
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.addListener()
+        actualUser = viewModel.getDesigner()!!
     }
 
     override fun render(viewState: MissionsViewState) {
@@ -47,6 +49,7 @@ class MissionsFragment : RainbowCakeFragment<MissionsViewState, MissionsViewMode
                         missions = viewState.missions,
                         sessions = viewState.sessions,
                         id = viewState.id,
+                        user = actualUser,
                         onJoinWithCode = ::onJoinWithCode,
                         onModifyMission = ::onModifyMission,
                         onDeleteMission = ::onDeleteMission,
@@ -66,8 +69,9 @@ class MissionsFragment : RainbowCakeFragment<MissionsViewState, MissionsViewMode
     }
 
     private fun onModifyMission(mission: Mission) {
-        val designer = User()
-        navigator?.add(NewMissionFragment.newInstance(designer, mission))
+        val designer = viewModel.getDesigner()
+        if(designer != null)
+            navigator?.add(NewMissionFragment.newInstance(designer, mission))
     }
 
     private fun onDeleteMission(mission: Mission) {
@@ -75,8 +79,9 @@ class MissionsFragment : RainbowCakeFragment<MissionsViewState, MissionsViewMode
     }
 
     private fun onAddMission() {
-        val designer = User()
-        navigator?.add(NewMissionFragment.newInstance(designer))
+        val designer = viewModel.getDesigner()
+        if(designer != null)
+            navigator?.add(NewMissionFragment.newInstance(designer))
     }
 
     private fun onItemClicked(mission: Mission) {
