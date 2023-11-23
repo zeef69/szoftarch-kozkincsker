@@ -61,11 +61,18 @@ class MissionStartFragment : RainbowCakeFragment<MissionViewState, MissionStartV
     }
 
     private fun onStartSession(session: Session, asModerator: Boolean) {
-        //TODO
-        viewModel.onStartSession(session, asModerator)
-        if(asModerator)
-            navigator?.add(SessionModeratorFragment.newInstance(session))
-        else
-            navigator?.add(SessionPlayerFragment.newInstance(session))
+        val allowedChars = ('A'..'Z') + ('0'..'9')
+        session.accessCode = (1..6)
+            .map { allowedChars.random() }
+            .joinToString("")
+
+        val id = viewModel.onStartSession(session, asModerator)
+        if(id != null) {
+            session.id = id
+            if(asModerator)
+                navigator?.add(SessionModeratorFragment.newInstance(session))
+            else
+                navigator?.add(SessionPlayerFragment.newInstance(session))
+        }
     }
 }

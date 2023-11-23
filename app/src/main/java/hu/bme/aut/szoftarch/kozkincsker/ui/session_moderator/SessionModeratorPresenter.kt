@@ -15,7 +15,7 @@ class SessionModeratorPresenter @Inject constructor(
         return sessionInteractor.getMissionFromSession(session)
     }
 
-    suspend fun getDesignerFromMission(mission: Mission): User {
+    suspend fun getDesignerFromMission(mission: Mission): User? {
         return sessionInteractor.getDesignerFromMission(mission)
     }
 

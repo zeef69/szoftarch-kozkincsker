@@ -30,7 +30,6 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import hu.bme.aut.szoftarch.kozkincsker.data.model.Feedback
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Level
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
@@ -41,7 +40,7 @@ import hu.bme.aut.szoftarch.kozkincsker.data.model.User
 fun ModeratorPlayerList(
     session: Session,
     mission: Mission,
-    designer: User,
+    designer: User?,
     players: MutableList<User> = ArrayList(),
     onUserClicked: (User) -> Unit,
     onBackClick: () -> Unit = {}

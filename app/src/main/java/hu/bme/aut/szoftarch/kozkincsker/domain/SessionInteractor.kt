@@ -11,15 +11,16 @@ import javax.inject.Inject
 class SessionInteractor @Inject constructor(
     private val firebaseDataSource: FirebaseDataSource
 ) {
-    suspend fun startSession(session: Session, asModerator: Boolean) {
-        firebaseDataSource.onStartSession(session, asModerator)
+    suspend fun startSession(session: Session, asModerator: Boolean): String? {
+        val data = firebaseDataSource.onStartSession(session, asModerator)
+        return data?.id
     }
 
     suspend fun getMissionFromSession(session: Session): Mission {
         return firebaseDataSource.getMissionById(session.missionId)
     }
 
-    suspend fun getDesignerFromMission(mission: Mission): User {
+    suspend fun getDesignerFromMission(mission: Mission): User? {
         return firebaseDataSource.getUserFromId(mission.designerId!!)
     }
 

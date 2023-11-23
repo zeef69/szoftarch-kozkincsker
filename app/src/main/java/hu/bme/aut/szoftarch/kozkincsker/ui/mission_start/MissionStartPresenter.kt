@@ -8,7 +8,7 @@ import javax.inject.Inject
 class MissionStartPresenter @Inject constructor(
     private val sessionInteractor: SessionInteractor
 ) {
-    suspend fun onStartSession(session: Session, asModerator: Boolean) = withIOContext {
-        sessionInteractor.startSession(session, asModerator)
+    suspend fun onStartSession(session: Session, asModerator: Boolean): String? = withIOContext {
+        return@withIOContext sessionInteractor.startSession(session, asModerator)
     }
 }

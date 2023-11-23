@@ -4,6 +4,7 @@ import co.zsmb.rainbowcake.base.RainbowCakeViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
@@ -15,7 +16,7 @@ class MissionStartViewModel @Inject constructor(private val missionStartPresente
         viewState = MissionContent(false, mission)
     }
 
-    fun onStartSession(session: Session, asModerator: Boolean) = execute {
-        missionStartPresenter.onStartSession(session, asModerator)
+    fun onStartSession(session: Session, asModerator: Boolean): String? = runBlocking {
+        return@runBlocking missionStartPresenter.onStartSession(session, asModerator)
     }
 }
