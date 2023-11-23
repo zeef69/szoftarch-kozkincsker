@@ -1,9 +1,11 @@
 package hu.bme.aut.szoftarch.kozkincsker.ui.session_moderator
 
+import co.zsmb.rainbowcake.withIOContext
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
 import hu.bme.aut.szoftarch.kozkincsker.data.model.User
 import hu.bme.aut.szoftarch.kozkincsker.domain.SessionInteractor
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class SessionModeratorPresenter @Inject constructor(
@@ -17,7 +19,7 @@ class SessionModeratorPresenter @Inject constructor(
         return sessionInteractor.getDesignerFromMission(mission)
     }
 
-    suspend fun getPlayersFromSession(session: Session): List<User> {
-        return sessionInteractor.getPlayersFromSession(session)
+    suspend fun addListener(session: Session): Flow<List<User>> = withIOContext {
+        sessionInteractor.getPlayersFromSessionListener(session)
     }
 }

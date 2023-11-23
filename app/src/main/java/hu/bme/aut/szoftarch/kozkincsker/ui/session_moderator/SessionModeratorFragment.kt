@@ -34,9 +34,8 @@ class SessionModeratorFragment : RainbowCakeFragment<SessionModeratorViewState, 
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        viewModel.load(
-            arguments?.getParcelable(SESSION)!!
-        )
+
+        viewModel.addListener(arguments?.getParcelable(SESSION)!!)
 
         return ComposeView(requireContext()).apply {
             setContent {

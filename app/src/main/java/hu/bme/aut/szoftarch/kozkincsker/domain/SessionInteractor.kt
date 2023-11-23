@@ -5,6 +5,7 @@ import hu.bme.aut.szoftarch.kozkincsker.data.datasource.FirebaseDataSource
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
 import hu.bme.aut.szoftarch.kozkincsker.data.model.User
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class SessionInteractor @Inject constructor(
@@ -23,8 +24,9 @@ class SessionInteractor @Inject constructor(
         return firebaseDataSource.getUserFromId(mission.designerId!!)
     }
 
-    suspend fun getPlayersFromSession(session: Session): List<User> {
-        return firebaseDataSource.getUsersFromSession(session.id)
+
+    suspend fun getPlayersFromSessionListener(session: Session): Flow<List<User>> {
+        return firebaseDataSource.getUsersFromSessionListener(session.id)
     }
 
     suspend fun joinWithCode(code: String): Session? {
