@@ -1,6 +1,5 @@
 package hu.bme.aut.szoftarch.kozkincsker.views
 
-import android.util.Log
 import java.text.SimpleDateFormat
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -55,8 +54,6 @@ import hu.bme.aut.szoftarch.kozkincsker.data.model.Task
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.ComboBox
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.DatePicker
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.SegmentedControl
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 
@@ -104,39 +101,54 @@ fun NewTask(
      * Answer values
      *-------------------------
      */
-    val originalTaskAnswers = task.answers.split('|')
+    val pattern =  '|'
 
     /**
      * Answers size list preparation
      */
     val answerNumberList = mutableListOf<String>()
     for(i in 2..6) answerNumberList.add(i.toString())
-    var answersChoiceSelectedIndex by remember { mutableIntStateOf(0) }
+    var answersChoiceSelectedIndex by remember { mutableIntStateOf(
+        if (task.taskType == TaskType.ListedAnswer
+          //  && privacySwitchState == 0 &&
+            && task.answers.split(pattern).size > 1)
+            task.answers.split(pattern)[0].toInt()-2
+        else 0
+    ) }
     var answersChoiceExpanded by remember { mutableStateOf(false) }
-    var answersOrderSelectedIndex by remember { mutableIntStateOf(0) }
+    var answersOrderSelectedIndex by remember { mutableIntStateOf(
+        if (task.taskType == TaskType.OrderAnswer && task.answers.split(pattern).size > 1)
+            task.answers.split(pattern)[0].toInt()-2
+        else 0
+    ) }
     var answersOrderExpanded by remember { mutableStateOf(false) }
-
-
-    val pattern =  '|'
-    //TODO kicserélni mindet task.answer feldologzása után
 
     /**
      * Choice answers by designer
      * */
     val choiceAnswerInputList = remember { mutableStateListOf<String>() }
-    for (i in 0..<6){
-        choiceAnswerInputList.add("")
-    }
     val checkedStateList = remember { mutableStateListOf<Boolean>() }
     for (i in 0..<6){
-        checkedStateList.add(false)
+        if (task.taskType == TaskType.ListedAnswer && task.answers.split(pattern).size > 12){
+            checkedStateList.add(task.answers.split(pattern)[2*i+1].toBoolean())
+            choiceAnswerInputList.add(task.answers.split(pattern)[2*i+2])
+        }
+        else {
+            checkedStateList.add(false)
+            choiceAnswerInputList.add("")
+        }
     }
     /**
      * Order answers by designer
      * */
     val orderAnswerInputList = remember { mutableStateListOf<String>() }
     for (i in 0..<6){
-        orderAnswerInputList.add("")
+        if (task.taskType == TaskType.OrderAnswer && task.answers.split(pattern).size > 6){
+            orderAnswerInputList.add(task.answers.split(pattern)[i+1])
+        }
+        else {
+            orderAnswerInputList.add("")
+        }
     }
     /**
      * Number answer by designer
@@ -145,6 +157,9 @@ fun NewTask(
         if(task.taskType == TaskType.NumberAnswer) task.answers
         else "0")
     }
+    /**
+     * Date answer by designer
+     * */
     var datePickerState by remember { mutableStateOf(false) }
     var dateInput by remember {
         mutableStateOf(SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).format(
@@ -156,23 +171,27 @@ fun NewTask(
     /**
      * Map answer by designer
      * */
-    var radiusInput by remember { mutableStateOf("10.0") }
-    var actualRadius = (if(radiusInput != "") radiusInput.toDouble() else 10.0)
+    var radiusInput by remember { mutableStateOf(
+        if(task.taskType == TaskType.MapAnswer && task.answers.split(pattern).size == 4) task.answers.split(pattern)[0]
+        else "10") }
+    var actualRadius = (if(radiusInput != "" ) radiusInput.toDouble() else 10.0)
+    val markerState = rememberMarkerState(position =
+        (if(task.taskType == TaskType.MapAnswer && task.answers.split(pattern).size == 4)
+            LatLng(task.answers.split(pattern)[2].toDouble(), task.answers.split(pattern)[3].toDouble())
+        else LatLng(47.497913, 19.040236))
+    )
+    val mapZoomState by remember { mutableFloatStateOf(
+        if(task.taskType == TaskType.MapAnswer && task.answers.split(pattern).size == 4)
+            task.answers.split(pattern)[1].toFloat()
+        else 20f)
+    }
     var mapInput by remember { mutableStateOf("") }
-    val markerState = rememberMarkerState(position = LatLng(47.497913, 19.040236))
-    var mapZoomState by remember { mutableFloatStateOf(20f)}
-    mapInput = markerState.position.latitude.toString() + ", " + markerState.position.longitude.toString()
-
-    /*
-    when(task.taskType){
-        TaskType.ListedAnswer -> ""
-        TaskType.NumberAnswer -> answerNumberInput = task.answers
-        TaskType.DateAnswer -> ""
-        TaskType.MapAnswer -> ""
-        TaskType.OrderAnswer -> ""
-        else -> {}
-    }*/
-
+    mapInput = markerState.position.latitude.toString() + "|" + markerState.position.longitude.toString()
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(
+            markerState.position,
+            mapZoomState)
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -244,7 +263,7 @@ fun NewTask(
                     OutlinedTextField(
                         value = scoreInput,
                         onValueChange = { scoreInput = it },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
                         singleLine = true,
                         label = {Text(text = "Score")},
                         placeholder = {
@@ -404,8 +423,8 @@ fun NewTask(
                                         )
                                         OutlinedTextField(
                                             value = radiusInput,
-                                            onValueChange = {  radiusInput = it },
-                                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                                            onValueChange = {  radiusInput =  it },
+                                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
                                             singleLine = true,
                                             placeholder = {
                                                 Text(
@@ -419,12 +438,12 @@ fun NewTask(
                                         )
                                         Button(
                                             onClick = {
-                                                if(radiusInput != "" && radiusInput.toDouble() >= 10.0){
+                                                if(radiusInput != "" && radiusInput.toDouble() >= 0.5){
                                                     actualRadius = radiusInput.toDouble()
                                                 }
                                                 else {
                                                     actualRadius = 10.0
-                                                    radiusInput = "10.0"
+                                                    radiusInput = "10"
                                                 }
                                             },
                                             modifier = Modifier
@@ -435,11 +454,6 @@ fun NewTask(
                                             Text("Radius save")
                                         }
                                     }
-                                }
-                                val cameraPositionState = rememberCameraPositionState {
-                                    position = CameraPosition.fromLatLngZoom(
-                                        markerState.position,
-                                        mapZoomState)
                                 }
                                 Box(
                                     modifier= Modifier
@@ -495,7 +509,7 @@ fun NewTask(
                                     for(i in 0..<answerNumberList[answersOrderSelectedIndex].toInt()){
                                         OutlinedTextField(
                                             value = orderAnswerInputList[i],
-                                            onValueChange = {if (it.isEmpty() || !it.contains(pattern)) {orderAnswerInputList[i] = it}},
+                                            onValueChange = {if (it.isEmpty() || it.contains(pattern)) {orderAnswerInputList[i] = it}},
                                             singleLine = false,
                                             placeholder = {
                                                 Text(
@@ -557,15 +571,20 @@ fun NewTask(
                             if(i < answerNumberList[answersOrderSelectedIndex].toInt()) answerStringBuilder.append(orderAnswerInputList[i])
                         }
                     }
+                    else if(task.taskType==TaskType.MapAnswer) {
+                        answerStringBuilder
+                            .append(radiusInput)
+                            .append('|')
+                            .append(cameraPositionState.position.zoom)
+                            .append('|')
+                            .append(mapInput)
 
+                    }
                     task.answers = when(task.taskType){
-                        TaskType.ListedAnswer -> answerStringBuilder.toString()
+                        TaskType.ListedAnswer, TaskType.MapAnswer, TaskType.OrderAnswer -> answerStringBuilder.toString()
                         TaskType.NumberAnswer -> if(answerNumberInput == "") "0" else answerNumberInput
                         TaskType.DateAnswer -> dateInput.toString()
-                        TaskType.MapAnswer -> ""
-                        TaskType.OrderAnswer -> answerStringBuilder.toString()
-                        TaskType.TextAnswer -> ""
-                        TaskType.ImageAnswer -> ""
+                        TaskType.TextAnswer, TaskType.ImageAnswer -> ""
                     }
                     task.score = if(scoreInput!="") scoreInput.toInt() else 0
                     onSaveNewClick(task)
