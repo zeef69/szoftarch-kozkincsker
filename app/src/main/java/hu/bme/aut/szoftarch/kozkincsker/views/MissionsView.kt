@@ -145,10 +145,11 @@ fun MissionsView(
                                 Column(
                                     modifier = Modifier
                                         .padding(horizontal = 10.dp, vertical = 5.dp)
+                                        .weight(0.7f, true)
                                         .width(90.dp)
                                 ) {
                                     Text(
-                                        text = mission.name, color = Color.Black, fontSize = 24.sp, maxLines = 1
+                                        text = mission.name, color = Color.Black, fontSize = 24.sp
                                     )
                                 }
                             }
@@ -178,10 +179,11 @@ fun MissionsView(
                                     Column(
                                         modifier = Modifier
                                             .padding(horizontal = 10.dp, vertical = 5.dp)
+                                            .weight(0.7f, true)
                                             .width(90.dp)
                                     ) {
                                         Text(
-                                            text = session.name, color = Color.Black, fontSize = 24.sp, maxLines = 1
+                                            text = session.name, color = Color.Black, fontSize = 24.sp
                                         )
                                     }
                                     Row(
@@ -211,10 +213,11 @@ fun MissionsView(
                                     Column(
                                         modifier = Modifier
                                             .padding(horizontal = 10.dp, vertical = 5.dp)
+                                            .weight(0.7f, true)
                                             .width(90.dp)
                                     ) {
                                         Text(
-                                            text = session.name, color = Color.Black, fontSize = 24.sp, maxLines = 1
+                                            text = session.name, color = Color.Black, fontSize = 24.sp
                                         )
                                     }
                                 }
@@ -243,10 +246,11 @@ fun MissionsView(
                                 Column(
                                     modifier = Modifier
                                         .padding(horizontal = 10.dp, vertical = 5.dp)
+                                        .weight(0.7f, true)
                                         .width(90.dp)
                                 ) {
                                     Text(
-                                        text = mission.name, color = Color.Black, fontSize = 24.sp, maxLines = 1
+                                        text = mission.name, color = Color.Black, fontSize = 24.sp
                                     )
                                 }
                                 Row(

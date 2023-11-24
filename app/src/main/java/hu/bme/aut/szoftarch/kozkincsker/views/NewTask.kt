@@ -119,8 +119,9 @@ fun NewTask(
     var answerDInput by remember { mutableStateOf("") }
     var answerEInput by remember { mutableStateOf("") }
     var answerFInput by remember { mutableStateOf("") }
-    //var choiceAnswerInputList = arrayOf<MutableState<String>>()
-    /*for (i in 0..<6){
+/*
+    var choiceAnswerInputList = arrayOf<MutableState<String>>()
+    for (i in 0..<6){
         choiceAnswerInputList[i] = remember { mutableStateOf("") }
     }*/
     //listOf(answerAInput, answerBInput, answerCInput)
@@ -134,6 +135,10 @@ fun NewTask(
     var checkedDState by remember { mutableStateOf(false) }
     var checkedEState by remember { mutableStateOf(false) }
     var checkedFState by remember { mutableStateOf(false) }
+    /*var checkedStateList = arrayOf<Boolean>()
+    for (b in 0..<6){
+        checkedStateList[b]  = false
+    }*/
     /**
      * Number answer by designer
      * */
@@ -153,8 +158,13 @@ fun NewTask(
     mapInput = markerState.position.latitude.toString() + ", " + markerState.position.longitude.toString()
 
     when(task.taskType){
-
-        else -> {}
+        TaskType.ListedAnswer -> ""
+        TaskType.NumberAnswer -> answerNumberInput = task.answers
+        TaskType.DateAnswer -> ""
+        TaskType.MapAnswer -> ""
+        TaskType.OrderAnswer -> ""
+        TaskType.TextAnswer -> ""
+        TaskType.ImageAnswer -> ""
     }
 
     Column(
@@ -325,7 +335,7 @@ fun NewTask(
                                             )
                                             OutlinedTextField(
                                                 value = answerAInput,
-                                                onValueChange = {if (it.isEmpty() || !it.contains(pattern)) {answerAInput = it}},
+                                                onValueChange = {if (it.isEmpty() || !it.contains(pattern)) { answerAInput = it}},
                                                 singleLine = false,
                                                 placeholder = {
                                                     Text(
@@ -495,6 +505,8 @@ fun NewTask(
                                             )
                                         }
                                     }
+
+
                                 }
                             }
                             typeList.indexOf(TaskType.NumberAnswer)->{
@@ -582,7 +594,7 @@ fun NewTask(
                                 Box(
                                     modifier= Modifier
                                         .fillMaxSize()
-                                        .heightIn(60.dp,100.dp)
+                                        .heightIn(60.dp, 100.dp)
                                 ){
                                     GoogleMap(
                                         modifier = Modifier
@@ -769,7 +781,7 @@ fun NewTask(
                     }
                     task.answers = when(task.taskType){
                         TaskType.ListedAnswer -> ""
-                        TaskType.NumberAnswer -> ""
+                        TaskType.NumberAnswer -> if(answerNumberInput == "") "0" else answerNumberInput
                         TaskType.DateAnswer -> ""
                         TaskType.MapAnswer -> ""
                         TaskType.OrderAnswer -> ""

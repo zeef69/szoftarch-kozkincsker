@@ -75,7 +75,6 @@ class FirebaseDataSource @Inject constructor() {
             .addOnFailureListener { exception ->
                 Log.d("failure", "Error getting documents: ", exception)
             }.await()
-
         val user = getUser()
         if (user != null && newMission.designerId!=null) {
             val addDesignedMission : HashMap<String, Any> = HashMap()
@@ -102,6 +101,7 @@ class FirebaseDataSource @Inject constructor() {
     }
 
     suspend fun onDeleteMission(mission: Mission) {
+        var savedMissionId = mission.id
         database.collection("missions").document(mission.id).delete()
             .addOnSuccessListener { documentReference ->
                 Log.d("success", "DocumentSnapshot written with ID: $documentReference.")
@@ -109,6 +109,20 @@ class FirebaseDataSource @Inject constructor() {
             .addOnFailureListener { exception ->
                 Log.d("failure", "Error getting documents: ", exception)
             }.await()
+
+        val user = getUser()
+        if (user != null) {
+            val addDesignedMission : HashMap<String, Any> = HashMap()
+            addDesignedMission["designedMissionIds"] = FieldValue.arrayRemove(savedMissionId)
+
+            database.collection("users").document(user.id).update(addDesignedMission)
+                .addOnSuccessListener { documentReference ->
+                    Log.d("success", "DocumentSnapshot written with ID: $documentReference.")
+                }
+                .addOnFailureListener { exception ->
+                    Log.d("failure", "Error getting documents: ", exception)
+                }.await()
+        }
     }
 
     suspend fun onAddFeedbackToMission(feedback: Feedback, missionId: String) {
