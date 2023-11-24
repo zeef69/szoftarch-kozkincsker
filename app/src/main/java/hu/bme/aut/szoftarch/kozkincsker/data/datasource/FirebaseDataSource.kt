@@ -5,6 +5,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.SetOptions
@@ -170,10 +171,28 @@ class FirebaseDataSource @Inject constructor() {
         return sessions
     }
 
-    suspend fun getPlayingOrModeratedSessionsFromUser(id: String): List<Session>{
-        val sessions = mutableListOf<Session>()
-        sessions.addAll(getSessionsFromUserId(id))
-        database.collection("sessions").whereEqualTo("moderator", id).get()
+    suspend fun getPlayingOrModeratedSessionsFromUser(id: String?): Flow<List<Session>> = callbackFlow {
+        val listenerRegistration = database.collection("sessions").where(Filter.or(Filter.equalTo("moderator", id), Filter.arrayContains("playerIds", id)))
+            .addSnapshotListener { querySnapshot: QuerySnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
+                if (firebaseFirestoreException != null) {
+                    cancel(message = "Error fetching items", cause = firebaseFirestoreException)
+                    return@addSnapshotListener
+                }
+                val items = mutableListOf<Session>()
+                if (querySnapshot != null) {
+                    for(document in querySnapshot) {
+                        items.add(document.toObject())
+                    }
+                }
+                this.trySend(items).isSuccess
+            }
+        awaitClose {
+            Log.d("failure", "Cancelling items listener")
+            listenerRegistration.remove()
+        }
+
+
+        /*database.collection("sessions").whereEqualTo("moderator", id).get()
             .addOnSuccessListener { documents ->
                 for(document in documents)
                     sessions.add(document.toObject())
@@ -182,7 +201,7 @@ class FirebaseDataSource @Inject constructor() {
                 Log.d("failure", "Error getting documents: ", exception)
             }
             .await()
-        return sessions
+        return sessions*/
     }
 
     suspend fun getUsersFromSessionListener(sessionId: String): Flow<List<User>> = callbackFlow {

@@ -11,9 +11,11 @@ class SessionPlayerViewModel @Inject constructor(
     private val sessionPlayerPresenter: SessionPlayerPresenter
 ) : RainbowCakeViewModel<SessionPlayerViewState>(Loading) {
     fun load(session: Session) = execute {
-        Log.i("dolog", session.toString())
+        Log.i("session", session.toString())
         val mission = sessionPlayerPresenter.getMissionFromSession(session)
+        Log.i("mission", mission.toString())
         val designer = sessionPlayerPresenter.getDesignerFromMission(mission)
+        Log.i("designer", designer.toString())
         viewState = SessionPlayerContent(
             session = session,
             mission = mission,

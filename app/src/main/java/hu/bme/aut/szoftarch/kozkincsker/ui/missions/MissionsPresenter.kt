@@ -33,7 +33,7 @@ class MissionsPresenter @Inject constructor(
         return@withIOContext sessionInteractor.joinWithCode(code)
     }
 
-    suspend fun getPlayingOrModeratedSessionsFromUser(userId: String): List<Session> = withIOContext {
-        sessionInteractor.getPlayingOrModeratedSessionsFromUser(userId)
+    suspend fun getPlayingOrModeratedSessionsFromUser(id: String?): Flow<List<Session>> = withIOContext {
+        sessionInteractor.getPlayingOrModeratedSessionsFromUser(id)
     }
 }

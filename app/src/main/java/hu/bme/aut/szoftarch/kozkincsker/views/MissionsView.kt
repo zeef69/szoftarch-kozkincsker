@@ -200,7 +200,7 @@ fun MissionsView(
                                     .fillMaxWidth()
                                     .padding(1.dp)
                                     .clickable(onClick = {
-                                        onSessionClicked(Session())
+                                        onSessionClicked(session)
                                     }),
                                 shape = RoundedCornerShape(20),
                                 elevation = 1.dp,

@@ -18,16 +18,32 @@ class MissionsViewModel @Inject constructor(
 ) {
     fun addListener() = execute {
         val id = missionsPresenter.getId()
-        val sessions = missionsPresenter.getPlayingOrModeratedSessionsFromUser(id!!) //TODO Ez is listener kell legyen!
         viewModelScope.launch {
-            missionsPresenter.addListener().collect {
-                viewState = MissionsContent(isListed = true)
-                viewState = MissionsContent(
-                    missions = it,
-                    sessions = sessions,
-                    id = id,
-                    isListed = false
-                )
+            var missions: List<Mission> = emptyList()
+            var sessions: List<Session> = emptyList()
+            launch {
+                missionsPresenter.addListener().collect() {
+                    missions = it
+                    viewState = MissionsContent(isListed = true)
+                    viewState = MissionsContent(
+                        missions = it,
+                        sessions = sessions,
+                        id = id,
+                        isListed = false
+                    )
+                }
+            }
+            launch {
+                missionsPresenter.getPlayingOrModeratedSessionsFromUser(id).collect {
+                    sessions = it
+                    viewState = MissionsContent(isListed = true)
+                    viewState = MissionsContent(
+                        missions = missions,
+                        sessions = it,
+                        id = id,
+                        isListed = false
+                    )
+                }
             }
         }
     }

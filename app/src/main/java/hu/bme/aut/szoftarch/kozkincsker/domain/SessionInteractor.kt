@@ -36,7 +36,7 @@ class SessionInteractor @Inject constructor(
         return firebaseDataSource.getSessionsFromUserId(id)
     }
 
-    suspend fun getPlayingOrModeratedSessionsFromUser(id: String): List<Session>{
+    suspend fun getPlayingOrModeratedSessionsFromUser(id: String?): Flow<List<Session>>{
         return firebaseDataSource.getPlayingOrModeratedSessionsFromUser(id)
     }
 
