@@ -165,7 +165,7 @@ fun MissionsView(
                                     .fillMaxWidth()
                                     .padding(1.dp)
                                     .clickable(onClick = {
-                                        //onSessionClicked(Session())
+                                        onSessionClicked(session)
                                     }),
                                 shape = RoundedCornerShape(20),
                                 elevation = 1.dp,
@@ -200,7 +200,7 @@ fun MissionsView(
                                     .fillMaxWidth()
                                     .padding(1.dp)
                                     .clickable(onClick = {
-                                        //onSessionClicked(Session())
+                                        onSessionClicked(Session())
                                     }),
                                 shape = RoundedCornerShape(20),
                                 elevation = 1.dp,
@@ -232,7 +232,10 @@ fun MissionsView(
                                 .fillMaxWidth()
                                 .padding(1.dp)
                                 .clickable(onClick = {
-                                    onItemClicked(mission)
+                                    if(mission.state == Mission.State.DESIGNING)
+                                        onModifyMission(mission)
+                                    else
+                                        onItemClicked(mission)
                                 }),
                             shape = RoundedCornerShape(20),
                             elevation = 1.dp,
