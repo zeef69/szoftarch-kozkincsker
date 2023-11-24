@@ -27,10 +27,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -65,7 +65,7 @@ fun NewTask(
     onBackClick: () -> Unit = {}
 ) {
     val context = LocalContext.current
-    var checkable =  if (task.taskType.checkable) 0 else 1
+    val checkable =  if (task.taskType.checkable) 0 else 1
     var privacySwitchState by remember { mutableIntStateOf(checkable) }
     val typeListNames = mutableListOf<String>()
     val typeList = mutableListOf<TaskType>()
@@ -87,7 +87,7 @@ fun NewTask(
     var descriptionInput by remember { mutableStateOf(task.description) }
     var scoreInput by remember { mutableStateOf(task.score.toString()) }
 
-    var scrolabblemodifier =
+    val scrolabblemodifier =
         if(
             privacySwitchState == 0 &&
             (typeSelectedIndexAutomatic == typeList.indexOf(TaskType.MapAnswer))
@@ -111,34 +111,23 @@ fun NewTask(
 
 
     /**
-     * Order and choice answers by designer
-     * */
-    var answerAInput by remember { mutableStateOf("") }
-    var answerBInput by remember { mutableStateOf("") }
-    var answerCInput by remember { mutableStateOf("") }
-    var answerDInput by remember { mutableStateOf("") }
-    var answerEInput by remember { mutableStateOf("") }
-    var answerFInput by remember { mutableStateOf("") }
-/*
-    var choiceAnswerInputList = arrayOf<MutableState<String>>()
-    for (i in 0..<6){
-        choiceAnswerInputList[i] = remember { mutableStateOf("") }
-    }*/
-    //listOf(answerAInput, answerBInput, answerCInput)
-
-    /**
      * Choice answers by designer
      * */
-    var checkedAState by remember { mutableStateOf(false) }
-    var checkedBState by remember { mutableStateOf(false) }
-    var checkedCState by remember { mutableStateOf(false) }
-    var checkedDState by remember { mutableStateOf(false) }
-    var checkedEState by remember { mutableStateOf(false) }
-    var checkedFState by remember { mutableStateOf(false) }
-    /*var checkedStateList = arrayOf<Boolean>()
-    for (b in 0..<6){
-        checkedStateList[b]  = false
-    }*/
+    val choiceAnswerInputList = remember { mutableStateListOf<String>() }
+    for (i in 0..<6){
+        choiceAnswerInputList.add("")
+    }
+    val checkedStateList = remember { mutableStateListOf<Boolean>() }
+    for (i in 0..<6){
+        checkedStateList.add(false)
+    }
+    /**
+     * Order answers by designer
+     * */
+    val orderAnswerInputList = remember { mutableStateListOf<String>() }
+    for (i in 0..<6){
+        orderAnswerInputList.add("")
+    }
     /**
      * Number answer by designer
      * */
@@ -163,8 +152,7 @@ fun NewTask(
         TaskType.DateAnswer -> ""
         TaskType.MapAnswer -> ""
         TaskType.OrderAnswer -> ""
-        TaskType.TextAnswer -> ""
-        TaskType.ImageAnswer -> ""
+        else -> {}
     }
 
     Column(
@@ -319,6 +307,41 @@ fun NewTask(
                                             )
                                         }
                                     }
+                                    for(i in 0..<answerNumberList[answersChoiceSelectedIndex].toInt()){
+                                        Row(
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            modifier = Modifier
+                                                .padding(0.dp, 2.dp, 0.dp, 2.dp)
+                                        ){
+                                            Checkbox(
+                                                checked = checkedStateList[i],
+                                                onCheckedChange = { checkedStateList[i] = it },
+                                                colors = CheckboxDefaults.colors(Color.Blue),
+                                                modifier = Modifier
+                                                    .padding(2.dp)
+                                                    .weight(0.1f, false)
+                                            )
+                                            OutlinedTextField(
+                                                value = choiceAnswerInputList[i],
+                                                onValueChange = {if (it.isEmpty() || !it.contains(pattern)) {
+                                                    choiceAnswerInputList[i] = it
+                                                }},
+                                                singleLine = false,
+                                                placeholder = {
+                                                    Text(
+                                                        text = "Answer option $i.",
+                                                        color = Color.Gray
+                                                    )
+                                                },
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .padding(0.dp, 2.dp, 0.dp, 2.dp)
+                                                    .weight(0.8f, true)
+                                            )
+                                        }
+                                    }
+
+/*
                                     if(answerNumberList[answersChoiceSelectedIndex].toInt() >= 1){
                                         Row(
                                             verticalAlignment = Alignment.CenterVertically,
@@ -506,7 +529,7 @@ fun NewTask(
                                         }
                                     }
 
-
+*/
                                 }
                             }
                             typeList.indexOf(TaskType.NumberAnswer)->{
@@ -642,6 +665,24 @@ fun NewTask(
                                             )
                                         }
                                     }
+                                    for(i in 0..<answerNumberList[answersOrderSelectedIndex].toInt()){
+                                        OutlinedTextField(
+                                            value = orderAnswerInputList[i],
+                                            onValueChange = {if (it.isEmpty() || !it.contains(pattern)) {orderAnswerInputList[i] = it}},
+                                            singleLine = false,
+                                            placeholder = {
+                                                Text(
+                                                    text = "Answer option $i.",
+                                                    color = Color.Gray
+                                                )
+                                            },
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(0.dp, 2.dp, 0.dp, 2.dp)
+                                        )
+                                    }
+
+                                    /*
                                     if(answerNumberList[answersOrderSelectedIndex].toInt() >= 1){
                                         OutlinedTextField(
                                             value = answerAInput,
@@ -738,6 +779,7 @@ fun NewTask(
                                                 .padding(0.dp, 2.dp, 0.dp, 2.dp)
                                         )
                                     }
+                                    */
                                 }
                             }
                             else -> {}
@@ -771,20 +813,30 @@ fun NewTask(
                      * Answers save ->
                      * depends on the taskType
                      * */
-                    var answersStringList=""
-                    if(privacySwitchState == 0 && typeList[typeSelectedIndexAutomatic]==TaskType.ListedAnswer) {
-                        for(i in 0..<answerNumberList[answersChoiceSelectedIndex].toInt()){
 
+                    val answerStringBuilder=StringBuilder()
+                    if(task.taskType==TaskType.ListedAnswer) {
+                        answerStringBuilder.append(answerNumberList[answersChoiceSelectedIndex])
+                        for(i in 0..<6){
+                            answerStringBuilder.append('|')
+                            if(i < answerNumberList[answersChoiceSelectedIndex].toInt()) answerStringBuilder.append(checkedStateList[i]).append('|').append(choiceAnswerInputList[i])
+                            else answerStringBuilder.append(false).append('|')
                         }
-                    } else if(privacySwitchState == 1) {
-                        task.taskType = typeList[typeSelectedIndexHuman]
                     }
+                    else if(task.taskType==TaskType.OrderAnswer) {
+                        answerStringBuilder.append(answerNumberList[answersOrderSelectedIndex])
+                        for(i in 0..<6){
+                            answerStringBuilder.append('|')
+                            if(i < answerNumberList[answersOrderSelectedIndex].toInt()) answerStringBuilder.append(orderAnswerInputList[i])
+                        }
+                    }
+
                     task.answers = when(task.taskType){
-                        TaskType.ListedAnswer -> ""
+                        TaskType.ListedAnswer -> answerStringBuilder.toString()
                         TaskType.NumberAnswer -> if(answerNumberInput == "") "0" else answerNumberInput
-                        TaskType.DateAnswer -> ""
+                        TaskType.DateAnswer -> dateInput.toString()
                         TaskType.MapAnswer -> ""
-                        TaskType.OrderAnswer -> ""
+                        TaskType.OrderAnswer -> answerStringBuilder.toString()
                         TaskType.TextAnswer -> ""
                         TaskType.ImageAnswer -> ""
                     }
