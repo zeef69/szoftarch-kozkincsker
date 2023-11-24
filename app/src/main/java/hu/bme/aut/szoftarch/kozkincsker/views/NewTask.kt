@@ -1,5 +1,6 @@
 package hu.bme.aut.szoftarch.kozkincsker.views
 
+import android.util.Log
 import java.text.SimpleDateFormat
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -54,6 +55,8 @@ import hu.bme.aut.szoftarch.kozkincsker.data.model.Task
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.ComboBox
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.DatePicker
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.SegmentedControl
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 
@@ -67,6 +70,9 @@ fun NewTask(
     val context = LocalContext.current
     val checkable =  if (task.taskType.checkable) 0 else 1
     var privacySwitchState by remember { mutableIntStateOf(checkable) }
+    /**
+     * Task type lists preparation
+     * */
     val typeListNames = mutableListOf<String>()
     val typeList = mutableListOf<TaskType>()
     for(type in TaskType.values()) {
@@ -83,24 +89,25 @@ fun NewTask(
     var typeSelectedIndexHuman by remember { mutableIntStateOf(if(!task.taskType.checkable) typeList.indexOf(task.taskType) else 0) }
     var typeExpanded by remember { mutableStateOf(false) }
 
+    val scrollablemodifier =
+        if(
+            privacySwitchState == 0 &&
+            (typeSelectedIndexAutomatic == typeList.indexOf(TaskType.MapAnswer))
+        )  Modifier
+        else Modifier.verticalScroll(rememberScrollState())
+    
     var titleInput by remember { mutableStateOf(task.title) }
     var descriptionInput by remember { mutableStateOf(task.description) }
     var scoreInput by remember { mutableStateOf(task.score.toString()) }
 
-    val scrolabblemodifier =
-        if(
-            privacySwitchState == 0 &&
-            (typeSelectedIndexAutomatic == typeList.indexOf(TaskType.MapAnswer))
-            )  Modifier
-        else Modifier.verticalScroll(rememberScrollState())
     /**
      * Answer values
-     *
+     *-------------------------
      */
-    val pattern =  '|'
-    //TODO kicserélni mindet task.answer feldologzása után
+    val originalTaskAnswers = task.answers.split('|')
+
     /**
-     * Answer number by designer
+     * Answers size list preparation
      */
     val answerNumberList = mutableListOf<String>()
     for(i in 2..6) answerNumberList.add(i.toString())
@@ -109,6 +116,9 @@ fun NewTask(
     var answersOrderSelectedIndex by remember { mutableIntStateOf(0) }
     var answersOrderExpanded by remember { mutableStateOf(false) }
 
+
+    val pattern =  '|'
+    //TODO kicserélni mindet task.answer feldologzása után
 
     /**
      * Choice answers by designer
@@ -131,10 +141,17 @@ fun NewTask(
     /**
      * Number answer by designer
      * */
-    var answerNumberInput by remember { mutableStateOf("0") }
+    var answerNumberInput by remember { mutableStateOf(
+        if(task.taskType == TaskType.NumberAnswer) task.answers
+        else "0")
+    }
     var datePickerState by remember { mutableStateOf(false) }
     var dateInput by remember {
-        mutableStateOf(SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).format(Date()))
+        mutableStateOf(SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).format(
+            if(task.taskType == TaskType.DateAnswer)
+                SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(task.answers)
+            else Date())
+        )
     }
     /**
      * Map answer by designer
@@ -146,6 +163,7 @@ fun NewTask(
     var mapZoomState by remember { mutableFloatStateOf(20f)}
     mapInput = markerState.position.latitude.toString() + ", " + markerState.position.longitude.toString()
 
+    /*
     when(task.taskType){
         TaskType.ListedAnswer -> ""
         TaskType.NumberAnswer -> answerNumberInput = task.answers
@@ -153,7 +171,7 @@ fun NewTask(
         TaskType.MapAnswer -> ""
         TaskType.OrderAnswer -> ""
         else -> {}
-    }
+    }*/
 
     Column(
         modifier = Modifier
@@ -185,7 +203,7 @@ fun NewTask(
             verticalArrangement = Arrangement.SpaceBetween
         ){
             Column(
-                modifier = scrolabblemodifier
+                modifier = scrollablemodifier
                     .fillMaxSize()
                     .padding(12.dp, 12.dp, 12.dp, 25.dp)
                     .weight(1f, false)
@@ -272,7 +290,6 @@ fun NewTask(
                 )
                 Column(
                     modifier= Modifier
-                        //.fillMaxSize()
                         .fillMaxWidth()
                         .padding(12.dp, 12.dp, 12.dp, 25.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -290,7 +307,7 @@ fun NewTask(
                                         modifier = Modifier
                                             .padding(0.dp, 2.dp, 0.dp, 2.dp)
                                     ){
-                                        Text(text = "Answer options",
+                                        Text(text = "Answer option",
                                                 modifier = Modifier
                                                 .weight(0.5f, true))
                                         Box(
@@ -340,196 +357,6 @@ fun NewTask(
                                             )
                                         }
                                     }
-
-/*
-                                    if(answerNumberList[answersChoiceSelectedIndex].toInt() >= 1){
-                                        Row(
-                                            verticalAlignment = Alignment.CenterVertically,
-                                            modifier = Modifier
-                                                .padding(0.dp, 2.dp, 0.dp, 2.dp)
-                                        ){
-                                            Checkbox(
-                                                checked = checkedAState,
-                                                onCheckedChange = { checkedAState = it },
-                                                colors = CheckboxDefaults.colors(Color.Blue),
-                                                modifier = Modifier
-                                                    .padding(2.dp)
-                                                    .weight(0.1f, false)
-                                            )
-                                            OutlinedTextField(
-                                                value = answerAInput,
-                                                onValueChange = {if (it.isEmpty() || !it.contains(pattern)) { answerAInput = it}},
-                                                singleLine = false,
-                                                placeholder = {
-                                                    Text(
-                                                        text = "Answer option 1.",
-                                                        color = Color.Gray
-                                                    )
-                                                },
-                                                modifier = Modifier
-                                                    .fillMaxWidth()
-                                                    .padding(0.dp, 2.dp, 0.dp, 2.dp)
-                                                    .weight(0.8f, true)
-                                            )
-                                        }
-                                    }
-                                    if(answerNumberList[answersChoiceSelectedIndex].toInt() >= 2) {
-                                        Row(
-                                            verticalAlignment = Alignment.CenterVertically,
-                                            modifier = Modifier
-                                                .padding(0.dp, 2.dp, 0.dp, 2.dp)
-                                        ) {
-                                            Checkbox(
-                                                checked = checkedBState,
-                                                onCheckedChange = { checkedBState = it },
-                                                colors = CheckboxDefaults.colors(Color.Blue),
-                                                modifier = Modifier
-                                                    .padding(2.dp)
-                                                    .weight(0.1f, false)
-                                            )
-                                            OutlinedTextField(
-                                                value = answerBInput,
-                                                onValueChange = {if (it.isEmpty() || !it.contains(pattern)) {answerBInput = it}},
-                                                singleLine = false,
-                                                placeholder = {
-                                                    Text(
-                                                        text = "Answer option 2.",
-                                                        color = Color.Gray
-                                                    )
-                                                },
-                                                modifier = Modifier
-                                                    .fillMaxWidth()
-                                                    .padding(0.dp, 2.dp, 0.dp, 2.dp)
-                                                    .weight(0.8f, true)
-                                            )
-                                        }
-                                    }
-                                    if(answerNumberList[answersChoiceSelectedIndex].toInt() >= 3) {
-                                        Row(
-                                            verticalAlignment = Alignment.CenterVertically,
-                                            modifier = Modifier
-                                                .padding(0.dp, 2.dp, 0.dp, 2.dp)
-                                        ) {
-                                            Checkbox(
-                                                checked = checkedCState,
-                                                onCheckedChange = { checkedCState = it },
-                                                colors = CheckboxDefaults.colors(Color.Blue),
-                                                modifier = Modifier
-                                                    .padding(2.dp)
-                                                    .weight(0.1f, false)
-                                            )
-                                            OutlinedTextField(
-                                                value = answerCInput,
-                                                onValueChange = { if (it.isEmpty() || it.contains(pattern)) {answerCInput = it}},
-                                                singleLine = false,
-                                                placeholder = {
-                                                    Text(
-                                                        text = "Answer option 3.",
-                                                        color = Color.Gray
-                                                    )
-                                                },
-                                                modifier = Modifier
-                                                    .fillMaxWidth()
-                                                    .padding(0.dp, 2.dp, 0.dp, 2.dp)
-                                                    .weight(0.8f, true)
-                                            )
-                                        }
-                                    }
-                                    if(answerNumberList[answersChoiceSelectedIndex].toInt() >= 4) {
-                                        Row(
-                                            verticalAlignment = Alignment.CenterVertically,
-                                            modifier = Modifier
-                                                .padding(0.dp, 2.dp, 0.dp, 2.dp)
-                                        ) {
-                                            Checkbox(
-                                                checked = checkedDState,
-                                                onCheckedChange = { checkedDState = it },
-                                                colors = CheckboxDefaults.colors(Color.Blue),
-                                                modifier = Modifier
-                                                    .padding(2.dp)
-                                                    .weight(0.1f, false)
-                                            )
-                                            OutlinedTextField(
-                                                value = answerDInput,
-                                                onValueChange = {if (it.isEmpty() || it.contains(pattern)) {answerDInput = it}},
-                                                singleLine = false,
-                                                placeholder = {
-                                                    Text(
-                                                        text = "Answer option 4.",
-                                                        color = Color.Gray
-                                                    )
-                                                },
-                                                modifier = Modifier
-                                                    .fillMaxWidth()
-                                                    .padding(0.dp, 2.dp, 0.dp, 2.dp)
-                                                    .weight(0.8f, true)
-                                            )
-                                        }
-                                    }
-                                    if(answerNumberList[answersChoiceSelectedIndex].toInt() >= 5) {
-                                        Row(
-                                            verticalAlignment = Alignment.CenterVertically,
-                                            modifier = Modifier
-                                                .padding(0.dp, 2.dp, 0.dp, 2.dp)
-                                        ) {
-                                            Checkbox(
-                                                checked = checkedEState,
-                                                onCheckedChange = { checkedEState = it },
-                                                colors = CheckboxDefaults.colors(Color.Blue),
-                                                modifier = Modifier
-                                                    .padding(2.dp)
-                                                    .weight(0.1f, false)
-                                            )
-                                            OutlinedTextField(
-                                                value = answerEInput,
-                                                onValueChange = { if (it.isEmpty() || it.contains(pattern)) {answerEInput = it}},
-                                                singleLine = false,
-                                                placeholder = {
-                                                    Text(
-                                                        text = "Answer option 5.",
-                                                        color = Color.Gray
-                                                    )
-                                                },
-                                                modifier = Modifier
-                                                    .fillMaxWidth()
-                                                    .padding(0.dp, 2.dp, 0.dp, 2.dp)
-                                                    .weight(0.8f, true)
-                                            )
-                                        }
-                                    }
-                                    if(answerNumberList[answersChoiceSelectedIndex].toInt() >= 6) {
-                                        Row(
-                                            verticalAlignment = Alignment.CenterVertically,
-                                            modifier = Modifier
-                                                .padding(0.dp, 2.dp, 0.dp, 2.dp)
-                                        ) {
-                                            Checkbox(
-                                                checked = checkedFState,
-                                                onCheckedChange = { checkedFState = it },
-                                                colors = CheckboxDefaults.colors(Color.Blue),
-                                                modifier = Modifier
-                                                    .padding(2.dp)
-                                                    .weight(0.1f, false)
-                                            )
-                                            OutlinedTextField(
-                                                value = answerFInput,
-                                                onValueChange = { if (it.isEmpty() || it.contains(pattern)) {answerFInput = it}},
-                                                singleLine = false,
-                                                placeholder = {
-                                                    Text(
-                                                        text = "Answer option 6.",
-                                                        color = Color.Gray
-                                                    )
-                                                },
-                                                modifier = Modifier
-                                                    .fillMaxWidth()
-                                                    .padding(0.dp, 2.dp, 0.dp, 2.dp)
-                                                    .weight(0.8f, true)
-                                            )
-                                        }
-                                    }
-
-*/
                                 }
                             }
                             typeList.indexOf(TaskType.NumberAnswer)->{
@@ -672,7 +499,7 @@ fun NewTask(
                                             singleLine = false,
                                             placeholder = {
                                                 Text(
-                                                    text = "Answer option $i.",
+                                                    text = "Answer option",
                                                     color = Color.Gray
                                                 )
                                             },
@@ -681,121 +508,21 @@ fun NewTask(
                                                 .padding(0.dp, 2.dp, 0.dp, 2.dp)
                                         )
                                     }
-
-                                    /*
-                                    if(answerNumberList[answersOrderSelectedIndex].toInt() >= 1){
-                                        OutlinedTextField(
-                                            value = answerAInput,
-                                            onValueChange = {if (it.isEmpty() || it.contains(pattern)) {answerAInput = it}},
-                                            singleLine = false,
-                                            placeholder = {
-                                                Text(
-                                                    text = "Answer option 1.",
-                                                    color = Color.Gray
-                                                )
-                                            },
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .padding(0.dp, 2.dp, 0.dp, 2.dp)
-                                        )
-                                    }
-                                    if(answerNumberList[answersOrderSelectedIndex].toInt() >= 2) {
-                                        OutlinedTextField(
-                                            value = answerBInput,
-                                            onValueChange = {if (it.isEmpty() || it.contains(pattern)) {answerBInput = it}},
-                                            singleLine = false,
-                                            placeholder = {
-                                                Text(
-                                                    text = "Answer option 2.",
-                                                    color = Color.Gray
-                                                )
-                                            },
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .padding(0.dp, 2.dp, 0.dp, 2.dp)
-                                        )
-                                    }
-                                    if(answerNumberList[answersOrderSelectedIndex].toInt() >= 3) {
-                                        OutlinedTextField(
-                                            value = answerCInput,
-                                            onValueChange = { if (it.isEmpty() || it.contains(pattern)) {answerCInput = it}},
-                                            singleLine = false,
-                                            placeholder = {
-                                                Text(
-                                                    text = "Answer option 3.",
-                                                    color = Color.Gray
-                                                )
-                                            },
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .padding(0.dp, 2.dp, 0.dp, 2.dp)
-                                        )
-                                    }
-                                    if(answerNumberList[answersOrderSelectedIndex].toInt() >= 4) {
-                                        OutlinedTextField(
-                                            value = answerDInput,
-                                            onValueChange = {if (it.isEmpty() || it.contains(pattern)) {answerDInput = it}},
-                                            singleLine = false,
-                                            placeholder = {
-                                                Text(
-                                                    text = "Answer option 4.",
-                                                    color = Color.Gray
-                                                )
-                                            },
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .padding(0.dp, 2.dp, 0.dp, 2.dp)
-                                        )
-                                    }
-                                    if(answerNumberList[answersOrderSelectedIndex].toInt() >= 5) {
-                                        OutlinedTextField(
-                                            value = answerEInput,
-                                            onValueChange = { if (it.isEmpty() || it.contains(pattern)) {answerEInput = it}},
-                                            singleLine = false,
-                                            placeholder = {
-                                                Text(
-                                                    text = "Answer option 5.",
-                                                    color = Color.Gray
-                                                )
-                                            },
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .padding(0.dp, 2.dp, 0.dp, 2.dp)
-                                        )
-                                    }
-                                    if(answerNumberList[answersOrderSelectedIndex].toInt() >= 6) {
-                                        OutlinedTextField(
-                                            value = answerFInput,
-                                            onValueChange = { if (it.isEmpty() || it.contains(pattern)) {answerFInput = it}},
-                                            singleLine = false,
-                                            placeholder = {
-                                                Text(
-                                                    text = "Answer option 6.",
-                                                    color = Color.Gray
-                                                )
-                                            },
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .padding(0.dp, 2.dp, 0.dp, 2.dp)
-                                        )
-                                    }
-                                    */
                                 }
                             }
                             else -> {}
                         }
-
                     }
                     else if(privacySwitchState == 1) {
-                    when (typeSelectedIndexHuman) {
-                        typeList.indexOf(TaskType.TextAnswer) -> {
-                            Text(text = "The user provides a text as answer")
+                        when (typeSelectedIndexHuman) {
+                            typeList.indexOf(TaskType.TextAnswer) -> {
+                                Text(text = "The user provides a text as answer")
+                            }
+                            typeList.indexOf(TaskType.ImageAnswer) -> {
+                                Text(text = "The user provides an image as answer")
+                            }
+                            else -> {}
                         }
-                        typeList.indexOf(TaskType.ImageAnswer) -> {
-                            Text(text = "The user provides an image as answer")
-                        }
-                        else -> {}
-                    }
                 }
                 }
             }
