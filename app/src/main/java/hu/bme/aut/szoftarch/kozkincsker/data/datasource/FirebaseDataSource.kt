@@ -65,22 +65,23 @@ class FirebaseDataSource @Inject constructor() {
         return missions
     }
 
-    suspend fun onUploadMission(newMission: Mission) {
-        var newMissionId =""
-        database.collection("missions").add(newMission)
+    suspend fun onUploadMission(newMission: Mission) : DocumentReference? {
+        return database.collection("missions").add(newMission)
             .addOnSuccessListener { documentReference ->
-                newMissionId = documentReference.id
                 Log.d("success", "DocumentSnapshot written with ID: $documentReference.")
             }
             .addOnFailureListener { exception ->
                 Log.d("failure", "Error getting documents: ", exception)
             }.await()
-        val user = getUser()
-        if (user != null && newMission.designerId!=null) {
-            val addDesignedMission : HashMap<String, Any> = HashMap()
-            addDesignedMission["designedMissionIds"] = FieldValue.arrayUnion(newMissionId)
+    }
 
-            database.collection("users").document(user.id).update(addDesignedMission)
+    suspend fun addMissionToUser(mission: Mission?){
+        val user = getUser()
+        if (user != null && mission != null) {
+            val addMission : HashMap<String, Any> = HashMap()
+            addMission["designedMissionIds"] = FieldValue.arrayUnion(mission.id)
+
+            database.collection("users").document(user.id).update(addMission)
                 .addOnSuccessListener { documentReference ->
                     Log.d("success", "DocumentSnapshot written with ID: $documentReference.")
                 }
@@ -101,7 +102,6 @@ class FirebaseDataSource @Inject constructor() {
     }
 
     suspend fun onDeleteMission(mission: Mission) {
-        var savedMissionId = mission.id
         database.collection("missions").document(mission.id).delete()
             .addOnSuccessListener { documentReference ->
                 Log.d("success", "DocumentSnapshot written with ID: $documentReference.")
@@ -113,7 +113,7 @@ class FirebaseDataSource @Inject constructor() {
         val user = getUser()
         if (user != null) {
             val addDesignedMission : HashMap<String, Any> = HashMap()
-            addDesignedMission["designedMissionIds"] = FieldValue.arrayRemove(savedMissionId)
+            addDesignedMission["designedMissionIds"] = FieldValue.arrayRemove(mission.id)
 
             database.collection("users").document(user.id).update(addDesignedMission)
                 .addOnSuccessListener { documentReference ->

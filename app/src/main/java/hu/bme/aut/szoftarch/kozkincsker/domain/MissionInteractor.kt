@@ -17,8 +17,13 @@ class MissionInteractor @Inject constructor(
         return firebaseDataSource.getMissionsOnce()
     }
 
-    suspend fun uploadMission(newMission: Mission) {
-        firebaseDataSource.onUploadMission(newMission)
+    suspend fun uploadMission(newMission: Mission) : String? {
+        val data = firebaseDataSource.onUploadMission(newMission)
+        if(data != null) {
+            newMission.id = data.id
+            firebaseDataSource.addMissionToUser(newMission)
+        }
+        return data?.id
     }
 
     suspend fun editMission(mission: Mission) {

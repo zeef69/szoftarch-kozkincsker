@@ -4,6 +4,7 @@ import co.zsmb.rainbowcake.base.RainbowCakeViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
 import hu.bme.aut.szoftarch.kozkincsker.data.model.User
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 @HiltViewModel
 class NewMissionViewModel
@@ -21,8 +22,8 @@ class NewMissionViewModel
 
         }
 
-    fun uploadMission(newMission: Mission) = execute{
-        newMissionPresenter.uploadMission(newMission)
+    fun uploadMission(newMission: Mission): String? = runBlocking {
+        return@runBlocking newMissionPresenter.uploadMission(newMission)
     }
     fun updateMission(editedMission: Mission) = execute{
         newMissionPresenter.updateMission(editedMission)
