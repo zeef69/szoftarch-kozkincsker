@@ -15,6 +15,7 @@ import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
 import hu.bme.aut.szoftarch.kozkincsker.data.model.User
 import hu.bme.aut.szoftarch.kozkincsker.ui.mission_start.MissionStartFragment
 import hu.bme.aut.szoftarch.kozkincsker.ui.new_mission.NewMissionFragment
+import hu.bme.aut.szoftarch.kozkincsker.ui.session_moderator.SessionModeratorFragment
 import hu.bme.aut.szoftarch.kozkincsker.ui.session_player.SessionPlayerFragment
 import hu.bme.aut.szoftarch.kozkincsker.views.MissionsView
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.FullScreenLoading
@@ -89,6 +90,8 @@ class MissionsFragment : RainbowCakeFragment<MissionsViewState, MissionsViewMode
     }
 
     private fun onSessionClicked(session: Session) {
-        navigator?.add(SessionPlayerFragment.newInstance(session))
+        if(session.moderator == actualUser.id)
+            navigator?.add(SessionModeratorFragment.newInstance(session))
+        else navigator?.add(SessionPlayerFragment.newInstance(session))
     }
 }
