@@ -110,7 +110,6 @@ fun NewTask(
     for(i in 2..6) answerNumberList.add(i.toString())
     var answersChoiceSelectedIndex by remember { mutableIntStateOf(
         if (task.taskType == TaskType.ListedAnswer
-          //  && privacySwitchState == 0 &&
             && task.answers.split(pattern).size > 1)
             task.answers.split(pattern)[0].toInt()-2
         else 0

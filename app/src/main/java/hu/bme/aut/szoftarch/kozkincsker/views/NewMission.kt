@@ -55,6 +55,8 @@ import hu.bme.aut.szoftarch.kozkincsker.views.helpers.ChangingIconButton
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.ComboBox
 import java.util.Date
 import hu.bme.aut.szoftarch.kozkincsker.R
+import hu.bme.aut.szoftarch.kozkincsker.data.enums.MissionType
+import hu.bme.aut.szoftarch.kozkincsker.data.enums.TaskType
 import hu.bme.aut.szoftarch.kozkincsker.data.model.User
 
 @Composable
@@ -72,7 +74,14 @@ fun NewMission(
     var privacySwitchState by remember { mutableIntStateOf(mission.visibility.ordinal) }
     var hoursToSolveStringInput by remember { mutableStateOf(mission.hoursToSolve.toString()) }
     var daysToSolveStringInput by remember { mutableStateOf(mission.daysToSolve.toString()) }
-    var missionTags by remember { mutableStateOf("mission.missionTagIds") }
+    val missionTypeListNames = mutableListOf<String>()
+    val missionTypeList = mutableListOf<MissionType>()
+    for(type in MissionType.values()) {
+        missionTypeListNames.add(stringResource(type.translation))
+        missionTypeList.add(type)
+    }
+    var missionTypeSelectedIndex by remember { mutableIntStateOf( missionTypeList.indexOf(mission.missionType)) }
+    var missionTypeExpanded by remember { mutableStateOf(false) }
     val levels = mission.levelList
     mission.designerId = designer.id
     Column(
@@ -183,20 +192,20 @@ fun NewMission(
                         .weight(0.3f, false)
                         .padding(horizontal = 5.dp, vertical=2.dp)
                 )
-                OutlinedTextField(
-                    value = missionTags,
-                    onValueChange = { missionTags = it },
-                    singleLine = true,
-                    label = {
-                        Text(
-                            text = "Mission tags",
-                            color = Color.Gray
-                        )
-                    },
-                    modifier = Modifier
+                Box(
+                    modifier=Modifier
                         .weight(0.4f, true)
                         .padding(vertical=2.dp)
-                )
+                ) {
+                    ComboBox(
+                        list = missionTypeListNames,
+                        selectedIndex = missionTypeSelectedIndex,
+                        onIndexChanged = { missionTypeSelectedIndex = it },
+                        isExpanded = missionTypeExpanded,
+                        onExpandedChanged = { missionTypeExpanded = it },
+                        textWidth = 130.dp
+                    )
+                }
             }
             LazyColumn(
                 modifier = Modifier
@@ -232,8 +241,6 @@ fun NewMission(
                                 onExpandedChanged = { typeExpanded = it },
                                 textWidth = 0.dp
                             )
-                            println(LevelType.values().toList())
-                            println(LevelType.values().toList()[typeSelectedIndex])
                             level.levelType = LevelType.values().toList()[typeSelectedIndex]
                         }
                         Row(
@@ -273,6 +280,7 @@ fun NewMission(
                                     mission.hoursToSolve = hoursToSolveStringInput.toInt()
                                     mission.daysToSolve = daysToSolveStringInput.toInt()
                                     mission.levelList = levels
+                                    mission.missionType = missionTypeList[missionTypeSelectedIndex]
                                     mission.visibility = if(privacySwitchState==0) Mission.Visibility.PRIVATE else Mission.Visibility.PUBLIC
                                     onNewTask(mission, level) },
                                 modifier = Modifier
@@ -296,6 +304,7 @@ fun NewMission(
                     mission.hoursToSolve = hoursToSolveStringInput.toInt()
                     mission.daysToSolve = daysToSolveStringInput.toInt()
                     mission.levelList = levels
+                    mission.missionType = missionTypeList[missionTypeSelectedIndex]
                     mission.visibility = if(privacySwitchState==0) Mission.Visibility.PRIVATE else Mission.Visibility.PUBLIC
                     val level = Level()
                     onNewTask(mission, level)
@@ -321,6 +330,7 @@ fun NewMission(
                         mission.hoursToSolve = hoursToSolveStringInput.toInt()
                         mission.daysToSolve = daysToSolveStringInput.toInt()
                         mission.levelList = levels
+                        mission.missionType = missionTypeList[missionTypeSelectedIndex]
                         mission.modificationDate = Date()
                         var playableWithoutModerator = true
                         for(level in mission.levelList) for (task in level.taskList) playableWithoutModerator=playableWithoutModerator and task.taskType.checkable
@@ -343,6 +353,7 @@ fun NewMission(
                         mission.hoursToSolve = hoursToSolveStringInput.toInt()
                         mission.daysToSolve = daysToSolveStringInput.toInt()
                         mission.levelList = levels
+                        mission.missionType = missionTypeList[missionTypeSelectedIndex]
                         mission.modificationDate = Date()
                         var playableWithoutModerator = true
                         for(level in mission.levelList) for (task in level.taskList) playableWithoutModerator=playableWithoutModerator and task.taskType.checkable
