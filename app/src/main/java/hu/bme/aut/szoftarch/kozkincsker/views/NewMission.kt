@@ -2,6 +2,7 @@ package hu.bme.aut.szoftarch.kozkincsker.views
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,7 +18,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -40,6 +43,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -47,8 +51,6 @@ import hu.bme.aut.szoftarch.kozkincsker.data.enums.LevelType
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Level
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Task
-import hu.bme.aut.szoftarch.kozkincsker.views.helpers.AccordionMenu
-import hu.bme.aut.szoftarch.kozkincsker.views.helpers.AccordionModel
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.ChangingIconButton
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.ComboBox
 import java.util.Date
@@ -68,8 +70,8 @@ fun NewMission(
     var titleInput by remember { mutableStateOf(mission.name) }
     var descriptionInput by remember { mutableStateOf(mission.description) }
     var privacySwitchState by remember { mutableIntStateOf(mission.visibility.ordinal) }
-    var hoursToSolveInput by remember { mutableIntStateOf(mission.hoursToSolve) }
-    var daysToSolveInput by remember { mutableIntStateOf(mission.daysToSolve) }
+    var hoursToSolveStringInput by remember { mutableStateOf(mission.hoursToSolve.toString()) }
+    var daysToSolveStringInput by remember { mutableStateOf(mission.daysToSolve.toString()) }
     var missionTags by remember { mutableStateOf("mission.missionTagIds") }
     val levels = mission.levelList
     mission.designerId = designer.id
@@ -144,22 +146,58 @@ fun NewMission(
                     .fillMaxWidth()
                     .padding(0.dp, 2.dp, 0.dp, 2.dp)
             )
-
-            var otherSettingsModel= AccordionModel(
-                header = stringResource(R.string.other_settings),
-                rows = mutableListOf(
-                    AccordionModel.Row(AccordionModel.VisibleValue.IntValue, title="Solution days", valueIntToString=daysToSolveInput.toString()),
-                    AccordionModel.Row(AccordionModel.VisibleValue.IntValue, title="Solution hours", valueIntToString=hoursToSolveInput.toString()),
-                    AccordionModel.Row(AccordionModel.VisibleValue.StringValue, title="Mission tags", valueString=missionTags),
-                    AccordionModel.Row(AccordionModel.VisibleValue.BadgeValue, title="Badge", valueString="Default", valueIntToString="0"),
-                )
-            )
-
-            AccordionMenu(
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
-                .fillMaxWidth(),
-                model=otherSettingsModel )
-
+                    .height(IntrinsicSize.Min)
+                    .fillMaxWidth()
+                    .horizontalScroll(rememberScrollState())
+                ){
+                OutlinedTextField(
+                    value = daysToSolveStringInput,
+                    onValueChange = { daysToSolveStringInput = it },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
+                    singleLine = true,
+                    label = {
+                        Text(
+                            text = "Solution days",
+                            color = Color.Gray
+                        )
+                    },
+                    modifier = Modifier
+                        .weight(0.3f, false)
+                        .padding(horizontal = 5.dp, vertical=2.dp)
+                )
+                OutlinedTextField(
+                    value = hoursToSolveStringInput,
+                    onValueChange = { hoursToSolveStringInput = it },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
+                    singleLine = true,
+                    label = {
+                        Text(
+                            text = "Solution hours",
+                            color = Color.Gray
+                        )
+                    },
+                    modifier = Modifier
+                        .weight(0.3f, false)
+                        .padding(horizontal = 5.dp, vertical=2.dp)
+                )
+                OutlinedTextField(
+                    value = missionTags,
+                    onValueChange = { missionTags = it },
+                    singleLine = true,
+                    label = {
+                        Text(
+                            text = "Mission tags",
+                            color = Color.Gray
+                        )
+                    },
+                    modifier = Modifier
+                        .weight(0.4f, true)
+                        .padding(vertical=2.dp)
+                )
+            }
             LazyColumn(
                 modifier = Modifier
                     .padding(all = 5.dp)
@@ -232,8 +270,8 @@ fun NewMission(
                                 onClick = {
                                     mission.name = titleInput
                                     mission.description = descriptionInput
-                                    mission.hoursToSolve = hoursToSolveInput
-                                    mission.daysToSolve = daysToSolveInput
+                                    mission.hoursToSolve = hoursToSolveStringInput.toInt()
+                                    mission.daysToSolve = daysToSolveStringInput.toInt()
                                     mission.levelList = levels
                                     mission.visibility = if(privacySwitchState==0) Mission.Visibility.PRIVATE else Mission.Visibility.PUBLIC
                                     onNewTask(mission, level) },
@@ -255,12 +293,11 @@ fun NewMission(
                 onClick = {
                     mission.name = titleInput
                     mission.description = descriptionInput
-                    mission.hoursToSolve = hoursToSolveInput
-                    mission.daysToSolve = daysToSolveInput
+                    mission.hoursToSolve = hoursToSolveStringInput.toInt()
+                    mission.daysToSolve = daysToSolveStringInput.toInt()
                     mission.levelList = levels
                     mission.visibility = if(privacySwitchState==0) Mission.Visibility.PRIVATE else Mission.Visibility.PUBLIC
                     val level = Level()
-                    //levels.add(level)
                     onNewTask(mission, level)
                 },
                 modifier = Modifier
@@ -269,49 +306,58 @@ fun NewMission(
             ) {
                 Icon(imageVector  = Icons.Filled.Add, null)
             }
-            Button(
-                onClick = {
-                    mission.name = titleInput
-                    mission.description = descriptionInput
-                    mission.hoursToSolve = hoursToSolveInput
-                    mission.daysToSolve = daysToSolveInput
-                    mission.levelList = levels
-                    mission.modificationDate = Date()
-                    var playableWithoutModerator = true
-                    for(level in mission.levelList) for (task in level.taskList) playableWithoutModerator=playableWithoutModerator and task.taskType.checkable
-                    mission.isPlayableWithoutModerator = playableWithoutModerator
-                    mission.visibility = if(privacySwitchState==0) Mission.Visibility.PRIVATE else Mission.Visibility.PUBLIC
-                    mission.state = Mission.State.DESIGNING
-                    onSaveClick(mission)
-                },
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceEvenly,
                 modifier = Modifier
-                    .padding(vertical = 2.dp, horizontal = 50.dp)
-                    .fillMaxWidth(),
-                shape = RoundedCornerShape(10),
-            ) {
-                Text("Save")
-            }
-            Button(
-                onClick = {
-                    mission.name = titleInput
-                    mission.description = descriptionInput
-                    mission.hoursToSolve = hoursToSolveInput
-                    mission.daysToSolve = daysToSolveInput
-                    mission.levelList = levels
-                    mission.modificationDate = Date()
-                    var playableWithoutModerator = true
-                    for(level in mission.levelList) for (task in level.taskList) playableWithoutModerator=playableWithoutModerator and task.taskType.checkable
-                    mission.isPlayableWithoutModerator = playableWithoutModerator
-                    mission.visibility = if(privacySwitchState==0) Mission.Visibility.PRIVATE else Mission.Visibility.PUBLIC
-                    mission.state = Mission.State.FINISHED
-                    onPostClick(mission)
-                },
-                modifier = Modifier
-                    .padding(vertical = 2.dp, horizontal = 50.dp)
-                    .fillMaxWidth(),
-                shape = RoundedCornerShape(10),
-            ) {
-                Text("Post")
+                    .height(IntrinsicSize.Min)
+                    .padding(horizontal = 25.dp)
+                    .fillMaxWidth()
+            ){
+                Button(
+                    onClick = {
+                        mission.name = titleInput
+                        mission.description = descriptionInput
+                        mission.hoursToSolve = hoursToSolveStringInput.toInt()
+                        mission.daysToSolve = daysToSolveStringInput.toInt()
+                        mission.levelList = levels
+                        mission.modificationDate = Date()
+                        var playableWithoutModerator = true
+                        for(level in mission.levelList) for (task in level.taskList) playableWithoutModerator=playableWithoutModerator and task.taskType.checkable
+                        mission.isPlayableWithoutModerator = playableWithoutModerator
+                        mission.visibility = if(privacySwitchState==0) Mission.Visibility.PRIVATE else Mission.Visibility.PUBLIC
+                        mission.state = Mission.State.DESIGNING
+                        onSaveClick(mission)
+                    },
+                    modifier = Modifier
+                        .padding(horizontal=5.dp, vertical = 2.dp)
+                        .weight(0.4f, true),
+                    shape = RoundedCornerShape(10),
+                ) {
+                    Text("Save")
+                }
+                Button(
+                    onClick = {
+                        mission.name = titleInput
+                        mission.description = descriptionInput
+                        mission.hoursToSolve = hoursToSolveStringInput.toInt()
+                        mission.daysToSolve = daysToSolveStringInput.toInt()
+                        mission.levelList = levels
+                        mission.modificationDate = Date()
+                        var playableWithoutModerator = true
+                        for(level in mission.levelList) for (task in level.taskList) playableWithoutModerator=playableWithoutModerator and task.taskType.checkable
+                        mission.isPlayableWithoutModerator = playableWithoutModerator
+                        mission.visibility = if(privacySwitchState==0) Mission.Visibility.PRIVATE else Mission.Visibility.PUBLIC
+                        mission.state = Mission.State.FINISHED
+                        onPostClick(mission)
+                    },
+                    modifier = Modifier
+                        .padding(horizontal=5.dp, vertical = 2.dp)
+                        .weight(0.4f, true),
+                    shape = RoundedCornerShape(10),
+                ) {
+                    Text("Post")
+                }
             }
         }
     }

@@ -1,7 +1,6 @@
 package hu.bme.aut.szoftarch.kozkincsker.views.helpers
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -78,7 +77,6 @@ data class AccordionModel(
         val title: String = "",
         var valueString: String = "",
         var valueIntToString: String = "0"
-
     )
 }
 
@@ -137,7 +135,6 @@ private fun AccordionRow(
                     .weight(0.2f, false)
             )
         }
-
         if(model.visibleValue==AccordionModel.VisibleValue.BadgeValue){
             OutlinedTextField(
                 value = stringInput,
@@ -171,6 +168,7 @@ private fun AccordionRow(
                     .weight(0.2f, false)
             )
         }
+        
     }
 }
 
