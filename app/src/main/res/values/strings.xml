@@ -20,4 +20,6 @@
     <string name="other_settings">Other settings</string>
     <string name="new_mission_title">Mission title</string>
     <string name="new_mission_description">Mission description</string>
+    <string name="mission_type_outdoor">Outdoor</string>
+    <string name="mission_type_indoor">Indoor</string>
 </resources>

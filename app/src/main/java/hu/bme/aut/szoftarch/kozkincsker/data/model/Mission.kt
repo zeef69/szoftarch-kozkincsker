@@ -3,6 +3,7 @@ package hu.bme.aut.szoftarch.kozkincsker.data.model
 import android.os.Parcelable
 import com.google.firebase.firestore.DocumentId
 import com.google.firebase.firestore.PropertyName
+import hu.bme.aut.szoftarch.kozkincsker.data.enums.MissionType
 import kotlinx.parcelize.Parcelize
 import java.util.Date
 /**
@@ -20,7 +21,7 @@ import java.util.Date
  * @param state játék tervezési-kész állapota
  * @param designerId tervező
  * @param levelList küldetészint lista
- * @param missionTagIds kulcsszavak, jellegzetes leírás lista a küldetésről
+ * @param missionType kulcsszó, jellegzetes leírás lista a küldetésről
  * @param feedbackIds játékosok visszajelzései
  * @param badgeId játékért kapható jelvény
  */
@@ -40,7 +41,7 @@ data class Mission(
     var state: State = State.DESIGNING,
     var designerId: String? = null,    //UserId (desinger)
     var levelList : MutableList<Level> = ArrayList(),
-    var missionTagIds : MutableList<String> = ArrayList(),  //MissionTagId list
+    var missionType : MissionType = MissionType.Outdoor,
     var feedbackIds: MutableList<Feedback> = ArrayList(),       //FeedbackId list
     var badgeId: String? = null,       //BadgeId
 ): Parcelable
