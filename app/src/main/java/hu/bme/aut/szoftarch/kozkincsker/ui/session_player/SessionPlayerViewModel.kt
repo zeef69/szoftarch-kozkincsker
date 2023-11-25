@@ -14,7 +14,7 @@ class SessionPlayerViewModel @Inject constructor(
         Log.i("session", session.toString())
         val mission = sessionPlayerPresenter.getMissionFromSession(session)
         Log.i("mission", mission.toString())
-        val designer = sessionPlayerPresenter.getDesignerFromMission(mission)
+        val designer = mission?.let { sessionPlayerPresenter.getDesignerFromMission(it) }
         Log.i("designer", designer.toString())
         viewState = SessionPlayerContent(
             session = session,
