@@ -2,6 +2,7 @@ package hu.bme.aut.szoftarch.kozkincsker.views.helpers
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -22,7 +23,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import org.burnoutcrew.reorderable.ReorderableItem
 import org.burnoutcrew.reorderable.detectReorderAfterLongPress
 import org.burnoutcrew.reorderable.rememberReorderableLazyListState
@@ -30,11 +37,12 @@ import org.burnoutcrew.reorderable.reorderable
 
 /**
  *
- * from: https://github.com/aclassen/ComposeReorderable
- */
+* from: https://github.com/aclassen/ComposeReorderable
+*/
 @Composable
-fun VerticalReorderList(modifier: Modifier = Modifier,
-                    //    listElements: MutableList<Unit>
+fun VerticalReorderList(listElements: MutableList<String>,
+                        modifier: Modifier = Modifier,
+                        newListElements: MutableList<String>,
 ) {
     var answerAInput by remember { mutableStateOf(value="a") }
     var answerBInput by remember { mutableStateOf("b") }
@@ -43,12 +51,12 @@ fun VerticalReorderList(modifier: Modifier = Modifier,
     var valueList = mutableListOf(
         answerAInput, answerBInput, answerCInput, answerDInput
     )
-    var data = remember { mutableStateOf(valueList) }
+    var data = remember { mutableStateOf(listElements) }
     var state = rememberReorderableLazyListState(onMove = { from, to ->
         data.value = data.value.toMutableList().apply {
             add(to.index, removeAt(from.index))
         }
-    })
+    }, onDragEnd = {from, to -> newListElements.apply { add(to, removeAt(from)) } })
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -69,16 +77,33 @@ fun VerticalReorderList(modifier: Modifier = Modifier,
                     modifier = Modifier
                         .height(IntrinsicSize.Min)
                         .fillMaxWidth()
+                        .detectReorderAfterLongPress(state),
+                    
                     ) { isDragging ->
-                    val elevation = animateDpAsState(if (isDragging) 16.dp else 0.dp)
+                    val elevation = animateDpAsState(if (isDragging) 28.dp else 0.dp)
                     Column(
                         modifier = Modifier
                             .shadow(elevation.value)
                             .background(MaterialTheme.colors.surface)
+                            .padding(10.dp,5.dp, 10.dp, 5.dp)
+                            .border(width=1.dp, color = Color.Black)
                             .fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text(text = item, color = Color.Gray)
+                            Text(
+                                buildAnnotatedString {
+                                    withStyle(style = SpanStyle(
+                                        fontSize = 18.sp,
+                                        fontWeight = FontWeight.Bold)) {
+                                        append(item)
+                                    }
+                                },
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier
+                                    .background(color= if(isDragging) MaterialTheme.colors.primary else MaterialTheme.colors.secondary)
+                                    .padding(10.dp, 10.dp, 10.dp, 10.dp)
+                                    .fillMaxWidth()
+                            )
                     }
                 }
             }

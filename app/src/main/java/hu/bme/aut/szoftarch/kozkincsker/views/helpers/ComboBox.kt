@@ -1,5 +1,6 @@
 package hu.bme.aut.szoftarch.kozkincsker.views.helpers
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -8,11 +9,13 @@ import androidx.compose.material.Button
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -52,13 +55,29 @@ fun ComboBox(
         onDismissRequest = { onExpandedChanged(false) },
     ) {
         list.forEachIndexed { index, s ->
-            DropdownMenuItem(
-                onClick = {
-                    onIndexChanged(index)
-                    onExpandedChanged(false)
+            if(selectedIndex == index) {
+                DropdownMenuItem(
+                    onClick = {
+                        onIndexChanged(index)
+                        onExpandedChanged(false)
+                    },
+                    modifier =Modifier
+                        .background(color= MaterialTheme.colors.secondaryVariant)
+                ) {
+                    Text(text = s, fontWeight = FontWeight.Bold, color = MaterialTheme.colors.onSecondary)
                 }
-            ) {
-                Text(text = s)
+            }
+            else{
+                DropdownMenuItem(
+                    onClick = {
+                        onIndexChanged(index)
+                        onExpandedChanged(false)
+                    }
+                ) {
+
+                    Text(text = s)
+
+                }
             }
         }
     }
