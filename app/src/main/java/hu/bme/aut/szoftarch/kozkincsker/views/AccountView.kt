@@ -1,5 +1,6 @@
 package hu.bme.aut.szoftarch.kozkincsker.views
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,6 +30,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -37,6 +39,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import hu.bme.aut.szoftarch.kozkincsker.R
 import hu.bme.aut.szoftarch.kozkincsker.data.model.User
 
 @Composable
@@ -109,6 +112,57 @@ fun AccountView(
                 modifier = Modifier
                     .padding(0.dp, 10.dp, 0.dp, 0.dp)
             )
+            Row(
+                modifier = Modifier
+                .fillMaxWidth()
+                .padding(5.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                if(user.designedMissionIds.size > 0)
+                    Image(
+                        painter = painterResource(id = R.drawable.builder),
+                        contentDescription = null,
+                        modifier = Modifier.size(80.dp)
+                    )
+                if(user.designedMissionIds.size >= 5)
+                    Image(
+                        painter = painterResource(id = R.drawable.architect),
+                        contentDescription = null,
+                        modifier = Modifier.size(80.dp)
+                    )
+                if(user.designedMissionIds.size >= 15)
+                    Image(
+                        painter = painterResource(id = R.drawable.king),
+                        contentDescription = null,
+                        modifier = Modifier.size(80.dp)
+                    )
+
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(5.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                if(user.currentSessionIds.size > 0)
+                    Image(
+                        painter = painterResource(id = R.drawable.key),
+                        contentDescription = null,
+                        modifier = Modifier.size(80.dp)
+                    )
+                if(user.currentSessionIds.size >= 5)
+                    Image(
+                        painter = painterResource(id = R.drawable.treasuremap),
+                        contentDescription = null,
+                        modifier = Modifier.size(80.dp)
+                    )
+                if(user.currentSessionIds.size >= 15)
+                    Image(
+                        painter = painterResource(id = R.drawable.gold),
+                        contentDescription = null,
+                        modifier = Modifier.size(80.dp)
+                    )
+            }
         }
         Column( ) {
             Button(

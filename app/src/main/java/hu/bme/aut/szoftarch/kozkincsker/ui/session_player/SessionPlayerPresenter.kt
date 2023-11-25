@@ -9,9 +9,9 @@ import javax.inject.Inject
 class SessionPlayerPresenter @Inject constructor(
     private val sessionInteractor: SessionInteractor
 ) {
- suspend fun getMissionFromSession(session: Session) : Mission {
-     return sessionInteractor.getMissionFromSession(session)
- }
+     suspend fun getMissionFromSession(session: Session) : Mission {
+         return sessionInteractor.getMissionFromSession(session)
+     }
 
     suspend fun getDesignerFromMission(mission: Mission): User? {
         return sessionInteractor.getDesignerFromMission(mission)
