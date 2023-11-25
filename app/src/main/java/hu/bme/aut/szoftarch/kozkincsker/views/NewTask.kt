@@ -325,7 +325,7 @@ fun NewTask(
                                         modifier = Modifier
                                             .padding(0.dp, 2.dp, 0.dp, 2.dp)
                                     ){
-                                        Text(text = "Answer option",
+                                        Text(text = "Answer options",
                                                 modifier = Modifier
                                                 .weight(0.5f, true))
                                         Box(

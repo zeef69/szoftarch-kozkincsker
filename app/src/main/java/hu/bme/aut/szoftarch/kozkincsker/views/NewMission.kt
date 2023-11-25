@@ -36,6 +36,7 @@ import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -82,7 +83,24 @@ fun NewMission(
     }
     var missionTypeSelectedIndex by remember { mutableIntStateOf( missionTypeList.indexOf(mission.missionType)) }
     var missionTypeExpanded by remember { mutableStateOf(false) }
+
     val levels = mission.levelList
+    val levelTypeListNames = mutableListOf<String>()
+    val levelTypeList = mutableListOf<LevelType>()
+    for(type in LevelType.values()) {
+        levelTypeListNames.add(stringResource(type.translation))
+        levelTypeList.add(type)
+    }
+    var levelTypeSelectedIndex by remember { mutableIntStateOf(0) }
+    var levelTypeExpanded by remember { mutableStateOf(false) }
+
+    val levelTypeSelectedIndexList = remember { mutableStateListOf<Int>() }
+    val levelTypeExpandedList = remember { mutableStateListOf<Boolean>() }
+    for (i in 0..<levels.size){
+        levelTypeSelectedIndexList.add(levelTypeList.indexOf(levels[i].levelType))
+        levelTypeExpandedList.add(false)
+    }
+
     mission.designerId = designer.id
     Column(
         modifier = Modifier
@@ -224,7 +242,7 @@ fun NewMission(
                     .padding(all = 5.dp)
                     .fillMaxSize()
             ) {
-                itemsIndexed(levels) { _, level ->
+                itemsIndexed(levels) { i, level ->
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
@@ -238,22 +256,15 @@ fun NewMission(
                                 .fillMaxWidth()
                                 .weight(0.1f, true)
                         ) {
-                            val typeListNames = mutableListOf<String>()
-                            for(type in LevelType.values()) {
-                                typeListNames.add(type.name)
-                            }
-                            var typeSelectedIndex by remember { mutableIntStateOf(0) }
-                            var typeExpanded by remember { mutableStateOf(false) }
-
                             ComboBox(
-                                list = typeListNames,
-                                selectedIndex = typeSelectedIndex,
-                                onIndexChanged = { typeSelectedIndex = it },
-                                isExpanded = typeExpanded,
-                                onExpandedChanged = { typeExpanded = it },
+                                list = levelTypeListNames,
+                                selectedIndex = levelTypeSelectedIndexList[i],
+                                onIndexChanged = { levelTypeSelectedIndexList[i] = it },
+                                isExpanded = levelTypeExpandedList[i],
+                                onExpandedChanged = { levelTypeExpandedList[i] = it },
                                 textWidth = 0.dp
                             )
-                            level.levelType = LevelType.values().toList()[typeSelectedIndex]
+                            level.levelType = levelTypeList[levelTypeSelectedIndexList[i]]
                         }
                         Row(
                             horizontalArrangement = Arrangement.SpaceEvenly,
