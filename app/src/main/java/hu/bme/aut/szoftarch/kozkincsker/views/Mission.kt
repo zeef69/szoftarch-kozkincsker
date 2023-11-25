@@ -155,7 +155,7 @@ fun Mission(
                     )
 
                     Switch(
-                        checked = checkedModerator and mission.isPlayableWithoutModerator,
+                        checked = checkedModerator,
                         enabled = mission.isPlayableWithoutModerator,
                         onCheckedChange = {
                             checkedModerator = it
@@ -268,7 +268,8 @@ fun Mission(
                             newSession.missionId = mission.id
                             newSession.name = nameInput
                             newSession.startDate = Date()
-                            onStartSession(newSession, checkedModerator)
+                            if(mission.isPlayableWithoutModerator) onStartSession(newSession, checkedModerator)
+                            else onStartSession(newSession, true)
                         }
                     },
                     modifier = Modifier

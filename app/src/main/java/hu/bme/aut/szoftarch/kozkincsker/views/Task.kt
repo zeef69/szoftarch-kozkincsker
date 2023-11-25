@@ -1,5 +1,9 @@
 package hu.bme.aut.szoftarch.kozkincsker.views
 
+
+import android.app.Activity
+import android.content.pm.PackageManager
+import android.location.Location
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -25,10 +29,13 @@ import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Flag
+import androidx.compose.material.icons.filled.PhoneAndroid
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,18 +54,22 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.Circle
 import com.google.maps.android.compose.GoogleMap
-import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.MarkerInfoWindowContent
+import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
+import dagger.hilt.android.internal.managers.ViewComponentManager
 import hu.bme.aut.szoftarch.kozkincsker.data.enums.TaskType
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Task
 import hu.bme.aut.szoftarch.kozkincsker.data.model.TaskSolution
+import hu.bme.aut.szoftarch.kozkincsker.views.helpers.ChangingIconButton
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.DatePicker
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.VerticalReorderList
 import java.text.SimpleDateFormat
@@ -73,6 +84,10 @@ fun Task(
     onBackClick: () -> Unit = {}
 ) {
     val context = LocalContext.current
+    val mContext = if (context is ViewComponentManager.FragmentContextWrapper)
+        context.baseContext
+    else
+        context
     val pattern =  '|'
     /**
      * Válaszlista és checkbox érték a választós és a sorbarendezős feladatokhoz
@@ -108,7 +123,7 @@ fun Task(
     var actualRadius by remember { mutableDoubleStateOf(
         if(task.taskType == TaskType.MapAnswer) task.answers.split(pattern)[0].toDouble()
         else 10.0) }
-    val markerState = rememberMarkerState(position =
+    val originalMarkerState = rememberMarkerState(position =
     (if(task.taskType == TaskType.MapAnswer)
         LatLng(task.answers.split(pattern)[2].toDouble(), task.answers.split(pattern)[3].toDouble())
     else LatLng(47.497913, 19.040236))
@@ -118,16 +133,42 @@ fun Task(
             task.answers.split(pattern)[1].toFloat()
         else 20f)
     }
-    val cameraPositionState = rememberCameraPositionState {
+    val originalCameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(
-            markerState.position,
+            originalMarkerState.position,
             mapZoomState)
     }
     /**
-     * Felahjsználó helye
+     * Felhasználó helye
      * */
-    val fusedLocationProviderClient =
-        remember { LocationServices.getFusedLocationProviderClient(context) }
+    val fusedLocationProviderClient = remember { LocationServices.getFusedLocationProviderClient(context) }
+    var lastKnownLocation by remember {mutableStateOf<Location?>(null)}
+    var deviceLatLng by remember {mutableStateOf(LatLng(0.0, 0.0))}
+    val deviceCameraPositionState = rememberCameraPositionState {position = CameraPosition.fromLatLngZoom(deviceLatLng, mapZoomState)}
+    if (ContextCompat.checkSelfPermission(
+            context,
+            android.Manifest.permission.ACCESS_FINE_LOCATION
+        )
+        == PackageManager.PERMISSION_GRANTED
+    ) {
+        val locationResult =  fusedLocationProviderClient.lastLocation
+        locationResult.addOnCompleteListener(mContext as Activity) { t ->
+            if (t.isSuccessful) {
+                lastKnownLocation = t.result
+                deviceLatLng = LatLng(lastKnownLocation!!.latitude, lastKnownLocation!!.longitude)
+                deviceCameraPositionState.position = CameraPosition.fromLatLngZoom(deviceLatLng, 18f)
+            } else {
+                Log.d("Location", "Current location is null. Using defaults.")
+                Log.e("Location", "Exception: %s", t.exception)
+            }
+        }
+    }
+    var markerVisibilityState by remember { mutableIntStateOf(0) }
+    //var mapInput by remember { mutableStateOf("") }
+    //mapInput = deviceCameraPositionState.position.target.latitude.toString() + "|" + deviceCameraPositionState.position.target.longitude.toString()
+
+
+
     /**
      * Szabadszöveges válasz
      * */
@@ -300,8 +341,28 @@ fun Task(
                         )
                     }
                     TaskType.MapAnswer -> {
-
-                        Text(text = "Map answer")
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .height(IntrinsicSize.Min)
+                                .fillMaxWidth()
+                        ) {
+                            Text(text = "Map answer",
+                                textAlign = TextAlign.Start,
+                                modifier = Modifier
+                                    .padding(0.dp, 10.dp, 0.dp, 0.dp)
+                                    .fillMaxWidth()
+                                    .weight(0.4f, false)
+                            )
+                            var iconList = mutableListOf(Icons.Filled.PhoneAndroid, Icons.Filled.Flag)
+                            ChangingIconButton(
+                                iconList,
+                                markerVisibilityState,
+                                modifier= Modifier
+                                    .weight(0.18f, true)
+                                    .padding(2.dp, 0.dp)
+                            ){markerVisibilityState = it}
+                        }
                         Box(
                             modifier= Modifier
                                 .fillMaxSize()
@@ -310,19 +371,27 @@ fun Task(
                             GoogleMap(
                                 modifier = Modifier
                                     .fillMaxSize(),
-                                cameraPositionState = cameraPositionState
+                                cameraPositionState = if(markerVisibilityState == 0) deviceCameraPositionState else originalCameraPositionState
                             ) {
-                                Marker(
-                                    state = markerState,
+                                MarkerInfoWindowContent(
+                                    state = MarkerState(position = deviceLatLng),
                                     draggable = false,
-                                    title = "Cél"
-                                    )
+                                    ){
+                                    Text("You", color = Color.Red)
+                                }
+                                MarkerInfoWindowContent(
+                                    state = MarkerState(position = originalMarkerState.position),
+                                    draggable = false,
+                                ){
+                                    Text("Goal", color = Color.Green)
+                                }
                                 Circle(
-                                    center = markerState.position,
+                                    center = originalMarkerState.position,
                                     radius = actualRadius,
                                     strokeColor = Color.Red
                                 )
                             }
+
                         }
                     }
                     TaskType.OrderAnswer -> {
@@ -372,11 +441,17 @@ fun Task(
                             answerStringBuilder.append(shuffledOrderAnswerList[i])
                         }
                     }
+                    else if(task.taskType==TaskType.MapAnswer) {
+                        answerStringBuilder
+                            .append(deviceCameraPositionState.position.target.latitude.toString())
+                            .append("|")
+                            .append(deviceCameraPositionState.position.target.longitude.toString())
+                    }
                     var userAnswer = when(task.taskType){
-                        TaskType.ListedAnswer, TaskType.OrderAnswer -> answerStringBuilder.toString()
+                        TaskType.ListedAnswer, TaskType.OrderAnswer, TaskType.MapAnswer -> answerStringBuilder.toString()
                         TaskType.NumberAnswer -> if(answerNumberInput == "") "0" else answerNumberInput
                         TaskType.DateAnswer -> dateInput.toString()
-                        TaskType.TextAnswer, TaskType.ImageAnswer, TaskType.MapAnswer -> ""
+                        TaskType.TextAnswer, TaskType.ImageAnswer -> ""
                     }
                     var taskSolution = TaskSolution(
                         sessionId = session.id,
