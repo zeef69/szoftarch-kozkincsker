@@ -14,9 +14,9 @@
     <string name="task_type_order_answer">List order</string>
     <string name="task_type_text_answer">Text answer</string>
     <string name="task_type_image_answer">Image answer</string>
-    <string name="level_type_all_task_per_level">Minden feladatot meg kell oldani</string>
-    <string name="level_type_min_one_task_per_level">Minimum egy feladatot meg kell oldani</string>
-    <string name="level_type_max_one_task_per_level">Pontosan egy feladatot meg kell oldani</string>
+    <string name="level_type_all_task_per_level">All</string>
+    <string name="level_type_min_one_task_per_level">Minimum 1</string>
+    <string name="level_type_max_one_task_per_level">Exactly 1</string>
     <string name="other_settings">Other settings</string>
     <string name="new_mission_title">Mission title</string>
     <string name="new_mission_description">Mission description</string>

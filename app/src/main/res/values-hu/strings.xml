@@ -14,9 +14,9 @@
     <string name="task_type_order_answer">List sorbarendezés</string>
     <string name="task_type_text_answer">Szöveges válasz</string>
     <string name="task_type_image_answer">Képpel válasz</string>
-    <string name="level_type_all_task_per_level">Minden feladatot meg kell oldani</string>
-    <string name="level_type_min_one_task_per_level">Minimum egy feladatot meg kell oldani</string>
-    <string name="level_type_max_one_task_per_level">Pontosan egy feladatot meg kell oldani</string>
+    <string name="level_type_all_task_per_level">Mind</string>
+    <string name="level_type_min_one_task_per_level">Minimum 1</string>
+    <string name="level_type_max_one_task_per_level">Pontosan 1</string>
     <string name="other_settings">Egyéb beállítások</string>
     <string name="new_mission_title">Küldetés cím</string>
     <string name="new_mission_description">Küldetés leírás</string>
