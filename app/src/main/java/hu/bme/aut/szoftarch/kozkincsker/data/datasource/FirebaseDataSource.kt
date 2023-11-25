@@ -111,12 +111,11 @@ class FirebaseDataSource @Inject constructor() {
                 Log.d("failure", "Error getting documents: ", exception)
             }.await()
 
-        val user = getUser()
-        if (user != null) {
-            val addDesignedMission : HashMap<String, Any> = HashMap()
-            addDesignedMission["designedMissionIds"] = FieldValue.arrayRemove(mission.id)
+        val addDesignedMission : HashMap<String, Any> = HashMap()
+        addDesignedMission["designedMissionIds"] = FieldValue.arrayRemove(mission.id)
 
-            database.collection("users").document(user.id).update(addDesignedMission)
+        mission.designerId?.let {
+            database.collection("users").document(it).update(addDesignedMission)
                 .addOnSuccessListener { documentReference ->
                     Log.d("success", "DocumentSnapshot written with ID: $documentReference.")
                 }
