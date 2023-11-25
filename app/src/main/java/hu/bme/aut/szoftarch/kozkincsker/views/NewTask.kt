@@ -508,7 +508,7 @@ fun NewTask(
                                     for(i in 0..<answerNumberList[answersOrderSelectedIndex].toInt()){
                                         OutlinedTextField(
                                             value = orderAnswerInputList[i],
-                                            onValueChange = {if (it.isEmpty() || it.contains(pattern)) {orderAnswerInputList[i] = it}},
+                                            onValueChange = {if (it.isEmpty() || !it.contains(pattern)) {orderAnswerInputList[i] = it}},
                                             singleLine = false,
                                             placeholder = {
                                                 Text(

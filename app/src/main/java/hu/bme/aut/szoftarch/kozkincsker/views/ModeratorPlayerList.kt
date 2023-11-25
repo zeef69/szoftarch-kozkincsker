@@ -24,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
@@ -33,6 +34,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import hu.bme.aut.szoftarch.kozkincsker.R
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Level
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
@@ -50,6 +52,9 @@ fun ModeratorPlayerList(
     onUserClicked: (User) -> Unit,
     onBackClick: () -> Unit = {}
 ) {
+    val unknown = stringResource(R.string.value_unknown)
+    val missionDeleted = stringResource(R.string.mission_deleted_message)
+
 
     Column(
         modifier = Modifier
@@ -74,23 +79,26 @@ fun ModeratorPlayerList(
                 .fillMaxSize()
                 .padding(12.dp, 12.dp, 12.dp, 25.dp)
         ) {
-            if((mission?.designerId != null) && (designer?.id == mission.designerId)) {
-                Text(
-                    buildAnnotatedString {
-                        pushStyle(SpanStyle(fontSize = 14.sp, fontStyle = FontStyle.Italic))
-                        append("Creator: ")
+            Text(
+                buildAnnotatedString {
+                    pushStyle(SpanStyle(fontSize = 14.sp, fontStyle = FontStyle.Italic))
+                    append("Creator: ")
 
-                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                        if((mission?.designerId != null) && (designer?.id == mission.designerId)) {
                             append(designer?.name)
                         }
-                        pop()
-                    },
-                    textAlign = TextAlign.End,
-                    modifier = Modifier
-                        .padding(0.dp, 10.dp, 0.dp, 0.dp)
-                        .fillMaxWidth()
-                )
-            }
+                        else{
+                            append(unknown)
+                        }
+                    }
+                    pop()
+                },
+                textAlign = TextAlign.End,
+                modifier = Modifier
+                    .padding(0.dp, 10.dp, 0.dp, 0.dp)
+                    .fillMaxWidth()
+            )
             Text(
                 buildAnnotatedString {
                     pushStyle(SpanStyle(fontWeight = FontWeight.Bold, fontSize = 24.sp))
@@ -98,7 +106,7 @@ fun ModeratorPlayerList(
                         style = SpanStyle(fontStyle = FontStyle.Italic)) {
                         append("Mission: ")
                     }
-                    append(mission?.name)
+                    append(mission?.name ?: unknown)
                     pop()
                     pushStyle(SpanStyle(fontWeight = FontWeight.Bold, fontSize = 18.sp))
                     withStyle(
@@ -117,7 +125,7 @@ fun ModeratorPlayerList(
             Text(
                 buildAnnotatedString {
                     withStyle(style = SpanStyle(fontSize=14.sp)) {
-                        append(mission?.description)
+                        append(mission?.description ?: missionDeleted)
                     }
                 },
                 textAlign = TextAlign.Start,
@@ -131,22 +139,25 @@ fun ModeratorPlayerList(
                     .height(IntrinsicSize.Min)
                     .fillMaxWidth()
             ){
-                Text(
-                    buildAnnotatedString {
-                        pushStyle(SpanStyle(fontWeight = FontWeight.Bold, fontSize = 24.sp))
-                        withStyle(
-                            style = SpanStyle(fontStyle = FontStyle.Italic)) {
-                            append("Access code: ")
-                        }
-                        append(session?.accessCode)
-                        pop()
-                    },
-                    textAlign = TextAlign.Start,
-                    modifier = Modifier
-                        .padding(0.dp, 10.dp, 0.dp, 0.dp)
-                        .fillMaxWidth()
-                        .weight(0.6f, false)
-                )
+                if(mission != null) {
+                    Text(
+                        buildAnnotatedString {
+                            pushStyle(SpanStyle(fontWeight = FontWeight.Bold, fontSize = 24.sp))
+                            withStyle(
+                                style = SpanStyle(fontStyle = FontStyle.Italic)
+                            ) {
+                                append("Access code: ")
+                            }
+                            append(session?.accessCode)
+                            pop()
+                        },
+                        textAlign = TextAlign.Start,
+                        modifier = Modifier
+                            .padding(0.dp, 10.dp, 0.dp, 0.dp)
+                            .fillMaxWidth()
+                            .weight(0.6f, false)
+                    )
+                }
                 Text(
                     buildAnnotatedString {
                         pushStyle(SpanStyle(fontSize = 14.sp))
@@ -164,31 +175,33 @@ fun ModeratorPlayerList(
                     modifier = Modifier
                         .padding(0.dp, 10.dp, 0.dp, 0.dp)
                         .fillMaxWidth()
-                        .weight(0.4f, false)
+                        .weight(0.4f, true)
                 )
             }
-            LazyColumn(
-                modifier = Modifier
-                    .padding(all = 10.dp)
-                    .fillMaxSize()
-            ) {
-                itemsIndexed(players) { _, item ->
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(Color.LightGray)
-                            .padding(5.dp, 5.dp, 5.dp, 5.dp)
-                            .clickable { onUserClicked(item) }
-                    ) {
-                        Text(
-                            text = item.name,
-                            color = Color.Black,
-                            fontSize = 18.sp,
+            if(mission != null) {
+                LazyColumn(
+                    modifier = Modifier
+                        .padding(all = 10.dp)
+                        .fillMaxSize()
+                ) {
+                    itemsIndexed(players) { _, item ->
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier
-                                .padding(all = 2.dp)
-                                .weight(0.6f, true)
-                        )
+                                .fillMaxSize()
+                                .background(Color.LightGray)
+                                .padding(5.dp, 5.dp, 5.dp, 5.dp)
+                                .clickable { onUserClicked(item) }
+                        ) {
+                            Text(
+                                text = item.name,
+                                color = Color.Black,
+                                fontSize = 18.sp,
+                                modifier = Modifier
+                                    .padding(all = 2.dp)
+                                    .weight(0.6f, true)
+                            )
+                        }
                     }
                 }
             }

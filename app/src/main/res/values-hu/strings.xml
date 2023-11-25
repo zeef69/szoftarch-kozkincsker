@@ -22,4 +22,6 @@
     <string name="new_mission_description">Küldetés leírás</string>
     <string name="mission_type_outdoor">Szabadtéri</string>
     <string name="mission_type_indoor">Beltéri</string>
+    <string name="value_unknown">Ismeretlen</string>
+    <string name="mission_deleted_message">Sajnáljuk! A küldetés törlésre került, ezért nem indítható belőle új játék, az elkezdtettek pedig nem folytathatók.</string>
 </resources>

@@ -22,4 +22,6 @@
     <string name="new_mission_description">Mission description</string>
     <string name="mission_type_outdoor">Outdoor</string>
     <string name="mission_type_indoor">Indoor</string>
+    <string name="value_unknown">Unknown</string>
+    <string name="mission_deleted_message">We\'re sorry! The mission has been deleted, so a new game cannot be started from it, and the ones already started cannot be continued.</string>
 </resources>
