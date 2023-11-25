@@ -236,33 +236,22 @@ class FirebaseDataSource @Inject constructor() {
             }.await()
     }
 
-    suspend fun getMissionById(missionId: String): Mission {
-        var mission: Mission? = null
-        database.collection("missions").document(missionId).get()
-            .addOnSuccessListener { document ->
-                mission = document.toObject()
-            }
+    suspend fun getMissionById(missionId: String): Mission? {
+        return database.collection("missions").document(missionId).get()
+            .addOnSuccessListener { }
             .addOnFailureListener { exception ->
                 Log.d("failure", "Error getting documents: ", exception)
             }
-            .await()
-
-        return if(mission != null) mission as Mission
-        else Mission()
+            .await().toObject()
     }
 
     suspend fun getUserFromId(designerId: String): User? {
-        var user: User? = null
-        database.collection("users").document(designerId).get()
-            .addOnSuccessListener { document ->
-                user = document.toObject()
-            }
+        return database.collection("users").document(designerId).get()
+            .addOnSuccessListener { }
             .addOnFailureListener { exception ->
                 Log.d("failure", "Error getting User: ", exception)
             }
-            .await()
-        return if(user != null) user as User
-        else null
+            .await().toObject()
     }
 
     suspend fun onStartSession(session: Session, asModerator: Boolean): DocumentReference? {

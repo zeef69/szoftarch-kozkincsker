@@ -129,7 +129,11 @@ fun NewMission(
                         .weight(0.82f, false)
                 )
                 var playablePublic = true
-                //for(level in mission.levelList) for (task in level.taskList) playablePublic=playablePublic and task.taskType.checkable
+                for(level in mission.levelList) {
+                    for (task in level.taskList){
+                        playablePublic=playablePublic && task.taskType.checkable
+                    }
+                }
                 var iconList = mutableListOf(Icons.Filled.VisibilityOff)
                 if(playablePublic) iconList.add(Icons.Filled.Public)
                 ChangingIconButton(
@@ -141,20 +145,28 @@ fun NewMission(
                 ){privacySwitchState = it}
 
             }
-            OutlinedTextField(
-                value = descriptionInput,
-                onValueChange = { descriptionInput = it },
-                singleLine = false,
-                placeholder = {
-                    Text(
-                        text = stringResource(R.string.new_mission_description),
-                        color = Color.Gray
-                    )
-                },
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
+                    .height(IntrinsicSize.Min)
                     .fillMaxWidth()
-                    .padding(0.dp, 2.dp, 0.dp, 2.dp)
-            )
+            ){
+                OutlinedTextField(
+                    value = descriptionInput,
+                    onValueChange = { descriptionInput = it },
+                    singleLine = false,
+                    placeholder = {
+                        Text(
+                            text = stringResource(R.string.new_mission_description),
+                            color = Color.Gray
+                        )
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(0.dp, 2.dp, 0.dp, 2.dp)
+                        .weight(0.82f, false)
+                )
+            }
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
@@ -193,9 +205,9 @@ fun NewMission(
                         .padding(horizontal = 5.dp, vertical=2.dp)
                 )
                 Box(
-                    modifier=Modifier
+                    modifier = Modifier
                         .weight(0.4f, true)
-                        .padding(vertical=2.dp)
+                        .padding(vertical = 2.dp)
                 ) {
                     ComboBox(
                         list = missionTypeListNames,
@@ -340,7 +352,7 @@ fun NewMission(
                         onSaveClick(mission)
                     },
                     modifier = Modifier
-                        .padding(horizontal=5.dp, vertical = 2.dp)
+                        .padding(horizontal = 5.dp, vertical = 2.dp)
                         .weight(0.4f, true),
                     shape = RoundedCornerShape(10),
                 ) {
@@ -363,7 +375,7 @@ fun NewMission(
                         onPostClick(mission)
                     },
                     modifier = Modifier
-                        .padding(horizontal=5.dp, vertical = 2.dp)
+                        .padding(horizontal = 5.dp, vertical = 2.dp)
                         .weight(0.4f, true),
                     shape = RoundedCornerShape(10),
                 ) {

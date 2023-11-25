@@ -9,11 +9,11 @@ import javax.inject.Inject
 class SessionPlayerPresenter @Inject constructor(
     private val sessionInteractor: SessionInteractor
 ) {
-     suspend fun getMissionFromSession(session: Session) : Mission {
-         return sessionInteractor.getMissionFromSession(session)
-     }
+    suspend fun getMissionFromSession(session: Session) : Mission? = withIOContext {
+        return@withIOContext sessionInteractor.getMissionFromSession(session)
+    }
 
-    suspend fun getDesignerFromMission(mission: Mission): User? {
-        return sessionInteractor.getDesignerFromMission(mission)
+    suspend fun getDesignerFromMission(mission: Mission): User? = withIOContext {
+        return@withIOContext sessionInteractor.getDesignerFromMission(mission)
     }
 }

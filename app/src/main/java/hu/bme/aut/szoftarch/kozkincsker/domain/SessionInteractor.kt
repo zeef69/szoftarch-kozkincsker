@@ -20,7 +20,7 @@ class SessionInteractor @Inject constructor(
         return data?.id
     }
 
-    suspend fun getMissionFromSession(session: Session): Mission {
+    suspend fun getMissionFromSession(session: Session): Mission? {
         return firebaseDataSource.getMissionById(session.missionId)
     }
 

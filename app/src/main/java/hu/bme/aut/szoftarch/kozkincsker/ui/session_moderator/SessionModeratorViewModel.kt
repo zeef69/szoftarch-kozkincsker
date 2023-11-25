@@ -14,8 +14,11 @@ class SessionModeratorViewModel @Inject constructor(
 ) : RainbowCakeViewModel<SessionModeratorViewState>(Loading) {
 
     fun addListener(session: Session) = execute {
+        Log.i("session", session.toString())
         val mission = sessionModeratorPresenter.getMissionFromSession(session)
-        val designer = sessionModeratorPresenter.getDesignerFromMission(mission)
+        Log.i("mission", mission.toString())
+        val designer = mission?.let { sessionModeratorPresenter.getDesignerFromMission(it) }
+        Log.i("designer", designer.toString())
         viewModelScope.launch {
             sessionModeratorPresenter.addListener(session).collect {
                 Log.i("dolog", it.toString())
