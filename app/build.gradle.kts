@@ -91,10 +91,16 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
     implementation("androidx.compose.material:material:1.5.4")
     debugImplementation("androidx.compose.ui:ui-tooling:$composeVersion")
-    implementation("com.google.maps.android:maps-compose:4.1.1")
 
+    //Accompanist (Permission)
+    implementation("com.google.accompanist:accompanist-permissions:0.31.3-beta")
+
+    //Google Services & Maps
+    implementation("com.google.maps.android:maps-compose:4.1.1")
+    //implementation("com.google.android.gms:play-services-location:21.0.1")
     implementation("androidx.navigation:navigation-fragment-ktx:2.7.5")
     implementation("com.google.android.gms:play-services-maps:18.2.0")
+    implementation("com.google.android.libraries.places:places:3.0.0")
 
     //Compose LazyList/Grid reorder
     implementation("org.burnoutcrew.composereorderable:reorderable:0.9.6")
