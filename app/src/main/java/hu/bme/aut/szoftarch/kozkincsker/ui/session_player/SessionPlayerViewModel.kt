@@ -4,6 +4,8 @@ import android.util.Log
 import co.zsmb.rainbowcake.base.RainbowCakeViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
+import hu.bme.aut.szoftarch.kozkincsker.data.model.User
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,5 +24,9 @@ class SessionPlayerViewModel @Inject constructor(
             designer = designer,
             loading = false
         )
+    }
+
+    fun getCurrentUser(): User? = runBlocking {
+        return@runBlocking sessionPlayerPresenter.getCurrentUser()
     }
 }
