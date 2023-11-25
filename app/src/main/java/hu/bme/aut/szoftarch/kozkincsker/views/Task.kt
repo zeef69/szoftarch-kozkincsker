@@ -47,6 +47,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.Circle
@@ -122,6 +123,11 @@ fun Task(
             markerState.position,
             mapZoomState)
     }
+    /**
+     * Felahjsználó helye
+     * */
+    val fusedLocationProviderClient =
+        remember { LocationServices.getFusedLocationProviderClient(context) }
     /**
      * Szabadszöveges válasz
      * */
@@ -294,6 +300,7 @@ fun Task(
                         )
                     }
                     TaskType.MapAnswer -> {
+
                         Text(text = "Map answer")
                         Box(
                             modifier= Modifier
@@ -307,7 +314,8 @@ fun Task(
                             ) {
                                 Marker(
                                     state = markerState,
-                                    draggable = true,
+                                    draggable = false,
+                                    title = "Cél"
                                     )
                                 Circle(
                                     center = markerState.position,
