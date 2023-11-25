@@ -146,14 +146,16 @@ fun NewMission(
                         .padding(0.dp, 2.dp, 0.dp, 2.dp)
                         .weight(0.82f, false)
                 )
+                /*
                 var playablePublic = true
                 for(level in mission.levelList) {
                     for (task in level.taskList){
                         playablePublic=playablePublic && task.taskType.checkable
                     }
-                }
+                }*/
                 var iconList = mutableListOf(Icons.Filled.VisibilityOff)
-                if(playablePublic) iconList.add(Icons.Filled.Public)
+                //if(playablePublic)
+                    iconList.add(Icons.Filled.Public)
                 ChangingIconButton(
                     iconList,
                     privacySwitchState,

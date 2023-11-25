@@ -80,7 +80,7 @@ fun Session(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(12.dp, 12.dp, 12.dp, 25.dp)
-                .weight(0.4f, false)
+                .weight(0.1f, false)
         ){
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -171,7 +171,7 @@ fun Session(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(12.dp, 12.dp, 12.dp, 25.dp)
-                    .weight(0.6f, false)
+                    .weight(0.6f, true)
             ) {
                 if(levels != null)
                     LazyColumn(

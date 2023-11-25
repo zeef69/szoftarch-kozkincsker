@@ -1,11 +1,16 @@
 package hu.bme.aut.szoftarch.kozkincsker.ui.task
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
 import co.zsmb.rainbowcake.base.RainbowCakeFragment
 import co.zsmb.rainbowcake.extensions.exhaustive
 import co.zsmb.rainbowcake.hilt.getViewModelFromFactory
@@ -15,6 +20,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Task
 import hu.bme.aut.szoftarch.kozkincsker.data.model.TaskSolution
+import hu.bme.aut.szoftarch.kozkincsker.data.model.User
 import hu.bme.aut.szoftarch.kozkincsker.views.Task
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.FullScreenLoading
 import hu.bme.aut.szoftarch.kozkincsker.views.theme.AppUiTheme1
@@ -22,16 +28,21 @@ import hu.bme.aut.szoftarch.kozkincsker.views.theme.AppUiTheme1
 @AndroidEntryPoint
 class TaskFragment : RainbowCakeFragment<TaskViewState, TaskViewModel>(){
 
-    override fun provideViewModel() = getViewModelFromFactory()
+    private val locationPermissionGranted = mutableStateOf(false)
 
+    override fun provideViewModel() = getViewModelFromFactory()
+    private lateinit var actualUser: User
     companion object {
         private const val TASK = "TASK"
         private const val SESSION = "TASK_SESSION"
+        private const val ACTUAL_USER = "ACTUAL_USER"
+        const val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1234
 
-        fun newInstance(task : Task, session: Session): TaskFragment {
+        fun newInstance(task : Task, session: Session, user: User): TaskFragment {
             return TaskFragment().applyArgs {
                 putParcelable(TASK, task)
                 putParcelable(SESSION, session)
+                putParcelable(ACTUAL_USER, user)
             }
         }
     }
@@ -41,7 +52,7 @@ class TaskFragment : RainbowCakeFragment<TaskViewState, TaskViewModel>(){
             arguments?.getParcelable(TASK)!!,
             arguments?.getParcelable(SESSION)!!
         )
-
+        actualUser = arguments?.getParcelable(ACTUAL_USER)!!
         return ComposeView(requireContext()).apply {
             setContent {
                 FullScreenLoading()
@@ -69,6 +80,7 @@ class TaskFragment : RainbowCakeFragment<TaskViewState, TaskViewModel>(){
             taskSolution.correct = task.taskType.solutionCheck(task.answers, taskSolution.userAnswer)
             taskSolution.checked = true
         }
+        taskSolution.userId = actualUser.id
         Log.i("taskSolution", taskSolution.toString())
         val id = viewModel.setTaskSolution(taskSolution)
         if (id != null) {
@@ -76,4 +88,5 @@ class TaskFragment : RainbowCakeFragment<TaskViewState, TaskViewModel>(){
         }
         navigator?.pop()
     }
+
 }

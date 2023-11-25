@@ -14,6 +14,7 @@ import com.google.firebase.firestore.toObject
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Feedback
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
+import hu.bme.aut.szoftarch.kozkincsker.data.model.Task
 import hu.bme.aut.szoftarch.kozkincsker.data.model.TaskSolution
 import hu.bme.aut.szoftarch.kozkincsker.data.model.User
 import kotlinx.coroutines.cancel
@@ -367,4 +368,7 @@ class FirebaseDataSource @Inject constructor() {
             }.await()
     }
 
+    suspend fun getSolutionsFromUserFromTask(user: User? , task: Task){
+
+    }
 }

@@ -13,6 +13,7 @@ import co.zsmb.rainbowcake.navigation.navigator
 import dagger.hilt.android.AndroidEntryPoint
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Task
+import hu.bme.aut.szoftarch.kozkincsker.data.model.User
 import hu.bme.aut.szoftarch.kozkincsker.ui.task.TaskFragment
 import hu.bme.aut.szoftarch.kozkincsker.views.Session
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.FullScreenLoading
@@ -23,6 +24,7 @@ class SessionPlayerFragment : RainbowCakeFragment<SessionPlayerViewState, Sessio
 
     override fun provideViewModel() = getViewModelFromFactory()
 
+    private lateinit var actualUser: User
     companion object {
         private const val SESSION = "SESSION"
 
@@ -37,6 +39,7 @@ class SessionPlayerFragment : RainbowCakeFragment<SessionPlayerViewState, Sessio
         viewModel.load(
             arguments?.getParcelable(SESSION)!!
         )
+        actualUser = viewModel.getCurrentUser()!!
 
         return ComposeView(requireContext()).apply {
             setContent {
@@ -62,6 +65,6 @@ class SessionPlayerFragment : RainbowCakeFragment<SessionPlayerViewState, Sessio
     }
 
     private fun onTaskClicked(task : Task, session: Session) {
-        navigator?.add(TaskFragment.newInstance(task, session))
+        navigator?.add(TaskFragment.newInstance(task, session, actualUser))
     }
 }
