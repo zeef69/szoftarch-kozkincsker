@@ -7,7 +7,8 @@ import javax.inject.Inject
 class TaskSolutionInteractor @Inject constructor(
     private val firebaseDataSource: FirebaseDataSource
 ) {
-    suspend fun setTaskSolution(solution: TaskSolution) {
-        firebaseDataSource.setTaskSolution(solution)
+    suspend fun setTaskSolution(solution: TaskSolution): String? {
+        val data = firebaseDataSource.setTaskSolution(solution)
+        return data?.id
     }
 }

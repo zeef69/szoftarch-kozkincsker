@@ -353,7 +353,18 @@ class FirebaseDataSource @Inject constructor() {
             }
     }
 
-    fun setTaskSolution(solution: TaskSolution) {
-        TODO("Not yet implemented")
+    suspend fun setTaskSolution(solution: TaskSolution) : DocumentReference? {
+        val user = getUser()
+        if (user != null) {
+            solution.userId = user.id
+        }
+        return database.collection("solutions").add(solution)
+            .addOnSuccessListener { documentReference ->
+                Log.d("success", "DocumentSnapshot written with ID: $documentReference.")
+            }
+            .addOnFailureListener { exception ->
+                Log.d("failure", "Error getting documents: ", exception)
+            }.await()
     }
+
 }

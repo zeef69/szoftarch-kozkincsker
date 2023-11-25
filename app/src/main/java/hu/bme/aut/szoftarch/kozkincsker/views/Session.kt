@@ -26,7 +26,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -52,7 +51,7 @@ fun Session(
     session: Session?,
     mission: Mission?,
     designer: User?,
-    onTaskClicked: (Task) -> Unit,
+    onTaskClicked: (Task, Session) -> Unit,
     onBackClick: () -> Unit = {}
 ) {
 
@@ -205,7 +204,11 @@ fun Session(
                                                 .background(Color.LightGray)
                                                 .padding(5.dp, 5.dp, 5.dp, 5.dp)
                                                 .weight(1.0f, true)
-                                                .clickable { onTaskClicked(task) }
+                                                .clickable {
+                                                    if (session != null) {
+                                                        onTaskClicked(task, session)
+                                                    }
+                                                }
                                         ) {
                                             Text(
                                                 text = task.title, color = Color.Black, fontSize = 18.sp, modifier = Modifier
@@ -270,7 +273,7 @@ fun SessionPreview() {
     level2.taskList = mutableListOf(task1)
     level3.taskList = mutableListOf(task1, task2, task3)
     mission.levelList = mutableListOf(level1, level2, level3)
-    fun onTaskClicked(t:Task){}
+    fun onTaskClicked(t:Task, s:Session){}
     Session(
         session = session,
         mission = mission,

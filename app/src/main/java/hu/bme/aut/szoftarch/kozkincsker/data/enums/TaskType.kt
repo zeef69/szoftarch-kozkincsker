@@ -11,11 +11,9 @@ enum class TaskType(val translation: Int, val checkable: Boolean) {
             var check = true
             if(designerAnswers.split(splitter).size < 13) return false
             var answerSize = designerAnswers.split(splitter)[0].toInt()
-            for (i in 0..<6){
-                if(i<answerSize){
-                    check = check && (designerAnswers.split(splitter)[2*i+1].toBoolean() ==
+            for (i in 0..<answerSize){
+                check = check && (designerAnswers.split(splitter)[2*i+1].toBoolean() ==
                         userAnswer.split(splitter)[2*i+1].toBoolean())
-                }
             }
             return check
         }
@@ -40,7 +38,17 @@ enum class TaskType(val translation: Int, val checkable: Boolean) {
     },
     @PropertyName("order_answer")
     OrderAnswer(R.string.task_type_order_answer, true){
-        override fun solutionCheck(designerAnswers: String, userAnswer: String) = true
+        override fun solutionCheck(designerAnswers: String, userAnswer: String): Boolean {
+            val splitter =  '|'
+            var check = true
+            if(designerAnswers.split(splitter).size < 7) return false
+            var answerSize = designerAnswers.split(splitter)[0].toInt()
+            for (i in 0..<answerSize){
+                check = check && (designerAnswers.split(splitter)[i+1]
+                    .compareTo(userAnswer.split(splitter)[i+1]) == 0)
+            }
+            return check
+        }
     },
     @PropertyName("text_answer")
     TextAnswer(R.string.task_type_text_answer, false){

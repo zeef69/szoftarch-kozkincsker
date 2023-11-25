@@ -61,7 +61,7 @@ class SessionPlayerFragment : RainbowCakeFragment<SessionPlayerViewState, Sessio
         }
     }
 
-    private fun onTaskClicked(task : Task) {
-        navigator?.add(TaskFragment.newInstance(task))
+    private fun onTaskClicked(task : Task, session: Session) {
+        navigator?.add(TaskFragment.newInstance(task, session))
     }
 }

@@ -3,12 +3,14 @@ package hu.bme.aut.szoftarch.kozkincsker.views
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -25,6 +27,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableDoubleStateOf
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,8 +47,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.Circle
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.rememberCameraPositionState
+import com.google.maps.android.compose.rememberMarkerState
 import hu.bme.aut.szoftarch.kozkincsker.data.enums.TaskType
+import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Task
+import hu.bme.aut.szoftarch.kozkincsker.data.model.TaskSolution
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.DatePicker
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.VerticalReorderList
 import java.text.SimpleDateFormat
@@ -54,7 +67,8 @@ import java.util.Locale
 @Composable
 fun Task(
     task: Task,
-    onSaveClicked: () -> Unit,
+    session: Session,
+    onSaveClicked: (Task, TaskSolution) -> Unit,
     onBackClick: () -> Unit = {}
 ) {
     val context = LocalContext.current
@@ -75,6 +89,7 @@ fun Task(
             orderAnswerInputList.add(task.answers.split(pattern)[i+1])
         }
     }
+    val shuffledOrderAnswerList = orderAnswerInputList.shuffled().toMutableList()
     /**
      * Számos feladathoz válasz mező érték
      * */
@@ -86,6 +101,30 @@ fun Task(
     var dateInput by remember {
         mutableStateOf(SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).format(Date()))
     }
+    /**
+     * Térképen való helymeghatározás (cél terület)
+     * */
+    var actualRadius by remember { mutableDoubleStateOf(
+        if(task.taskType == TaskType.MapAnswer) task.answers.split(pattern)[0].toDouble()
+        else 10.0) }
+    val markerState = rememberMarkerState(position =
+    (if(task.taskType == TaskType.MapAnswer)
+        LatLng(task.answers.split(pattern)[2].toDouble(), task.answers.split(pattern)[3].toDouble())
+    else LatLng(47.497913, 19.040236))
+    )
+    val mapZoomState by remember { mutableFloatStateOf(
+        if(task.taskType == TaskType.MapAnswer)
+            task.answers.split(pattern)[1].toFloat()
+        else 20f)
+    }
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(
+            markerState.position,
+            mapZoomState)
+    }
+    /**
+     * Szabadszöveges válasz
+     * */
     var textAnswerInput by remember { mutableStateOf("") }
 
     Column(
@@ -256,13 +295,33 @@ fun Task(
                     }
                     TaskType.MapAnswer -> {
                         Text(text = "Map answer")
-
+                        Box(
+                            modifier= Modifier
+                                .fillMaxSize()
+                                .heightIn(60.dp, 100.dp)
+                        ){
+                            GoogleMap(
+                                modifier = Modifier
+                                    .fillMaxSize(),
+                                cameraPositionState = cameraPositionState
+                            ) {
+                                Marker(
+                                    state = markerState,
+                                    draggable = true,
+                                    )
+                                Circle(
+                                    center = markerState.position,
+                                    radius = actualRadius,
+                                    strokeColor = Color.Red
+                                )
+                            }
+                        }
                     }
                     TaskType.OrderAnswer -> {
                         Text(text = "Order answers")
                         VerticalReorderList(
-                            listElements=orderAnswerInputList,
-                            newListElements=orderAnswerInputList
+                            listElements=shuffledOrderAnswerList,
+                            newListElements=shuffledOrderAnswerList
                         )
                     }
                     TaskType.TextAnswer -> {
@@ -288,9 +347,36 @@ fun Task(
         Column( ) {
             Button(
                 onClick = {
-                    for( i in 0..< orderAnswerInputList.size)
-                        Log.i("order", orderAnswerInputList[i])
-                    onSaveClicked()
+                    val answerStringBuilder=StringBuilder()
+
+
+                    if(task.taskType==TaskType.ListedAnswer) {
+                        answerStringBuilder.append(answerListSize)
+                        for(i in 0..<answerListSize){
+                            answerStringBuilder.append('|')
+                            answerStringBuilder.append(checkedStateList[i]).append('|').append(choiceAnswerInputList[i])
+                        }
+                    }
+                    else if(task.taskType==TaskType.OrderAnswer) {
+                        answerStringBuilder.append(answerListSize)
+                        for(i in 0..<answerListSize){
+                            answerStringBuilder.append('|')
+                            answerStringBuilder.append(shuffledOrderAnswerList[i])
+                        }
+                    }
+                    var userAnswer = when(task.taskType){
+                        TaskType.ListedAnswer, TaskType.OrderAnswer -> answerStringBuilder.toString()
+                        TaskType.NumberAnswer -> if(answerNumberInput == "") "0" else answerNumberInput
+                        TaskType.DateAnswer -> dateInput.toString()
+                        TaskType.TextAnswer, TaskType.ImageAnswer, TaskType.MapAnswer -> ""
+                    }
+                    var taskSolution = TaskSolution(
+                        sessionId = session.id,
+                        taskId = task.id,
+                        userAnswer= userAnswer,
+                        checked = false
+                    )
+                    onSaveClicked(task, taskSolution)
                 },
                 modifier = Modifier
                     .padding(vertical = 2.dp, horizontal = 50.dp)
