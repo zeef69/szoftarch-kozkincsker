@@ -51,7 +51,7 @@ class SessionModeratorFragment : RainbowCakeFragment<SessionModeratorViewState, 
                         session = viewState.session,
                         mission = viewState.mission,
                         designer = viewState.designer,
-                        players = ArrayList(),//viewState.players,
+                        players = viewState.players,
                         onUserClicked = ::onUserClicked,
                         onBackClick = { navigator?.pop() }
                     )
