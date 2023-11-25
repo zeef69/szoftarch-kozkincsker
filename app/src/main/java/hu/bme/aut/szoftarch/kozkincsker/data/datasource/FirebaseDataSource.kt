@@ -105,7 +105,7 @@ class FirebaseDataSource @Inject constructor() {
     suspend fun onDeleteMission(mission: Mission) {
         database.collection("missions").document(mission.id).delete()
             .addOnSuccessListener { documentReference ->
-                Log.d("success", "DocumentSnapshot written with ID: $documentReference.")
+                Log.d("success", "DocumentSnapshot deleted with ID: $documentReference.")
             }
             .addOnFailureListener { exception ->
                 Log.d("failure", "Error getting documents: ", exception)
@@ -142,18 +142,25 @@ class FirebaseDataSource @Inject constructor() {
             }.await()
     }
 
-    suspend fun getSessionsFromMission(mission: Mission): List<Session>{
-        val sessions = mutableListOf<Session>()
-        database.collection("sessions").whereEqualTo("mission", mission.id).get()
-            .addOnSuccessListener { documents ->
-                for(document in documents)
-                    sessions.add(document.toObject())
+    suspend fun getSessionsFromMissionListener(mission: Mission): Flow<List<Session>> = callbackFlow {
+        val listenerRegistration = database.collection("sessions").whereEqualTo("missionId", mission.id)
+            .addSnapshotListener { querySnapshot: QuerySnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
+                if (firebaseFirestoreException != null) {
+                    cancel(message = "Error fetching items", cause = firebaseFirestoreException)
+                    return@addSnapshotListener
+                }
+                val items = mutableListOf<Session>()
+                if (querySnapshot != null) {
+                    for(document in querySnapshot) {
+                        items.add(document.toObject())
+                    }
+                }
+                this.trySend(items).isSuccess
             }
-            .addOnFailureListener { exception ->
-                Log.d("failure", "Error getting documents: ", exception)
-            }
-            .await()
-        return sessions
+        awaitClose {
+            Log.d("failure", "Cancelling items listener")
+            listenerRegistration.remove()
+        }
     }
 
     suspend fun getSessionsFromUserId(id: String): List<Session>{
