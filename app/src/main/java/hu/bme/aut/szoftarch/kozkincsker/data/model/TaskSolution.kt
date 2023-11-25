@@ -11,5 +11,6 @@ data class TaskSolution(
     var sessionId: String = "",           //SessionId
     var taskId: String = "",              //TaskId
     var userId: String = "",              //UserId (player)
-    var userAnswer: String = ""
+    var userAnswer: String = "",
+    var checked: Boolean = false
 ): Parcelable
