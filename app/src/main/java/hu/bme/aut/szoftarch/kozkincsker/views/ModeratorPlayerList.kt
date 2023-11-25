@@ -1,15 +1,15 @@
 package hu.bme.aut.szoftarch.kozkincsker.views
 
+import java.text.SimpleDateFormat
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -20,10 +20,9 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
@@ -35,6 +34,8 @@ import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Task
 import hu.bme.aut.szoftarch.kozkincsker.data.model.User
+import java.util.Date
+import java.util.Locale
 
 @Composable
 fun ModeratorPlayerList(
@@ -63,49 +64,105 @@ fun ModeratorPlayerList(
                 )
             }
         )
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(12.dp, 12.dp, 12.dp, 25.dp)
-                .weight(1f, false)
         ) {
+            if((mission?.designerId != null) && (designer?.id == mission.designerId)) {
+                Text(
+                    buildAnnotatedString {
+                        pushStyle(SpanStyle(fontSize = 14.sp, fontStyle = FontStyle.Italic))
+                        append("Creator: ")
+
+                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                            append(designer?.name)
+                        }
+                        pop()
+                    },
+                    textAlign = TextAlign.End,
+                    modifier = Modifier
+                        .padding(0.dp, 10.dp, 0.dp, 0.dp)
+                        .fillMaxWidth()
+                )
+            }
             Text(
                 buildAnnotatedString {
-                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append(mission?.name)
+                    pushStyle(SpanStyle(fontWeight = FontWeight.Bold, fontSize = 24.sp))
+                    withStyle(
+                        style = SpanStyle(fontStyle = FontStyle.Italic)) {
+                        append("Mission: ")
                     }
+                    append(mission?.name)
+                    pop()
+                    pushStyle(SpanStyle(fontWeight = FontWeight.Bold, fontSize = 18.sp))
+                    withStyle(
+                        style = SpanStyle(fontStyle = FontStyle.Italic)) {
+                        append("\nSession name: ")
+                    }
+                    append(session?.name)
+                    pop()
                 },
                 textAlign = TextAlign.Start,
                 modifier = Modifier
                     .padding(0.dp, 10.dp, 0.dp, 0.dp)
-                    .width(((LocalConfiguration.current.screenWidthDp / 2) - 20).dp)
+                    .fillMaxWidth()
             )
 
             Text(
                 buildAnnotatedString {
-                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                    withStyle(style = SpanStyle(fontSize=14.sp)) {
                         append(mission?.description)
                     }
                 },
                 textAlign = TextAlign.Start,
                 modifier = Modifier
                     .padding(0.dp, 10.dp, 0.dp, 0.dp)
-                    .width(((LocalConfiguration.current.screenWidthDp / 2) - 20).dp)
+                    .fillMaxWidth()
             )
-
-            if(mission?.designerId != null && designer?.id == mission.designerId)
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .height(IntrinsicSize.Min)
+                    .fillMaxWidth()
+            ){
                 Text(
                     buildAnnotatedString {
-                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                            append(designer?.name)
+                        pushStyle(SpanStyle(fontWeight = FontWeight.Bold, fontSize = 24.sp))
+                        withStyle(
+                            style = SpanStyle(fontStyle = FontStyle.Italic)) {
+                            append("Access code: ")
                         }
+                        append(session?.accessCode)
+                        pop()
                     },
                     textAlign = TextAlign.Start,
                     modifier = Modifier
                         .padding(0.dp, 10.dp, 0.dp, 0.dp)
-                        .width(((LocalConfiguration.current.screenWidthDp / 2) - 20).dp)
+                        .fillMaxWidth()
+                        .weight(0.6f, false)
                 )
-
+                Text(
+                    buildAnnotatedString {
+                        pushStyle(SpanStyle(fontSize = 14.sp))
+                        withStyle(
+                            style = SpanStyle(fontStyle = FontStyle.Italic)) {
+                            append("Starting date: ")
+                        }
+                        append(session?.startDate?.let {
+                            SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.ENGLISH).format(
+                                it
+                            )
+                        })
+                    },
+                    textAlign = TextAlign.End,
+                    modifier = Modifier
+                        .padding(0.dp, 10.dp, 0.dp, 0.dp)
+                        .fillMaxWidth()
+                        .weight(0.4f, false)
+                )
+            }/*
             LazyColumn(
                 modifier = Modifier
                     .padding(all = 10.dp)
@@ -131,6 +188,7 @@ fun ModeratorPlayerList(
                     }
                 }
             }
+            */
         }
     }
 }
@@ -160,8 +218,11 @@ fun ModeratorPlayerListPreview(){
     val players = mutableListOf(player1, player2)
     val session = Session(
         id = "sessin_id_9876",
+        name = "ez a sessin name",
         missionId = "mission_id_9876",
-        playerIds = mutableListOf(player1.id, player2.id)
+        playerIds = mutableListOf(player1.id, player2.id),
+        startDate = Date(),
+        accessCode = "ALMA123"
     )
     val level1 = Level()
     val level2 = Level()
