@@ -10,4 +10,9 @@ class ImageInteractor @Inject constructor(
         val data = firebaseDataSource.uploadImageToStorage(byteArray)
         return data
     }
+
+    suspend fun downloadImageFromStorage(byteArray: ByteArray) : String? {
+        val data = firebaseDataSource.uploadImageToStorage(byteArray)
+        return data
+    }
 }

@@ -413,14 +413,13 @@ class FirebaseDataSource @Inject constructor() {
         //val uploadTask = storageRef.child("file/$sd").putFile(imageUri)
         val uploadTask = spaceRef.putBytes(byteArray)
         uploadTask.addOnSuccessListener { it ->
-            var downloadUrl = it.uploadSessionUri
             // using glide library to display the image
             //storageRef.child("upload/$sd").downloadUrl.addOnSuccessListener {
                /* Glide.with(this@MainActivity)
                     .load(it)
                     .into(imageview)
 */
-                Log.e("Firebase", "Image Upload success here: $downloadUrl")
+                Log.e("Firebase", "Image Upload success")
             /*}.addOnFailureListener {
                 Log.e("Firebase", "Failed in downloading")
             }*/
@@ -428,5 +427,11 @@ class FirebaseDataSource @Inject constructor() {
             Log.e("Firebase", "Image Upload fail")
         }
         return spaceRef.path
+    }
+
+    suspend fun downloadImageFromStorage(pathString: String){
+        var spaceRef: StorageReference = storageRef.child(pathString)
+        spaceRef
+
     }
 }
