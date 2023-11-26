@@ -1,22 +1,13 @@
 package hu.bme.aut.szoftarch.kozkincsker.ui.task
 
-import android.Manifest
-import android.content.Context
-import android.content.Intent
-import android.content.pm.PackageManager
+
 import android.net.Uri
 import android.os.Bundle
-import android.provider.OpenableColumns
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.LocalContext
-import androidx.core.content.ContextCompat
 import co.zsmb.rainbowcake.base.RainbowCakeFragment
 import co.zsmb.rainbowcake.extensions.exhaustive
 import co.zsmb.rainbowcake.hilt.getViewModelFromFactory
@@ -34,7 +25,6 @@ import hu.bme.aut.szoftarch.kozkincsker.views.theme.AppUiTheme1
 @AndroidEntryPoint
 class TaskFragment : RainbowCakeFragment<TaskViewState, TaskViewModel>(){
 
-    private val locationPermissionGranted = mutableStateOf(false)
 
     override fun provideViewModel() = getViewModelFromFactory()
     private lateinit var actualUser: User
@@ -42,7 +32,6 @@ class TaskFragment : RainbowCakeFragment<TaskViewState, TaskViewModel>(){
         private const val TASK = "TASK"
         private const val SESSION = "TASK_SESSION"
         private const val ACTUAL_USER = "ACTUAL_USER"
-        const val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1234
 
         fun newInstance(task : Task, session: Session, user: User): TaskFragment {
             return TaskFragment().applyArgs {
