@@ -70,8 +70,8 @@ class MissionsFragment : RainbowCakeFragment<MissionsViewState, MissionsViewMode
             navigator?.add(SessionPlayerFragment.newInstance(session))
     }
 
-    private fun onPrivateGameCode(code: String) {
-        viewModel.joinPrivateGame(code)
+    private fun onPrivateGameCode(code: String): Mission? {
+        return viewModel.joinPrivateGame(code)
     }
 
     private fun onModifyMission(mission: Mission) {

@@ -35,8 +35,8 @@ class MissionsPresenter @Inject constructor(
         return@withIOContext sessionInteractor.joinWithCode(code)
     }
 
-    suspend fun joinPrivateGame(code: String) = withIOContext {
-        missionInteractor.joinPrivateGame(code)
+    suspend fun joinPrivateGame(code: String): Mission? = withIOContext {
+        return@withIOContext missionInteractor.joinPrivateGame(code)
     }
 
     suspend fun getPlayingOrModeratedSessionsFromUser(id: String?): Flow<List<Session>> = withIOContext {

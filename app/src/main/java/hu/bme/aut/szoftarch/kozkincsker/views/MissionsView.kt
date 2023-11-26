@@ -53,7 +53,7 @@ fun MissionsView(
     id: String?,
     user: User?,
     onJoinWithCode: (String) -> Unit,
-    onPrivateGameCode: (String) -> Unit,
+    onPrivateGameCode: (String) -> Mission?,
     onModifyMission: (Mission) -> Unit,
     onDeleteMission: (Mission) -> Unit,
     onAddMission: () -> Unit,
@@ -404,7 +404,13 @@ fun MissionsView(
                             Text("Dismiss")
                         }
                         TextButton(
-                            onClick = { onPrivateGameCode(text) },
+                            onClick = {
+                                val privateMission = onPrivateGameCode(text)
+                                if (user != null && privateMission != null) {
+                                    user.privatePlayableMissionIds.add(privateMission.id)
+                                }
+                                showPrivateGameDialog = false
+                            },
                             modifier = Modifier.padding(8.dp),
                         ) {
                             Text("Confirm")
