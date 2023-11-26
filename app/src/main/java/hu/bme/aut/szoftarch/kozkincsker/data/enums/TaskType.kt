@@ -1,5 +1,8 @@
 package hu.bme.aut.szoftarch.kozkincsker.data.enums
 
+import android.location.Location
+import android.util.Log
+import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.firestore.PropertyName
 import hu.bme.aut.szoftarch.kozkincsker.R
 //TODO solutionCheck megírása minden feladattípushoz
@@ -33,6 +36,15 @@ enum class TaskType(val translation: Int, val checkable: Boolean) {
     @PropertyName("map_answer")
     MapAnswer(R.string.task_type_map_answer, true){
         override fun solutionCheck(designerAnswers: String, userAnswer: String) : Boolean {
+            val splitter =  '|'
+            if(designerAnswers.split(splitter).size < 4) return false
+            var actualRadius = designerAnswers.split(splitter)[0].toDouble()
+            var goal = LatLng(designerAnswers.split(splitter)[2].toDouble(), designerAnswers.split(splitter)[3].toDouble())
+            var device = LatLng(userAnswer.split(splitter)[0].toDouble(), userAnswer.split(splitter)[1].toDouble())
+            var results = FloatArray(1)
+            Location.distanceBetween(goal.latitude,goal.longitude, device.latitude, device.longitude, results)
+            Log.i("distance", results[0].toString())
+            if(results[0].compareTo(actualRadius)<0) return false
             return true
         }
     },
