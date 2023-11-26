@@ -1,11 +1,13 @@
 package hu.bme.aut.szoftarch.kozkincsker.views
 
+
 import android.net.Uri
 import android.app.Activity
+
 import android.content.pm.PackageManager
 import android.location.Location
+import android.os.Looper
 import android.util.Log
-import android.widget.ImageView
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -61,6 +63,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import coil.compose.AsyncImage
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -128,11 +133,8 @@ fun Task(
     var actualRadius by remember { mutableDoubleStateOf(
         if(task.taskType == TaskType.MapAnswer) task.answers.split(pattern)[0].toDouble()
         else 10.0) }
-    val originalMarkerState = rememberMarkerState(position =
-    (if(task.taskType == TaskType.MapAnswer)
-        LatLng(task.answers.split(pattern)[2].toDouble(), task.answers.split(pattern)[3].toDouble())
-    else LatLng(47.497913, 19.040236))
-    )
+    val originalMarkerState = rememberMarkerState(position = (if(task.taskType == TaskType.MapAnswer) LatLng(task.answers.split(pattern)[2].toDouble(), task.answers.split(pattern)[3].toDouble())
+                                                            else LatLng(47.497913, 19.040236)))
     val mapZoomState by remember { mutableFloatStateOf(
         if(task.taskType == TaskType.MapAnswer)
             task.answers.split(pattern)[1].toFloat()
@@ -150,6 +152,23 @@ fun Task(
     var lastKnownLocation by remember {mutableStateOf<Location?>(null)}
     var deviceLatLng by remember {mutableStateOf(LatLng(0.0, 0.0))}
     val deviceCameraPositionState = rememberCameraPositionState {position = CameraPosition.fromLatLngZoom(deviceLatLng, mapZoomState)}
+    //Location Update Callback
+    val locationCallBack = object : LocationCallback(){
+        override fun onLocationResult(locationResult: LocationResult) {
+            super.onLocationResult(locationResult)
+            for(location in locationResult.locations){
+                deviceLatLng = LatLng(location!!.latitude, location.longitude)
+            }
+        }
+    }
+    //Update time
+    val UPDATE_TIME : Long = 20000
+    //Update locationRequest
+    val locationRequest : LocationRequest = LocationRequest.create().apply{
+        interval = UPDATE_TIME
+        fastestInterval = UPDATE_TIME/4
+        priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+    }
     if (ContextCompat.checkSelfPermission(
             context,
             android.Manifest.permission.ACCESS_FINE_LOCATION
@@ -167,10 +186,9 @@ fun Task(
                 Log.e("Location", "Exception: %s", t.exception)
             }
         }
+        fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallBack, Looper.getMainLooper())
     }
     var markerVisibilityState by remember { mutableIntStateOf(0) }
-    //var mapInput by remember { mutableStateOf("") }
-    //mapInput = deviceCameraPositionState.position.target.latitude.toString() + "|" + deviceCameraPositionState.position.target.longitude.toString()
     /**
      * Kép válasz
      * */
