@@ -11,7 +11,8 @@ class ImageInteractor @Inject constructor(
         return data
     }
 
-    suspend fun downloadImageFromStorage(pathString: String){
-        val data = firebaseDataSource.downloadImageFromStorage(pathString)
+    suspend fun downloadImageFromStorage(pathString: String): String {
+        var taskUri = firebaseDataSource.downloadImageFromStorage(pathString)
+        return taskUri.toString()
     }
 }

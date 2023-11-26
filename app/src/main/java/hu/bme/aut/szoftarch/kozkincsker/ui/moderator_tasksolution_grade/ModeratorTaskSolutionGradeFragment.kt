@@ -1,6 +1,7 @@
 package hu.bme.aut.szoftarch.kozkincsker.ui.moderator_tasksolution_grade
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -74,7 +75,9 @@ class ModeratorTaskSolutionGradeFragment : RainbowCakeFragment<ModeratorTaskSolu
         navigator?.pop()
     }
 
-    private fun onDownloadImage(path: String) {
-        viewModel.onDownloadImage(path)
+    private fun onDownloadImage(path: String): String {
+        val data = viewModel.onDownloadImage(path)
+        Log.i("onDownloadImage:Fragment", data)
+        return data
     }
 }

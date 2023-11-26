@@ -4,6 +4,7 @@ import co.zsmb.rainbowcake.base.RainbowCakeViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Task
 import hu.bme.aut.szoftarch.kozkincsker.data.model.TaskSolution
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,7 +20,7 @@ class ModeratorTaskSolutionGradeViewModel @Inject constructor(private val modera
         moderatorTaskSolutionGradePresenter.onTaskSolutionGraded(taskSolution, grade)
     }
 
-    fun onDownloadImage(pathString: String) = execute {
-        moderatorTaskSolutionGradePresenter.onDownloadImage(pathString)
+    fun onDownloadImage(pathString: String): String = runBlocking {
+        return@runBlocking moderatorTaskSolutionGradePresenter.onDownloadImage(pathString)
     }
 }

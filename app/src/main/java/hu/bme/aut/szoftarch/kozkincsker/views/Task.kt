@@ -23,8 +23,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.Checkbox
 import androidx.compose.material.CheckboxDefaults
@@ -222,11 +224,11 @@ fun Task(
                 .fillMaxSize()
                 .padding(12.dp, 12.dp, 12.dp, 25.dp)
                 .weight(1f, false)
+                .verticalScroll(rememberScrollState())
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(0.3f, true)
                     .padding(bottom = 10.dp)
             ){
                 Row(
@@ -293,7 +295,6 @@ fun Task(
             }
             Column(
                 modifier = Modifier
-                    .weight(0.7f, false)
                     .fillMaxSize()
                     .padding(12.dp, 5.dp, 12.dp, 25.dp),
                 horizontalAlignment = Alignment.CenterHorizontally

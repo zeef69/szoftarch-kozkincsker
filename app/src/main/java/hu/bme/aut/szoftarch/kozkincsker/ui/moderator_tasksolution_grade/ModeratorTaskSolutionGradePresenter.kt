@@ -14,7 +14,8 @@ class ModeratorTaskSolutionGradePresenter @Inject constructor(
         taskSolutionInteractor.onTaskSolutionGraded(taskSolution, grade)
     }
 
-    suspend fun onDownloadImage(pathString: String){
-        imageInteractor.downloadImageFromStorage(pathString)
+    suspend fun onDownloadImage(pathString: String): String {
+
+        return imageInteractor.downloadImageFromStorage(pathString)
     }
 }
