@@ -1,10 +1,14 @@
 package hu.bme.aut.szoftarch.kozkincsker.views
 
-
+import android.net.Uri
 import android.app.Activity
 import android.content.pm.PackageManager
 import android.location.Location
 import android.util.Log
+import android.widget.ImageView
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,6 +20,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
@@ -55,6 +60,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
+import coil.compose.AsyncImage
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -80,14 +86,13 @@ import java.util.Locale
 fun Task(
     task: Task,
     session: Session,
+    onUploadImage : (uri: Uri) -> String,
     onSaveClicked: (Task, TaskSolution) -> Unit,
     onBackClick: () -> Unit = {}
 ) {
     val context = LocalContext.current
-    val mContext = if (context is ViewComponentManager.FragmentContextWrapper)
-        context.baseContext
-    else
-        context
+    val mContext = if (context is ViewComponentManager.FragmentContextWrapper) context.baseContext
+                    else context
     val pattern =  '|'
     /**
      * Válaszlista és checkbox érték a választós és a sorbarendezős feladatokhoz
@@ -166,9 +171,12 @@ fun Task(
     var markerVisibilityState by remember { mutableIntStateOf(0) }
     //var mapInput by remember { mutableStateOf("") }
     //mapInput = deviceCameraPositionState.position.target.latitude.toString() + "|" + deviceCameraPositionState.position.target.longitude.toString()
-
-
-
+    /**
+     * Kép válasz
+     * */
+    var selectedImageUri by remember {mutableStateOf<Uri?>(null)}
+    var singlePhotoPicker = rememberLauncherForActivityResult(contract = ActivityResultContracts.PickVisualMedia(), onResult = {selectedImageUri = it})
+    var uploadedImageUriString = ""
     /**
      * Szabadszöveges válasz
      * */
@@ -417,7 +425,49 @@ fun Task(
                                 .padding(0.dp, 2.dp, 0.dp, 2.dp)
                         )
                     }
-                    TaskType.ImageAnswer -> {}
+                    TaskType.ImageAnswer -> {
+                        Text(text = "Image answer")
+                        Row(
+                            horizontalArrangement  = Arrangement.SpaceEvenly,
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .height(IntrinsicSize.Min)
+                                .fillMaxWidth()
+                        ){
+                            Button(
+                                modifier = Modifier
+                                    .padding(0.dp, 10.dp, 0.dp, 0.dp)
+                                    .fillMaxWidth()
+                                    .weight(0.5f, true),
+                                onClick = {
+                                    singlePhotoPicker.launch(
+                                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                                }
+                            ) {
+                                Text(text = "Select image")
+                            }
+                            Button(
+                                modifier = Modifier
+                                    .padding(0.dp, 10.dp, 0.dp, 0.dp)
+                                    .fillMaxWidth()
+                                    .weight(0.5f, true),
+                                onClick = {
+                                    selectedImageUri?.let{
+                                        uploadedImageUriString=onUploadImage(selectedImageUri!!)}
+                                }
+                            ){
+                                Text(text = "Upload image")
+                            }
+                        }
+                        AsyncImage(
+                            model = selectedImageUri,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(248.dp)
+                        )
+
+                       // ImagePicker(onImageSelected = )
+                    }
                 }
             }
         }
@@ -451,7 +501,8 @@ fun Task(
                         TaskType.ListedAnswer, TaskType.OrderAnswer, TaskType.MapAnswer -> answerStringBuilder.toString()
                         TaskType.NumberAnswer -> if(answerNumberInput == "") "0" else answerNumberInput
                         TaskType.DateAnswer -> dateInput.toString()
-                        TaskType.TextAnswer, TaskType.ImageAnswer -> ""
+                        TaskType.TextAnswer -> textAnswerInput
+                        TaskType.ImageAnswer -> uploadedImageUriString
                     }
                     var taskSolution = TaskSolution(
                         sessionId = session.id,
