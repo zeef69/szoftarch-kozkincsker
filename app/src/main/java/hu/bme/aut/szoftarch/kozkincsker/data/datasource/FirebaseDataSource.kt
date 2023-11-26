@@ -1,5 +1,6 @@
 package hu.bme.aut.szoftarch.kozkincsker.data.datasource
 
+import android.net.Uri
 import android.util.Log
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
@@ -11,6 +12,10 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObject
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.StorageTask
+import com.google.firebase.storage.UploadTask
+import com.google.firebase.storage.storage
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Feedback
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
@@ -22,6 +27,7 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
+import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -29,6 +35,8 @@ import javax.inject.Singleton
 class FirebaseDataSource @Inject constructor() {
 
     private val database = Firebase.firestore
+    private val storage = Firebase.storage
+    private val storageRef = storage.reference
     //private val uid = FirebaseAuth.getInstance().currentUser?.uid
 
     suspend fun getMissionsListener(): Flow<List<Mission>> = callbackFlow {
@@ -368,7 +376,6 @@ class FirebaseDataSource @Inject constructor() {
     suspend fun getSolutionsFromUserFromTask(user: User? , task: Task){
 
     }
-
     suspend fun getTaskSolutionsListener(sessionId: String, playerId: String): Flow<List<TaskSolution>> = callbackFlow {
         val listenerRegistration = database.collection("solutions").where(Filter.and(Filter.equalTo("sessionId", sessionId), Filter.equalTo("userId", playerId)))
             .addSnapshotListener { querySnapshot: QuerySnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
@@ -398,5 +405,28 @@ class FirebaseDataSource @Inject constructor() {
             .addOnFailureListener { exception ->
                 Log.d("failure", "Error getting documents: ", exception)
             }.await()
+    }
+    
+    suspend fun uploadImageToStorage(byteArray: ByteArray) : String?{
+        val uniqueImageName = UUID.randomUUID()
+        var spaceRef: StorageReference = storageRef.child("images/$uniqueImageName.jpg")
+        //val uploadTask = storageRef.child("file/$sd").putFile(imageUri)
+        val uploadTask = spaceRef.putBytes(byteArray)
+        uploadTask.addOnSuccessListener { it ->
+            var downloadUrl = it.uploadSessionUri
+            // using glide library to display the image
+            //storageRef.child("upload/$sd").downloadUrl.addOnSuccessListener {
+               /* Glide.with(this@MainActivity)
+                    .load(it)
+                    .into(imageview)
+*/
+                Log.e("Firebase", "Image Upload success here: $downloadUrl")
+            /*}.addOnFailureListener {
+                Log.e("Firebase", "Failed in downloading")
+            }*/
+        }.addOnFailureListener {
+            Log.e("Firebase", "Image Upload fail")
+        }
+        return spaceRef.path
     }
 }

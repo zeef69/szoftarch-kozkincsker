@@ -1,12 +1,18 @@
 package hu.bme.aut.szoftarch.kozkincsker.ui.task
 
 import android.Manifest
+import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
+import android.provider.OpenableColumns
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
@@ -45,6 +51,7 @@ class TaskFragment : RainbowCakeFragment<TaskViewState, TaskViewModel>(){
                 putParcelable(ACTUAL_USER, user)
             }
         }
+
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -67,6 +74,7 @@ class TaskFragment : RainbowCakeFragment<TaskViewState, TaskViewModel>(){
                     is TaskContent -> Task(
                         task = viewState.task,
                         session = viewState.session,
+                        onUploadImage = ::onUploadImage,
                         onSaveClicked = ::onSaveClicked,
                         onBackClick = { navigator?.pop() }
                     )
@@ -87,6 +95,18 @@ class TaskFragment : RainbowCakeFragment<TaskViewState, TaskViewModel>(){
             Log.i("taskSolutionID", id)
         }
         navigator?.pop()
+    }
+
+    private fun onUploadImage(uri: Uri) : String {
+        val byteArray: ByteArray? = context?.contentResolver
+            ?.openInputStream(uri)
+            ?.use { it.readBytes() }
+
+        var imageNewUri : String? = null
+        byteArray?.let{
+            imageNewUri = viewModel.onUploadImage(byteArray)
+        }
+        return imageNewUri ?: ""
     }
 
 }

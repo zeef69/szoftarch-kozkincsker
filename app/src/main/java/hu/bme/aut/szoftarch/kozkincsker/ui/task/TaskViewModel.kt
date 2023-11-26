@@ -23,4 +23,8 @@ class TaskViewModel @Inject constructor(
     fun setTaskSolution(solution: TaskSolution): String? = runBlocking {
         return@runBlocking taskPresenter.setTaskSolution(solution)
     }
+
+    fun onUploadImage(byteArray: ByteArray): String? = runBlocking {
+        return@runBlocking taskPresenter.onUploadImage(byteArray)
+    }
 }
