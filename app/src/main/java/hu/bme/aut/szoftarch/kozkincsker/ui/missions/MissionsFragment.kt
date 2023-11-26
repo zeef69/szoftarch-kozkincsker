@@ -52,6 +52,7 @@ class MissionsFragment : RainbowCakeFragment<MissionsViewState, MissionsViewMode
                         id = viewState.id,
                         user = actualUser,
                         onJoinWithCode = ::onJoinWithCode,
+                        onPrivateGameCode = ::onPrivateGameCode,
                         onModifyMission = ::onModifyMission,
                         onDeleteMission = ::onDeleteMission,
                         onAddMission = ::onAddMission,
@@ -67,6 +68,10 @@ class MissionsFragment : RainbowCakeFragment<MissionsViewState, MissionsViewMode
         val session = viewModel.joinWithCode(code)
         if(session != null)
             navigator?.add(SessionPlayerFragment.newInstance(session))
+    }
+
+    private fun onPrivateGameCode(code: String) {
+        viewModel.joinPrivateGame(code)
     }
 
     private fun onModifyMission(mission: Mission) {

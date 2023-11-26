@@ -1,8 +1,10 @@
 package hu.bme.aut.szoftarch.kozkincsker.domain
 
+import com.google.firebase.firestore.toObject
 import hu.bme.aut.szoftarch.kozkincsker.data.datasource.FirebaseDataSource
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Feedback
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
+import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -40,5 +42,15 @@ class MissionInteractor @Inject constructor(
 
     suspend fun deleteFeedback(feedback: Feedback, missionId: String) {
         firebaseDataSource.onDeleteFeedbackFromMission(feedback, missionId)
+    }
+
+    suspend fun joinPrivateGame(code: String){
+        val missions = mutableListOf<Mission>()
+        val documents = firebaseDataSource.getPrivateMissionByCode(code)
+        for(document in documents)
+            missions.add(document.toObject())
+        if(missions.isNotEmpty()) {
+            firebaseDataSource.addPrivateMissionToUser(missions[0])
+        }
     }
 }

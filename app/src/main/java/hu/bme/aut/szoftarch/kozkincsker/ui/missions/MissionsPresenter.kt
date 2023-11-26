@@ -11,7 +11,9 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class MissionsPresenter @Inject constructor(
-    private val missionInteractor: MissionInteractor, private val userInteractor: UserInteractor, private val sessionInteractor: SessionInteractor
+    private val missionInteractor: MissionInteractor,
+    private val userInteractor: UserInteractor,
+    private val sessionInteractor: SessionInteractor
 ) {
     suspend fun addListener(): Flow<List<Mission>> = withIOContext {
         missionInteractor.getMissionsListener()
@@ -31,6 +33,10 @@ class MissionsPresenter @Inject constructor(
 
     suspend fun joinWithCode(code: String): Session? = withIOContext {
         return@withIOContext sessionInteractor.joinWithCode(code)
+    }
+
+    suspend fun joinPrivateGame(code: String) = withIOContext {
+        missionInteractor.joinPrivateGame(code)
     }
 
     suspend fun getPlayingOrModeratedSessionsFromUser(id: String?): Flow<List<Session>> = withIOContext {

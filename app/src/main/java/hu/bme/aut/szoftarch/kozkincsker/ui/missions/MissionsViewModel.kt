@@ -59,4 +59,7 @@ class MissionsViewModel @Inject constructor(
     fun joinWithCode(code: String): Session? = runBlocking {
         return@runBlocking missionsPresenter.joinWithCode(code)
     }
+    fun joinPrivateGame(code: String) = execute {
+        missionsPresenter.joinPrivateGame(code)
+    }
 }

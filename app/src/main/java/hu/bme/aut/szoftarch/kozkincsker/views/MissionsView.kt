@@ -53,6 +53,7 @@ fun MissionsView(
     id: String?,
     user: User?,
     onJoinWithCode: (String) -> Unit,
+    onPrivateGameCode: (String) -> Unit,
     onModifyMission: (Mission) -> Unit,
     onDeleteMission: (Mission) -> Unit,
     onAddMission: () -> Unit,
@@ -60,7 +61,8 @@ fun MissionsView(
     onSessionClicked: (Session) -> Unit
 ) {
     var privacySwitchState by remember { mutableIntStateOf(0) }
-    var showDialog by remember { mutableStateOf(false) }
+    var showJoinDialog by remember { mutableStateOf(false) }
+    var showPrivateGameDialog by remember { mutableStateOf(false) }
     var searchedMissions = missions
 
     Column(
@@ -288,13 +290,25 @@ fun MissionsView(
             }
         }
         if (privacySwitchState == 0) {
-            Button(
-                onClick = {
-                    showDialog = showDialog.not()
-                },
-                modifier = Modifier.align(alignment = Alignment.CenterHorizontally)
-            ) {
-                Text(text = "Join with code")
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+            ){
+                Button(
+                    onClick = {
+                        showJoinDialog = showJoinDialog.not()
+                    }
+                ) {
+                    Text(text = "Join with code")
+                }
+                Button(
+                    onClick = {
+                        showPrivateGameDialog = showPrivateGameDialog.not()
+                    }
+                ) {
+                    Text(text = "Private game code")
+                }
             }
         } else if (privacySwitchState == 2) {
             FloatingActionButton(
@@ -308,8 +322,8 @@ fun MissionsView(
     }
 
 
-    if (showDialog) {
-        Dialog(onDismissRequest = { showDialog = false }) {
+    if (showJoinDialog) {
+        Dialog(onDismissRequest = { showJoinDialog = false }) {
             var text by remember { mutableStateOf("") }
 
             Card(
@@ -338,13 +352,59 @@ fun MissionsView(
                         horizontalArrangement = Arrangement.Center,
                     ) {
                         TextButton(
-                            onClick = { showDialog = false },
+                            onClick = { showJoinDialog = false },
                             modifier = Modifier.padding(8.dp),
                         ) {
                             Text("Dismiss")
                         }
                         TextButton(
                             onClick = { onJoinWithCode(text) },
+                            modifier = Modifier.padding(8.dp),
+                        ) {
+                            Text("Confirm")
+                        }
+                    }
+                }
+            }
+        }
+    }
+    if (showPrivateGameDialog) {
+        Dialog(onDismissRequest = { showPrivateGameDialog = false }) {
+            var text by remember { mutableStateOf("") }
+
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp)
+                    .padding(16.dp),
+                shape = RoundedCornerShape(16.dp),
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    OutlinedTextField(
+                        value = text,
+                        onValueChange = { text = it },
+                        label = { Text("Private game code") },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
+                    ) {
+                        TextButton(
+                            onClick = { showPrivateGameDialog = false },
+                            modifier = Modifier.padding(8.dp),
+                        ) {
+                            Text("Dismiss")
+                        }
+                        TextButton(
+                            onClick = { onPrivateGameCode(text) },
                             modifier = Modifier.padding(8.dp),
                         ) {
                             Text("Confirm")

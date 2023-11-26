@@ -117,6 +117,19 @@ fun Mission(
                 modifier = Modifier
                     .padding(0.dp, 10.dp, 0.dp, 0.dp)
             )
+            if (mission?.designerId != null && user?.id == mission.designerId)
+                Text(
+                    buildAnnotatedString {
+
+                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, fontSize = 20.sp)) {
+                            append("Access code: ")
+                            append(mission.accessCode)
+                        }
+                    },
+                    textAlign = TextAlign.Start,
+                    modifier = Modifier
+                        .padding(0.dp, 10.dp, 0.dp, 0.dp)
+                )
 
             if (mission?.designerId != null && designer?.id == mission.designerId)
                 Text(

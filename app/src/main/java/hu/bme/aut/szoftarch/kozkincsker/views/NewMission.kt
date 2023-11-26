@@ -385,6 +385,12 @@ fun NewMission(
                         mission.isPlayableWithoutModerator = playableWithoutModerator
                         mission.visibility = if(privacySwitchState==0) Mission.Visibility.PRIVATE else Mission.Visibility.PUBLIC
                         mission.state = Mission.State.FINISHED
+                        if(mission.visibility == Mission.Visibility.PRIVATE){
+                            val allowedChars = ('A'..'Z') + ('0'..'9')
+                            mission.accessCode = (1..8)
+                                .map { allowedChars.random() }
+                                .joinToString("")
+                        }
                         onPostClick(mission)
                     },
                     modifier = Modifier

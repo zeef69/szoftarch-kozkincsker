@@ -259,6 +259,30 @@ class FirebaseDataSource @Inject constructor() {
             .await().toObject()
     }
 
+    suspend fun getPrivateMissionByCode(code: String): QuerySnapshot {
+        return database.collection("missions").whereEqualTo("accessCode", code).limit(1).get()
+            .addOnSuccessListener { }
+            .addOnFailureListener { exception ->
+                Log.d("failure", "Error getting documents: ", exception)
+            }
+            .await()
+    }
+
+    suspend fun addPrivateMissionToUser(mission: Mission) {
+        val user = getUser()
+        if (user != null) {
+            val addMission : HashMap<String, Any> = HashMap()
+            addMission["privatePlayableMissionIds"] = FieldValue.arrayUnion(mission.id)
+            database.collection("users").document(user.id).update(addMission)
+                .addOnSuccessListener { documentReference ->
+                    Log.d("success", "DocumentSnapshot written with ID: $documentReference.")
+                }
+                .addOnFailureListener { exception ->
+                    Log.d("failure", "Error getting documents: ", exception)
+                }.await()
+        }
+    }
+
     suspend fun getUserFromId(id: String?): User? {
         return if(id != null)
             database.collection("users").document(id).get()
