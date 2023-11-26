@@ -197,18 +197,6 @@ class FirebaseDataSource @Inject constructor() {
             Log.d("failure", "Cancelling items listener")
             listenerRegistration.remove()
         }
-
-
-        /*database.collection("sessions").whereEqualTo("moderator", id).get()
-            .addOnSuccessListener { documents ->
-                for(document in documents)
-                    sessions.add(document.toObject())
-            }
-            .addOnFailureListener { exception ->
-                Log.d("failure", "Error getting documents: ", exception)
-            }
-            .await()
-        return sessions*/
     }
 
     suspend fun getUsersFromSessionListener(sessionId: String): Flow<List<User>> = callbackFlow {
@@ -254,6 +242,15 @@ class FirebaseDataSource @Inject constructor() {
 
     suspend fun getUserFromId(designerId: String): User? {
         return database.collection("users").document(designerId).get()
+            .addOnSuccessListener { }
+            .addOnFailureListener { exception ->
+                Log.d("failure", "Error getting User: ", exception)
+            }
+            .await().toObject()
+    }
+
+    suspend fun getSessionFromId(sessionId: String): Session? {
+        return database.collection("sessions").document(sessionId).get()
             .addOnSuccessListener { }
             .addOnFailureListener { exception ->
                 Log.d("failure", "Error getting User: ", exception)
@@ -370,5 +367,36 @@ class FirebaseDataSource @Inject constructor() {
 
     suspend fun getSolutionsFromUserFromTask(user: User? , task: Task){
 
+    }
+
+    suspend fun getTaskSolutionsListener(sessionId: String, playerId: String): Flow<List<TaskSolution>> = callbackFlow {
+        val listenerRegistration = database.collection("solutions").where(Filter.and(Filter.equalTo("sessionId", sessionId), Filter.equalTo("userId", playerId)))
+            .addSnapshotListener { querySnapshot: QuerySnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
+                if (firebaseFirestoreException != null) {
+                    cancel(message = "Error fetching items", cause = firebaseFirestoreException)
+                    return@addSnapshotListener
+                }
+                val items = mutableListOf<TaskSolution>()
+                if (querySnapshot != null) {
+                    for(document in querySnapshot) {
+                        items.add(document.toObject())
+                    }
+                }
+                this.trySend(items).isSuccess
+            }
+        awaitClose {
+            Log.d("failure", "Cancelling items listener")
+            listenerRegistration.remove()
+        }
+    }
+
+    suspend fun onEditTaskSolution(taskSolution: TaskSolution, grade: Boolean) {
+        database.collection("solutions").document(taskSolution.id).update("checked", true, "correct", grade)
+            .addOnSuccessListener { documentReference ->
+                Log.d("success", "DocumentSnapshot written with ID: $documentReference.")
+            }
+            .addOnFailureListener { exception ->
+                Log.d("failure", "Error getting documents: ", exception)
+            }.await()
     }
 }
