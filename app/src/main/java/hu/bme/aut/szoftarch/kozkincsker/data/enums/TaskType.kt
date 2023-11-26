@@ -1,7 +1,6 @@
 package hu.bme.aut.szoftarch.kozkincsker.data.enums
 
 import android.location.Location
-import android.util.Log
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.firestore.PropertyName
 import hu.bme.aut.szoftarch.kozkincsker.R
@@ -42,9 +41,12 @@ enum class TaskType(val translation: Int, val checkable: Boolean) {
             var goal = LatLng(designerAnswers.split(splitter)[2].toDouble(), designerAnswers.split(splitter)[3].toDouble())
             var device = LatLng(userAnswer.split(splitter)[0].toDouble(), userAnswer.split(splitter)[1].toDouble())
             var results = FloatArray(1)
-            Location.distanceBetween(goal.latitude,goal.longitude, device.latitude, device.longitude, results)
-            if(results[0]<=actualRadius) return false
-            return true
+            Location.distanceBetween(
+                goal.latitude,goal.longitude,
+                device.latitude, device.longitude,
+                results)
+            if(results[0]<=actualRadius) return true
+            return false
         }
     },
     @PropertyName("order_answer")
