@@ -12,7 +12,7 @@ import co.zsmb.rainbowcake.navigation.extensions.applyArgs
 import co.zsmb.rainbowcake.navigation.navigator
 import dagger.hilt.android.AndroidEntryPoint
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
-import hu.bme.aut.szoftarch.kozkincsker.data.model.User
+import hu.bme.aut.szoftarch.kozkincsker.ui.moderator_tasksolution_list.ModeratorTaskSolutionListFragment
 import hu.bme.aut.szoftarch.kozkincsker.views.ModeratorPlayerList
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.FullScreenLoading
 import hu.bme.aut.szoftarch.kozkincsker.views.theme.AppUiTheme1
@@ -60,8 +60,7 @@ class SessionModeratorFragment : RainbowCakeFragment<SessionModeratorViewState, 
         }
     }
 
-    private fun onUserClicked(user : User) {
-
+    private fun onUserClicked(sessionId: String, playerId: String) {
+        navigator?.add(ModeratorTaskSolutionListFragment.newInstance(sessionId, playerId))
     }
-
 }

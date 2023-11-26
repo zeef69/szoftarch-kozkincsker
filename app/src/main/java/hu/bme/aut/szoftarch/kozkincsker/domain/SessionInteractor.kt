@@ -59,4 +59,9 @@ class SessionInteractor @Inject constructor(
         return if(sessions.isNotEmpty()) sessions[0]
         else null
     }
+
+    suspend fun getMissionFromSessionId(sessionId: String): Mission? {
+        val session = firebaseDataSource.getSessionFromId(sessionId)
+        return session?.missionId?.let { firebaseDataSource.getMissionById(it) }
+    }
 }

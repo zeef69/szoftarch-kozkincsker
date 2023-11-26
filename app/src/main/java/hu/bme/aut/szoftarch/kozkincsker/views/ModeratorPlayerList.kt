@@ -31,16 +31,12 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hu.bme.aut.szoftarch.kozkincsker.R
-import hu.bme.aut.szoftarch.kozkincsker.data.model.Level
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
-import hu.bme.aut.szoftarch.kozkincsker.data.model.Task
 import hu.bme.aut.szoftarch.kozkincsker.data.model.User
-import java.util.Date
 import java.util.Locale
 
 @Composable
@@ -49,7 +45,7 @@ fun ModeratorPlayerList(
     mission: Mission?,
     designer: User?,
     players: List<User>,
-    onUserClicked: (User) -> Unit,
+    onUserClicked: (String, String) -> Unit,
     onBackClick: () -> Unit = {}
 ) {
     val unknown = stringResource(R.string.value_unknown)
@@ -191,7 +187,7 @@ fun ModeratorPlayerList(
                                 .fillMaxSize()
                                 .background(Color.LightGray)
                                 .padding(5.dp, 5.dp, 5.dp, 5.dp)
-                                .clickable { onUserClicked(item) }
+                                .clickable { session?.id?.let { onUserClicked(it, item.id) } }
                         ) {
                             Text(
                                 text = item.name,
@@ -209,7 +205,7 @@ fun ModeratorPlayerList(
     }
 }
 
-@Preview
+/*@Preview
 @Composable
 fun ModeratorPlayerListPreview(){
     val designer = User(
@@ -262,4 +258,4 @@ fun ModeratorPlayerListPreview(){
         onUserClicked = ::onUserClicked,
         onBackClick = {}
     )
-}
+}*/
