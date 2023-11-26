@@ -43,8 +43,7 @@ enum class TaskType(val translation: Int, val checkable: Boolean) {
             var device = LatLng(userAnswer.split(splitter)[0].toDouble(), userAnswer.split(splitter)[1].toDouble())
             var results = FloatArray(1)
             Location.distanceBetween(goal.latitude,goal.longitude, device.latitude, device.longitude, results)
-            Log.i("distance", results[0].toString())
-            if(results[0].compareTo(actualRadius)<0) return false
+            if(results[0]<=actualRadius) return false
             return true
         }
     },
