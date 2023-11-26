@@ -155,7 +155,7 @@ fun MissionsView(
                                 Row(
                                     horizontalArrangement = Arrangement.End
                                 ) {
-                                    if(user != null && user.isAdmin)
+                                    if(user != null && user.isAdmin && mission.visibility==Mission.Visibility.PUBLIC)
                                         IconButton(
                                             onClick = {onDeleteMission(mission)}
                                         ) {

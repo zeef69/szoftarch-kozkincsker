@@ -6,6 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Task
 import hu.bme.aut.szoftarch.kozkincsker.data.model.TaskSolution
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel

@@ -56,6 +56,7 @@ class ModeratorTaskSolutionGradeFragment : RainbowCakeFragment<ModeratorTaskSolu
                         taskSolution = viewState.taskSolution,
                         onTaskSolutionGoodClicked = ::onTaskSolutionGoodClicked,
                         onTaskSolutionWrongClicked = ::onTaskSolutionWrongClicked,
+                        onDownloadImage = :: onDownloadImage,
                         onBackClick = { navigator?.pop() }
                     )
                 }.exhaustive
@@ -71,5 +72,9 @@ class ModeratorTaskSolutionGradeFragment : RainbowCakeFragment<ModeratorTaskSolu
     private fun onTaskSolutionWrongClicked(taskSolution: TaskSolution) {
         viewModel.onTaskSolutionGraded(taskSolution, false)
         navigator?.pop()
+    }
+
+    private fun onDownloadImage(path: String) {
+        viewModel.onDownloadImage(path)
     }
 }

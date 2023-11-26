@@ -431,7 +431,7 @@ fun Task(
                         OutlinedTextField(
                             value = textAnswerInput,
                             onValueChange = { textAnswerInput = it },
-                            singleLine = true,
+                            singleLine = false,
                             placeholder = {
                                 Text(
                                     text = "Answer",

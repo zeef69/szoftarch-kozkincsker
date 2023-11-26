@@ -12,6 +12,7 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObject
+import com.google.firebase.storage.FileDownloadTask
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.StorageTask
 import com.google.firebase.storage.UploadTask
@@ -27,6 +28,7 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
+import java.io.File
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -423,31 +425,32 @@ class FirebaseDataSource @Inject constructor() {
             }.await()
     }
 
-    suspend fun uploadImageToStorage(byteArray: ByteArray) : String?{
+    suspend fun uploadImageToStorage(byteArray: ByteArray) : String? {
         val uniqueImageName = UUID.randomUUID()
         var spaceRef: StorageReference = storageRef.child("images/$uniqueImageName.jpg")
-        //val uploadTask = storageRef.child("file/$sd").putFile(imageUri)
         val uploadTask = spaceRef.putBytes(byteArray)
-        uploadTask.addOnSuccessListener { it ->
-            // using glide library to display the image
-            //storageRef.child("upload/$sd").downloadUrl.addOnSuccessListener {
-               /* Glide.with(this@MainActivity)
-                    .load(it)
-                    .into(imageview)
-*/
-                Log.e("Firebase", "Image Upload success")
-            /*}.addOnFailureListener {
-                Log.e("Firebase", "Failed in downloading")
-            }*/
+        var downloadURL: String? = "images/$uniqueImageName.jpg"
+        uploadTask.addOnSuccessListener {
+                storageRef.child("images/$uniqueImageName.jpg").downloadUrl.addOnSuccessListener { it->
+                    Log.e("Firebase", "Image Upload success $it")
+                }.addOnFailureListener {
+                    Log.e("Firebase", "Failed in downloading")
+                }.toString()
         }.addOnFailureListener {
             Log.e("Firebase", "Image Upload fail")
         }
-        return spaceRef.path
+        return downloadURL
     }
 
-    suspend fun downloadImageFromStorage(pathString: String){
+    suspend fun downloadImageFromStorage(pathString: String) {
         var spaceRef: StorageReference = storageRef.child(pathString)
-        spaceRef
+        val tempFile = File.createTempFile("tempFile", "jpg")
 
+        storageRef.child(pathString).downloadUrl.addOnSuccessListener { it->
+
+            Log.e("Firebase_Down", "Image Download success $it")
+        }.addOnFailureListener {
+            Log.e("Firebase_Down", "Failed in downloading")
+        }.toString()
     }
 }

@@ -18,4 +18,8 @@ class ModeratorTaskSolutionGradeViewModel @Inject constructor(private val modera
     fun onTaskSolutionGraded(taskSolution: TaskSolution, grade: Boolean) = execute {
         moderatorTaskSolutionGradePresenter.onTaskSolutionGraded(taskSolution, grade)
     }
+
+    fun onDownloadImage(pathString: String) = execute {
+        moderatorTaskSolutionGradePresenter.onDownloadImage(pathString)
+    }
 }
