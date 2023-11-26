@@ -66,8 +66,10 @@ class MissionsFragment : RainbowCakeFragment<MissionsViewState, MissionsViewMode
 
     private fun onJoinWithCode(code: String) {
         val session = viewModel.joinWithCode(code)
-        if(session != null)
+        if(session != null){
+            actualUser.currentSessionIds.add(session.id)
             navigator?.add(SessionPlayerFragment.newInstance(session))
+        }
     }
 
     private fun onPrivateGameCode(code: String): Mission? {
