@@ -21,11 +21,13 @@ import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material.icons.filled.StarRate
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -54,12 +56,18 @@ import java.util.Date
 fun Mission(
     mission: Mission? = null,
     designer: User? = null,
+    user: User? = null,
     onStartSession: (Session, Boolean) -> Unit,
+    onDeleteFeedback: (Feedback, String) -> Unit,
     onBackClick: () -> Unit = {}
 ) {
     var switchState by remember { mutableIntStateOf(0) }
     var checkedModerator by remember { mutableStateOf(false) }
     var nameInput by remember { mutableStateOf("") }
+    val feedbacks = remember { mutableStateListOf<Feedback>() }
+    if(mission != null && mission.feedbackIds.isNotEmpty())
+        for(feedback in mission.feedbackIds)
+            feedbacks.add(feedback)
 
     Column(
         modifier = Modifier
@@ -227,7 +235,7 @@ fun Mission(
                         .fillMaxSize()
                 ) {
                     if (mission != null) {
-                        itemsIndexed(mission.feedbackIds) { _, item ->
+                        itemsIndexed(feedbacks) { _, item ->
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
                                 modifier = Modifier
@@ -241,18 +249,40 @@ fun Mission(
                                     fontSize = 18.sp,
                                     modifier = Modifier.padding(all = 2.dp).weight(0.6f, true)
                                 )
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .padding(vertical = 2.dp, horizontal = 2.dp)
-                                        .weight(0.4f, true),
-                                ) {
-                                    for (i in 1..5) {
-                                        if (i <= item.stars.toInt()) Icon(Icons.Filled.StarRate, "")
-                                        else Icon(Icons.Filled.StarBorder, "")
+                                if(user != null && user.isAdmin)
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .padding(vertical = 2.dp, horizontal = 2.dp)
+                                            .weight(0.5f, true),
+                                    ) {
+                                        for (i in 1..5) {
+                                            if (i <= item.stars.toInt()) Icon(Icons.Filled.StarRate, "")
+                                            else Icon(Icons.Filled.StarBorder, "")
+                                        }
+                                        IconButton(
+                                            onClick = {
+                                                onDeleteFeedback(item, mission.id)
+                                                feedbacks.remove(item)
+                                            }
+                                        ) {
+                                            Icon(imageVector  = Icons.Filled.Delete, "")
+                                        }
                                     }
-                                }
+                                else
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .padding(vertical = 2.dp, horizontal = 2.dp)
+                                            .weight(0.4f, true),
+                                    ) {
+                                        for (i in 1..5) {
+                                            if (i <= item.stars.toInt()) Icon(Icons.Filled.StarRate, "")
+                                            else Icon(Icons.Filled.StarBorder, "")
+                                        }
+                                    }
                             }
                         }
                     }

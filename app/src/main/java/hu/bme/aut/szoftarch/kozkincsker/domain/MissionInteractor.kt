@@ -37,4 +37,8 @@ class MissionInteractor @Inject constructor(
     suspend fun newFeedback(feedback: Feedback, missionId: String) {
         firebaseDataSource.onAddFeedbackToMission(feedback, missionId)
     }
+
+    suspend fun deleteFeedback(feedback: Feedback, missionId: String) {
+        firebaseDataSource.onDeleteFeedbackFromMission(feedback, missionId)
+    }
 }

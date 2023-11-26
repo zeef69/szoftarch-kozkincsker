@@ -17,4 +17,8 @@ class UserInteractor @Inject constructor(
         return if(users.isNotEmpty()) users[0]
         else null
     }
+
+    suspend fun getUserFromId(id: String?): User? {
+        return firebaseDataSource.getUserFromId(id)
+    }
 }

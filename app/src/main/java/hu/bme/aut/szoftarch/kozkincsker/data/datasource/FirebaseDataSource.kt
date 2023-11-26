@@ -151,6 +151,19 @@ class FirebaseDataSource @Inject constructor() {
             }.await()
     }
 
+    suspend fun onDeleteFeedbackFromMission(feedback: Feedback, missionId: String) {
+        val removeFeedback : HashMap<String, Any> = HashMap()
+        removeFeedback["feedbackIds"] = FieldValue.arrayRemove(feedback)
+
+        database.collection("missions").document(missionId).update(removeFeedback)
+            .addOnSuccessListener { documentReference ->
+                Log.d("success", "DocumentSnapshot written with ID: $documentReference.")
+            }
+            .addOnFailureListener { exception ->
+                Log.d("failure", "Error getting documents: ", exception)
+            }.await()
+    }
+
     suspend fun getSessionsFromMissionListener(mission: Mission): Flow<List<Session>> = callbackFlow {
         val listenerRegistration = database.collection("sessions").whereEqualTo("missionId", mission.id)
             .addSnapshotListener { querySnapshot: QuerySnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
@@ -248,13 +261,15 @@ class FirebaseDataSource @Inject constructor() {
             .await().toObject()
     }
 
-    suspend fun getUserFromId(designerId: String): User? {
-        return database.collection("users").document(designerId).get()
-            .addOnSuccessListener { }
-            .addOnFailureListener { exception ->
-                Log.d("failure", "Error getting User: ", exception)
-            }
-            .await().toObject()
+    suspend fun getUserFromId(id: String?): User? {
+        return if(id != null)
+            database.collection("users").document(id).get()
+                .addOnSuccessListener { }
+                .addOnFailureListener { exception ->
+                    Log.d("failure", "Error getting User: ", exception)
+                }
+                .await().toObject()
+        else null
     }
 
     suspend fun getSessionFromId(sessionId: String): Session? {
@@ -376,6 +391,7 @@ class FirebaseDataSource @Inject constructor() {
     suspend fun getSolutionsFromUserFromTask(user: User? , task: Task){
 
     }
+
     suspend fun getTaskSolutionsListener(sessionId: String, playerId: String): Flow<List<TaskSolution>> = callbackFlow {
         val listenerRegistration = database.collection("solutions").where(Filter.and(Filter.equalTo("sessionId", sessionId), Filter.equalTo("userId", playerId)))
             .addSnapshotListener { querySnapshot: QuerySnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
@@ -406,7 +422,7 @@ class FirebaseDataSource @Inject constructor() {
                 Log.d("failure", "Error getting documents: ", exception)
             }.await()
     }
-    
+
     suspend fun uploadImageToStorage(byteArray: ByteArray) : String?{
         val uniqueImageName = UUID.randomUUID()
         var spaceRef: StorageReference = storageRef.child("images/$uniqueImageName.jpg")

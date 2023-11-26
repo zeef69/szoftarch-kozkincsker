@@ -152,6 +152,16 @@ fun MissionsView(
                                         text = mission.name, color = Color.Black, fontSize = 24.sp
                                     )
                                 }
+                                Row(
+                                    horizontalArrangement = Arrangement.End
+                                ) {
+                                    if(user != null && user.isAdmin)
+                                        IconButton(
+                                            onClick = {onDeleteMission(mission)}
+                                        ) {
+                                            Icon(imageVector  = Icons.Filled.Delete, "")
+                                        }
+                                }
                             }
                         }
                     }
