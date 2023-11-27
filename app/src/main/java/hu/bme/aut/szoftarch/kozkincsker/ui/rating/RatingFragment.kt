@@ -53,6 +53,7 @@ class RatingFragment : RainbowCakeFragment<RatingViewState, RatingViewModel>() {
                     is Loading -> FullScreenLoading()
                     is RatingContent -> Rating(
                         session = viewState.session,
+                        score = viewState.score,
                         onSaveClicked = ::onNewFeedback,
                         onBackClick = { navigator?.pop() }
                     )

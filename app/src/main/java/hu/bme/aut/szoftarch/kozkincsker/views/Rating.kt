@@ -40,7 +40,7 @@ import hu.bme.aut.szoftarch.kozkincsker.views.helpers.RatingBar
 @Composable
 fun Rating(
     session: Session?,
-    score: Int = 0,
+    score: Int,
     onSaveClicked: (Feedback, String) -> Unit,
     onBackClick: () -> Unit = {}
 ) {

@@ -29,6 +29,10 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -71,7 +75,7 @@ fun Session(
     if(mission != null)
         levels.addAll(mission.levelList)
 
-    var lastLevelTrue = false
+    var lastLevelTrue by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -261,6 +265,7 @@ fun Session(
                                 }
                                 else if(!level.showNextLevel && level.levelType == LevelType.MinOneTaskInLevel && solutionsInLevel > 0) {
                                     level.showNextLevel = true
+                                    Log.i("oksa", level.toString())
                                     if(index == levels.size-1)
                                         lastLevelTrue = true
                                 }
@@ -274,19 +279,7 @@ fun Session(
                     }
             }
         }
-        Log.i("oksa", levels[levels.size-1].toString())
         if(lastLevelTrue) {
-            var score = 0
-            for(level in levels) {
-                for (task in level.taskList) {
-                    for (taskSolutionAndTask in taskSolutionsAndTasks) {
-                        if (task.id == taskSolutionAndTask.second.id && taskSolutionAndTask.first.checked && taskSolutionAndTask.first.correct) {
-                            score += task.score
-                        }
-                    }
-                }
-            }
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -295,6 +288,16 @@ fun Session(
                 Button(
                     onClick = {
                         if (session != null) {
+                            var score = 0
+                            for(level in levels) {
+                                for (task in level.taskList) {
+                                    for (taskSolutionAndTask in taskSolutionsAndTasks) {
+                                        if (task.id == taskSolutionAndTask.second.id && taskSolutionAndTask.first.checked && taskSolutionAndTask.first.correct) {
+                                            score += task.score
+                                        }
+                                    }
+                                }
+                            }
                             onRateSession(session, score)
                         }
                     },
