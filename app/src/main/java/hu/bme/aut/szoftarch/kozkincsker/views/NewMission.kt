@@ -109,7 +109,7 @@ fun NewMission(
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         TopAppBar(
-            title = { Text(text = "Mission creator") },
+            title = { Text(text = stringResource(R.string.mission_creator_title)) },
             navigationIcon = {
                 IconButton(
                     content = {
@@ -152,16 +152,7 @@ fun NewMission(
                         .padding(0.dp, 2.dp, 0.dp, 2.dp)
                         .weight(0.82f, false)
                 )
-                /*
-                var playablePublic = true
-                for(level in mission.levelList) {
-                    for (task in level.taskList){
-                        playablePublic=playablePublic && task.taskType.checkable
-                    }
-                }*/
-                var iconList = mutableListOf(Icons.Filled.VisibilityOff)
-                //if(playablePublic)
-                    iconList.add(Icons.Filled.Public)
+                var iconList = mutableListOf(Icons.Filled.VisibilityOff, Icons.Filled.Public)
                     ChangingIconButton(
                         iconList,
                         privacySwitchState,
@@ -207,7 +198,7 @@ fun NewMission(
                     singleLine = true,
                     label = {
                         Text(
-                            text = "Solution days",
+                            text = stringResource(R.string.solution_days),
                             color = Gray
                         )
                     },
@@ -222,7 +213,7 @@ fun NewMission(
                     singleLine = true,
                     label = {
                         Text(
-                            text = "Solution hours",
+                            text = stringResource(R.string.solution_hours),
                             color = Gray
                         )
                     },
@@ -377,7 +368,7 @@ fun NewMission(
                         .weight(0.4f, true),
                     shape = RoundedCornerShape(10),
                 ) {
-                    Text("Save")
+                    Text(stringResource(R.string.save))
                 }
                 Button(
                     onClick = {
@@ -406,7 +397,7 @@ fun NewMission(
                         .weight(0.4f, true),
                     shape = RoundedCornerShape(10),
                 ) {
-                    Text("Post")
+                    Text(stringResource(R.string.post))
                 }
             }
         }

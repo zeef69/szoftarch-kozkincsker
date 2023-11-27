@@ -73,7 +73,7 @@ fun Login(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             SegmentedControl(
-                listOf("Login", "Register"),
+                listOf(stringResource(R.string.login),stringResource(R.string.register)),
                 switchState
             ) { switchState = it }
 
@@ -132,7 +132,7 @@ fun Login(
                     singleLine = true,
                     label = {
                         Text(
-                            text = "Name",
+                            text = stringResource(R.string.user_name_title),
                             color = Gray
                         )
                     },

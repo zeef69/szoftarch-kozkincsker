@@ -27,7 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-//import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import hu.bme.aut.szoftarch.kozkincsker.views.theme.*
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -38,6 +38,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import hu.bme.aut.szoftarch.kozkincsker.R
 import hu.bme.aut.szoftarch.kozkincsker.data.enums.TaskType
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Task
 import hu.bme.aut.szoftarch.kozkincsker.data.model.TaskSolution
@@ -60,7 +61,7 @@ fun ModeratorTaskSolutionGrade(
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         TopAppBar(
-            title = { Text(text = "Grade Task") },
+            title = { Text(text = stringResource(R.string.grade_task_title)) },
             navigationIcon = {
                 IconButton(
                     content = {
@@ -85,7 +86,7 @@ fun ModeratorTaskSolutionGrade(
                 Text(
                     buildAnnotatedString {
                         pushStyle(SpanStyle(fontSize = 24.sp, fontStyle = FontStyle.Italic))
-                        append("Task name: ")
+                        append(stringResource(R.string.task_name))
                         withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
                             if (task != null) {
                                 append(task.title)
@@ -102,7 +103,7 @@ fun ModeratorTaskSolutionGrade(
                 Text(
                     buildAnnotatedString {
                         pushStyle(SpanStyle(fontSize = 18.sp, fontStyle = FontStyle.Italic))
-                        append("Score: ")
+                        append(stringResource(R.string.score))
                         withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
                             if (task != null) {
                                 append(task.score.toString())
@@ -134,7 +135,7 @@ fun ModeratorTaskSolutionGrade(
                 Text(
                     buildAnnotatedString {
                         withStyle(style = SpanStyle(fontSize = 14.sp, fontStyle = FontStyle.Italic)) {
-                            append("User answer:")
+                            append(stringResource(R.string.user_answer_title))
                         }
                     },
                     textAlign = TextAlign.Start,
@@ -166,14 +167,12 @@ fun ModeratorTaskSolutionGrade(
                     Button(
                         onClick = {
                             if (taskSolution != null) {
-                                Log.i("Task_Answers", taskSolution.userAnswer)
                                 imageURL = onDownloadImage(taskSolution.userAnswer)
-                                Log.i("Task_Answers", imageURL)
 
                             }
                         }
                     ){
-                        Text(text="Load image")
+                        Text(text=stringResource(R.string.load_image))
                     }
                     if(imageURL != ""){
                         AsyncImage(
@@ -203,7 +202,7 @@ fun ModeratorTaskSolutionGrade(
                 shape = RoundedCornerShape(10),
                 colors = ButtonDefaults.buttonColors(backgroundColor = Green)
             ) {
-                Text("Good")
+                Text(stringResource(R.string.solution_good))
             }
 
             Button(
@@ -217,7 +216,7 @@ fun ModeratorTaskSolutionGrade(
                 shape = RoundedCornerShape(10),
                 colors = ButtonDefaults.buttonColors(backgroundColor = Red)
             ) {
-                Text("Wrong")
+                Text(stringResource(R.string.solution_wrong))
             }
         }
     }

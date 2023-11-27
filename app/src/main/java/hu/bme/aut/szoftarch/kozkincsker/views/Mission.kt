@@ -32,7 +32,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-//import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -42,6 +41,8 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import hu.bme.aut.szoftarch.kozkincsker.R
+import androidx.compose.ui.res.stringResource
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Feedback
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Level
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
@@ -78,7 +79,7 @@ fun Mission(
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         TopAppBar(
-            title = { Text(text = "Mission") },
+            title = { Text(text = stringResource(R.string.bottom_nav_title_mission)) },
             navigationIcon = {
                 IconButton(
                     content = {
@@ -119,12 +120,12 @@ fun Mission(
                 modifier = Modifier
                     .padding(0.dp, 10.dp, 0.dp, 0.dp)
             )
-            if (mission?.designerId != null && user?.id == mission.designerId)
+            if (mission?.designerId != null && user?.id == mission.designerId && mission.visibility == Mission.Visibility.PRIVATE)
                 Text(
                     buildAnnotatedString {
 
                         withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, fontSize = 20.sp)) {
-                            append("Access code: ")
+                            append(stringResource(R.string.private_access_code_title))
                             append(mission.accessCode)
                         }
                     },
@@ -146,7 +147,7 @@ fun Mission(
                 )
 
             SegmentedControl(
-                listOf("Start Session", "Statistics"),
+                listOf(stringResource(R.string.mission_start_session),stringResource(R.string.mission_statistics)),
                 switchState
             ) { switchState = it }
 
@@ -157,7 +158,7 @@ fun Mission(
                     singleLine = true,
                     placeholder = {
                         Text(
-                            text = "Session name",
+                            text = stringResource(R.string.session_name_title),
                             color = Gray
                         )
                     },
@@ -169,7 +170,7 @@ fun Mission(
                     Text(
                         buildAnnotatedString {
                             withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                append("As Moderator:")
+                                append(stringResource(R.string.start_as_moderator))
                             }
                         },
                         textAlign = TextAlign.Start,
@@ -192,7 +193,7 @@ fun Mission(
                 Text(
                     buildAnnotatedString {
                         withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                            append("Stats:")
+                            append(stringResource(R.string.statistics_title))
                         }
                     },
                     textAlign = TextAlign.Start,
@@ -235,7 +236,7 @@ fun Mission(
                 Text(
                     buildAnnotatedString {
                         withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                            append("Ratings:")
+                            append(stringResource(R.string.ratings))
                         }
                     },
                     textAlign = TextAlign.Start,
@@ -322,7 +323,7 @@ fun Mission(
                         .fillMaxWidth(),
                     shape = RoundedCornerShape(10),
                 ) {
-                    Text("Start")
+                    Text(stringResource(R.string.session_start))
                 }
             }
     }

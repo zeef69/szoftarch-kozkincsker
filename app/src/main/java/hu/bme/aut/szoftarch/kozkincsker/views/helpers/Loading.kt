@@ -32,7 +32,7 @@ fun FullScreenLoading() {
                 .height(48.dp)
         )
         Text(
-            stringResource(R.string.new_mission_title),
+            stringResource(R.string.loading),
             fontSize = 24.sp,
             fontStyle = FontStyle.Italic
         )

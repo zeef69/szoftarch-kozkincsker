@@ -49,6 +49,7 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
+import hu.bme.aut.szoftarch.kozkincsker.R
 import hu.bme.aut.szoftarch.kozkincsker.data.enums.TaskType
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Task
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.ComboBox
@@ -206,7 +207,7 @@ fun NewTask(
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         TopAppBar(
-            title = { Text(text = "Task creator") },
+            title = { Text(text = stringResource(R.string.task_creator_title)) },
             navigationIcon = {
                 IconButton(
                     content = {
@@ -239,7 +240,7 @@ fun NewTask(
                         .fillMaxWidth()
                 ){
                 SegmentedControl(
-                    listOf("Automatic", "Human"),
+                    listOf(stringResource(R.string.task_evaluation_type_automic), stringResource(R.string.task_evaluation_type_human)),
                     privacySwitchState
                 ) { privacySwitchState = it }
                 Row(
@@ -276,7 +277,7 @@ fun NewTask(
                         onValueChange = { scoreInput = it },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
                         singleLine = true,
-                        label = { Text(text = "Score") },
+                        label = { Text(text = stringResource(R.string.score_title)) },
                         placeholder = {
                             Text(
                                 text = "",
@@ -295,7 +296,7 @@ fun NewTask(
                     singleLine = true,
                     placeholder = {
                         Text(
-                            text = "Title",
+                            text = stringResource(R.string.new_task_title),
                             color = Gray
                         )
                     },
@@ -310,7 +311,7 @@ fun NewTask(
                     singleLine = false,
                     placeholder = {
                         Text(
-                            text = "Description",
+                            text = stringResource(R.string.new_task_description),
                             color = Gray
                         )
                     },
@@ -338,7 +339,7 @@ fun NewTask(
                                         modifier = Modifier
                                             .padding(0.dp, 2.dp, 0.dp, 2.dp)
                                     ){
-                                        Text(text = "Answer options",
+                                        Text(text = stringResource(R.string.answer_options),
                                                 modifier = Modifier
                                                 .weight(0.5f, true))
                                         Box(
@@ -377,7 +378,7 @@ fun NewTask(
                                                 singleLine = false,
                                                 placeholder = {
                                                     Text(
-                                                        text = "Answer option $i.",
+                                                        text = stringResource(R.string.answer_option) + " ${i+1}.",
                                                         color = Gray
                                                     )
                                                 },
@@ -391,7 +392,7 @@ fun NewTask(
                                 }
                             }
                             typeList.indexOf(TaskType.NumberAnswer)->{
-                                Text(text = "Number answer")
+                                Text(text = stringResource(R.string.number_answer))
                                 OutlinedTextField(
                                     value = answerNumberInput,
                                     onValueChange = { answerNumberInput = it },
@@ -429,7 +430,7 @@ fun NewTask(
                                             .padding(0.dp, 2.dp, 0.dp, 2.dp)
                                     ) {
                                         Text(
-                                            text = "Radius",
+                                            text = stringResource(R.string.radius),
                                             modifier = Modifier
                                                 .weight(0.3f, true)
                                         )
@@ -463,7 +464,7 @@ fun NewTask(
                                                 .weight(0.4f, true),
                                             shape = RoundedCornerShape(10),
                                         ) {
-                                            Text("Radius save")
+                                            Text(stringResource(R.string.radius_save))
                                         }
                                     }
                                 }
@@ -501,7 +502,7 @@ fun NewTask(
                                         modifier = Modifier
                                             .padding(0.dp, 2.dp, 0.dp, 2.dp)
                                     ){
-                                        Text(text = "Answers in order",
+                                        Text(text = stringResource(R.string.answers_in_order),
                                             modifier = Modifier
                                                 .weight(0.5f, true))
                                         Box(
@@ -525,7 +526,7 @@ fun NewTask(
                                             singleLine = false,
                                             placeholder = {
                                                 Text(
-                                                    text = "Answer option",
+                                                    text = stringResource(R.string.answer_option),
                                                     color = Gray
                                                 )
                                             },
@@ -542,10 +543,10 @@ fun NewTask(
                     else if(privacySwitchState == 1) {
                         when (typeSelectedIndexHuman) {
                             typeList.indexOf(TaskType.TextAnswer) -> {
-                                Text(text = "The user provides a text as answer")
+                                Text(text = stringResource(R.string.user_text_answer_plaxehoder))
                             }
                             typeList.indexOf(TaskType.ImageAnswer) -> {
-                                Text(text = "The user provides an image as answer")
+                                Text(text = stringResource(R.string.user_image_answer_plaxehoder))
                             }
                             else -> {}
                         }
@@ -616,7 +617,7 @@ fun NewTask(
                     .fillMaxWidth(),
                 shape = RoundedCornerShape(10),
             ) {
-                Text("Save")
+                Text(stringResource(R.string.save))
             }
         }
         }
