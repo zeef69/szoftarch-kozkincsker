@@ -290,10 +290,24 @@ fun Session(
                         if (session != null) {
                             var score = 0
                             for(level in levels) {
-                                for (task in level.taskList) {
-                                    for (taskSolutionAndTask in taskSolutionsAndTasks) {
-                                        if (task.id == taskSolutionAndTask.second.id && taskSolutionAndTask.first.checked && taskSolutionAndTask.first.correct) {
-                                            score += task.score
+                                if(level.levelType == LevelType.MaxOneTaskInLevel) {
+                                    var counter = 0
+                                    for (task in level.taskList) {
+                                        for (taskSolutionAndTask in taskSolutionsAndTasks) {
+                                            if (task.id == taskSolutionAndTask.second.id && taskSolutionAndTask.first.checked && taskSolutionAndTask.first.correct) {
+                                                if(counter == 0)
+                                                    score += task.score
+                                                counter++
+                                            }
+                                        }
+                                    }
+                                }
+                                else {
+                                    for (task in level.taskList) {
+                                        for (taskSolutionAndTask in taskSolutionsAndTasks) {
+                                            if (task.id == taskSolutionAndTask.second.id && taskSolutionAndTask.first.checked && taskSolutionAndTask.first.correct) {
+                                                score += task.score
+                                            }
                                         }
                                     }
                                 }

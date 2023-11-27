@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.ComposeView
 import co.zsmb.rainbowcake.base.RainbowCakeFragment
 import co.zsmb.rainbowcake.extensions.exhaustive
@@ -51,14 +53,22 @@ class MissionStartFragment : RainbowCakeFragment<MissionViewState, MissionStartV
             AppUiTheme1 {
                 when (viewState) {
                     is Loading -> FullScreenLoading()
-                    is MissionContent -> Mission(
-                        mission = viewState.mission,
-                        user = viewState.actualUser,
-                        designer = viewState.designer,
-                        onStartSession = ::onStartSession,
-                        onDeleteFeedback = ::onDeleteFeedback,
-                        onBackClick = { navigator?.pop() }
-                    )
+                    is MissionContent -> {
+                        val feedbacks = remember { mutableStateListOf<Feedback>() }
+                        if(viewState.mission != null && viewState.mission!!.feedbackIds.isNotEmpty())
+                            for(feedback in viewState.mission!!.feedbackIds)
+                                feedbacks.add(feedback)
+
+                        Mission(
+                            mission = viewState.mission,
+                            user = viewState.actualUser,
+                            designer = viewState.designer,
+                            feedbacks = feedbacks,
+                            onStartSession = ::onStartSession,
+                            onDeleteFeedback = ::onDeleteFeedback,
+                            onBackClick = { navigator?.pop() }
+                        )
+                    }
                 }.exhaustive
             }
         }

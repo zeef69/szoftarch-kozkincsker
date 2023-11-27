@@ -45,7 +45,7 @@ fun Rating(
     onBackClick: () -> Unit = {}
 ) {
     var commentInput by remember { mutableStateOf("") }
-    var rating by remember { mutableDoubleStateOf(3.5) }
+    var rating by remember { mutableDoubleStateOf(3.0) }
 
     Column(
         modifier = Modifier

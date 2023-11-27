@@ -64,6 +64,6 @@ class RatingFragment : RainbowCakeFragment<RatingViewState, RatingViewModel>() {
 
     private fun onNewFeedback(feedback: Feedback, missionId: String) {
         viewModel.newFeedback(feedback, missionId)
-        navigator?.pop()
+        //navigator?.pop()
     }
 }
