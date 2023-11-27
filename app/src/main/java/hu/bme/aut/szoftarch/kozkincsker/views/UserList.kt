@@ -32,9 +32,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 //import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import hu.bme.aut.szoftarch.kozkincsker.R
 import hu.bme.aut.szoftarch.kozkincsker.data.model.User
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.SegmentedControl
 import hu.bme.aut.szoftarch.kozkincsker.views.theme.*
@@ -46,8 +48,6 @@ fun UserList(
     onEditUser: (User) -> Unit
 ){
     var userPageSwitchState by remember { mutableIntStateOf(0) }
-    var userToAdminDialog by remember { mutableStateOf(false) }
-    var switchUserEvaluateDialog by remember { mutableStateOf(false) }
     var searchedUsers = users
 
     Column(
@@ -58,7 +58,7 @@ fun UserList(
         verticalArrangement = Arrangement.SpaceBetween
     ){
         TopAppBar(
-            title = { Text(text = "Users") },
+            title = { Text(text = stringResource(R.string.bottom_nav_title_users)) },
         )
         Column(
             modifier = Modifier
@@ -72,7 +72,7 @@ fun UserList(
             val suppressedUsers = searchedUsers.filter{ !it.ableToEvaluate }
             val adminUsers = searchedUsers.filter{ it.isAdmin }
             SegmentedControl (
-                if (actualUser != null && actualUser.isAdmin) listOf("All", "Suppressed", "Admins") else listOf("All", "Admins"),
+                if (actualUser != null && actualUser.isAdmin) listOf(stringResource(R.string.users_all_title), stringResource(R.string.users_suppressed_title), stringResource(R.string.users_admins_title)) else listOf(stringResource(R.string.users_all_title), stringResource(R.string.users_admins_title)),
                 userPageSwitchState
             ) { userPageSwitchState = it }
 
@@ -85,7 +85,7 @@ fun UserList(
                         contentDescription = null
                     )
                 },
-                label = { Text("Kereső") },
+                label = { Text(stringResource(R.string.search)) },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -95,10 +95,7 @@ fun UserList(
                         Card(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(1.dp)
-                                .clickable(onClick = {
-                               //     onItemClicked(mission)
-                                }),
+                                .padding(1.dp),
                             shape = RoundedCornerShape(20),
                             elevation = 1.dp,
                             backgroundColor = CardBackGround
@@ -134,7 +131,7 @@ fun UserList(
                                                 ) {
                                                     Icon(
                                                         imageVector = Icons.Filled.AdminPanelSettings,
-                                                        "Admin"
+                                                        ""
                                                     )
                                                 }
                                                 IconButton(
@@ -145,7 +142,7 @@ fun UserList(
                                                         onEditUser(user)
                                                     }
                                                 ) {
-                                                    Icon(imageVector = Icons.Filled.Block, "Block writing feedback")
+                                                    Icon(imageVector = Icons.Filled.Block, "")
                                                 }
                                             }
                                             else{
@@ -157,7 +154,7 @@ fun UserList(
                                                         onEditUser(user)
                                                     }
                                                 ) {
-                                                    Icon(imageVector = Icons.Filled.HowToReg, "Enegedélyezés")
+                                                    Icon(imageVector = Icons.Filled.HowToReg, "")
                                                 }
                                             }
                                         }
@@ -173,10 +170,7 @@ fun UserList(
                         Card(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(1.dp)
-                                .clickable(onClick = {
-                                    //     onItemClicked(mission)
-                                }),
+                                .padding(1.dp),
                             shape = RoundedCornerShape(20),
                             elevation = 1.dp,
                             backgroundColor = CardBackGround
@@ -222,10 +216,7 @@ fun UserList(
                         Card(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(1.dp)
-                                .clickable(onClick = {
-                                    //     onItemClicked(mission)
-                                }),
+                                .padding(1.dp),
                             shape = RoundedCornerShape(20),
                             elevation = 1.dp,
                             backgroundColor = CardBackGround
@@ -252,105 +243,4 @@ fun UserList(
             }
         }
     }
-
-/*
-    if (showJoinDialog) {
-        Dialog(onDismissRequest = { showJoinDialog = false }) {
-            var text by remember { mutableStateOf("") }
-
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
-                    .padding(16.dp),
-                shape = RoundedCornerShape(16.dp),
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    OutlinedTextField(
-                        value = text,
-                        onValueChange = { text = it },
-                        label = { Text("Code") },
-                        singleLine = true,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center,
-                    ) {
-                        TextButton(
-                            onClick = { showJoinDialog = false },
-                            modifier = Modifier.padding(8.dp),
-                        ) {
-                            Text("Dismiss")
-                        }
-                        TextButton(
-                            onClick = { onJoinWithCode(text) },
-                            modifier = Modifier.padding(8.dp),
-                        ) {
-                            Text("Confirm")
-                        }
-                    }
-                }
-            }
-        }
-    }
-    if (showPrivateGameDialog) {
-        Dialog(onDismissRequest = { showPrivateGameDialog = false }) {
-            var text by remember { mutableStateOf("") }
-
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
-                    .padding(16.dp),
-                shape = RoundedCornerShape(16.dp),
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    OutlinedTextField(
-                        value = text,
-                        onValueChange = { text = it },
-                        label = { Text("Private game code") },
-                        singleLine = true,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center,
-                    ) {
-                        TextButton(
-                            onClick = { showPrivateGameDialog = false },
-                            modifier = Modifier.padding(8.dp),
-                        ) {
-                            Text("Dismiss")
-                        }
-                        TextButton(
-                            onClick = {
-                                val privateMission = onPrivateGameCode(text)
-                                if (user != null && privateMission != null) {
-                                    user.privatePlayableMissionIds.add(privateMission.id)
-                                }
-                                showPrivateGameDialog = false
-                            },
-                            modifier = Modifier.padding(8.dp),
-                        ) {
-                            Text("Confirm")
-                        }
-                    }
-                }
-            }
-        }
-    }
-    */
 }

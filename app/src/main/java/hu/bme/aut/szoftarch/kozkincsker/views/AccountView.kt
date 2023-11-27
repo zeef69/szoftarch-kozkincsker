@@ -31,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -83,7 +84,7 @@ fun AccountView(
             Text(
                 buildAnnotatedString {
                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, fontSize = 18.sp)) {
-                        append("TreasureHunt")
+                        append(stringResource(R.string.app_name))
                     }
                 },
                 textAlign = TextAlign.Start,
@@ -174,7 +175,7 @@ fun AccountView(
                     .fillMaxWidth(),
                 shape = RoundedCornerShape(10),
             ) {
-                Text("Change email")
+                Text(stringResource(R.string.change_email))
             }
             Button(
                 onClick = {
@@ -185,7 +186,7 @@ fun AccountView(
                     .fillMaxWidth(),
                 shape = RoundedCornerShape(10),
             ) {
-                Text("Change password")
+                Text(stringResource(R.string.change_password))
             }
             Button(
                 onClick = {
@@ -196,7 +197,7 @@ fun AccountView(
                     .fillMaxWidth(),
                 shape = RoundedCornerShape(10),
             ) {
-                Text("Log out")
+                Text(stringResource(R.string.logout))
             }
         }
     }
@@ -222,14 +223,14 @@ fun AccountView(
                     OutlinedTextField(
                         value = pass,
                         onValueChange = { pass = it },
-                        label = { Text("Password") },
+                        label = { Text(stringResource(R.string.title_password)) },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth()
                     )
                     OutlinedTextField(
                         value = newEmail,
                         onValueChange = { newEmail = it },
-                        label = { Text("New Email") },
+                        label = { Text(stringResource(R.string.new_email)) },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -242,13 +243,13 @@ fun AccountView(
                             onClick = { showDialog = false },
                             modifier = Modifier.padding(8.dp),
                         ) {
-                            Text("Dismiss")
+                            Text(stringResource(R.string.dismiss))
                         }
                         TextButton(
                             onClick = { onEmailChange(pass, newEmail) },
                             modifier = Modifier.padding(8.dp),
                         ) {
-                            Text("Confirm")
+                            Text(stringResource(R.string.confirm))
                         }
                     }
                 }

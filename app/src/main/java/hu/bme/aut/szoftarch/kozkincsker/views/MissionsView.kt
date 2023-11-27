@@ -37,10 +37,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-//import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import hu.bme.aut.szoftarch.kozkincsker.R
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
 import hu.bme.aut.szoftarch.kozkincsker.data.model.User
@@ -74,7 +75,7 @@ fun MissionsView(
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         TopAppBar(
-            title = { Text(text = "Missions") },
+            title = { Text(text = stringResource(R.string.missions))},
         )
         Column(
             modifier = Modifier
@@ -95,7 +96,7 @@ fun MissionsView(
             val ownMissions = searchedMissions.filter { it.designerId == id }
 
             SegmentedControl (
-                listOf("General", "Running", "Own"),
+                listOf(stringResource(R.string.missions_general_title),stringResource(R.string.missions_runing_title),stringResource(R.string.missions_own_title)),
                 privacySwitchState
             ) { privacySwitchState = it }
 
@@ -109,7 +110,7 @@ fun MissionsView(
                         contentDescription = null
                     )
                 },
-                label = { Text("Kereső") },
+                label = { Text(stringResource(R.string.search)) },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -190,7 +191,7 @@ fun MissionsView(
                                     Row(
                                         horizontalArrangement = Arrangement.End
                                     ) {
-                                        Icon(imageVector = Icons.Filled.ContactPage, "Moderated Sessions")
+                                        Icon(imageVector = Icons.Filled.ContactPage, "")
                                     }
                                 }
                             }
@@ -289,14 +290,14 @@ fun MissionsView(
                         showJoinDialog = showJoinDialog.not()
                     }
                 ) {
-                    Text(text = "Join with code")
+                    Text(text = stringResource(R.string.join_with_code))
                 }
                 Button(
                     onClick = {
                         showPrivateGameDialog = showPrivateGameDialog.not()
                     }
                 ) {
-                    Text(text = "Private game code")
+                    Text(text = stringResource(R.string.private_game_code))
                 }
             }
         } else if (privacySwitchState == 2) {
@@ -331,7 +332,7 @@ fun MissionsView(
                     OutlinedTextField(
                         value = text,
                         onValueChange = { text = it },
-                        label = { Text("Code") },
+                        label = { Text(stringResource(R.string.access_code_title)) },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -344,13 +345,13 @@ fun MissionsView(
                             onClick = { showJoinDialog = false },
                             modifier = Modifier.padding(8.dp),
                         ) {
-                            Text("Dismiss")
+                            Text(stringResource(R.string.dismiss))
                         }
                         TextButton(
                             onClick = { onJoinWithCode(text) },
                             modifier = Modifier.padding(8.dp),
                         ) {
-                            Text("Confirm")
+                            Text(stringResource(R.string.confirm))
                         }
                     }
                 }
@@ -377,7 +378,7 @@ fun MissionsView(
                     OutlinedTextField(
                         value = text,
                         onValueChange = { text = it },
-                        label = { Text("Private game code") },
+                        label = { Text(stringResource(R.string.private_game_code)) },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -390,7 +391,7 @@ fun MissionsView(
                             onClick = { showPrivateGameDialog = false },
                             modifier = Modifier.padding(8.dp),
                         ) {
-                            Text("Dismiss")
+                            Text(stringResource(R.string.dismiss))
                         }
                         TextButton(
                             onClick = {
@@ -402,7 +403,7 @@ fun MissionsView(
                             },
                             modifier = Modifier.padding(8.dp),
                         ) {
-                            Text("Confirm")
+                            Text(stringResource(R.string.confirm))
                         }
                     }
                 }

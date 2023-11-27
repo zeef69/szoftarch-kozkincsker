@@ -24,15 +24,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-//import androidx.compose.ui.graphics.Color
 import hu.bme.aut.szoftarch.kozkincsker.views.theme.*
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import hu.bme.aut.szoftarch.kozkincsker.R
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Feedback
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.RatingBar
@@ -53,7 +54,7 @@ fun Rating(
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         TopAppBar(
-            title = { Text(text = "Rating") },
+            title = { Text(text = stringResource(R.string.rating_title)) },
             navigationIcon = {
                 IconButton(
                     content = {
@@ -72,7 +73,7 @@ fun Rating(
             Text(
                 buildAnnotatedString {
                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append("Score: ")
+                        append(stringResource(R.string.score))
                     }
                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
                         append(
@@ -92,7 +93,7 @@ fun Rating(
                 singleLine = true,
                 placeholder = {
                     Text(
-                        text = "Rating",
+                        text = stringResource(R.string.rating_title),
                         color = Gray
                     )
                 },
@@ -124,7 +125,7 @@ fun Rating(
                     .fillMaxWidth(),
                 shape = RoundedCornerShape(10),
             ) {
-                Text("Save")
+                Text(stringResource(R.string.save))
             }
         }
     }

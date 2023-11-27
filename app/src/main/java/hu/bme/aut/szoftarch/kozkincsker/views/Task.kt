@@ -77,6 +77,7 @@ import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
 import dagger.hilt.android.internal.managers.ViewComponentManager
+import hu.bme.aut.szoftarch.kozkincsker.R
 import hu.bme.aut.szoftarch.kozkincsker.data.enums.TaskType
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Task
@@ -204,7 +205,7 @@ fun Task(
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         TopAppBar(
-            title = { Text(text = "Task") },
+            title = { Text(text = stringResource(R.string.task_title)) },
             navigationIcon = {
                 IconButton(
                     content = {
@@ -234,7 +235,7 @@ fun Task(
                     Text(
                         buildAnnotatedString {
                             pushStyle(SpanStyle(fontSize = 18.sp, fontStyle = FontStyle.Italic))
-                            append("Task name: ")
+                            append(stringResource(R.string.task_name))
                             withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
                                 append(task.title)
                             }
@@ -249,7 +250,7 @@ fun Task(
                     Text(
                         buildAnnotatedString {
                             pushStyle(SpanStyle(fontSize = 14.sp, fontStyle = FontStyle.Italic))
-                            append("Score: ")
+                            append(stringResource(R.string.score))
                             withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
                                 append(task.score.toString())
                             }
@@ -265,7 +266,7 @@ fun Task(
                 Text(
                     buildAnnotatedString {
                         withStyle(style = SpanStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold)) {
-                            append("Task type: ")
+                            append(stringResource(R.string.task_type_title))
                             append(stringResource(id = task.taskType.translation))
                         }
                     },
@@ -299,7 +300,7 @@ fun Task(
                             modifier= Modifier
                                 .fillMaxSize()
                         ){
-                            Text(text = "Answer options",
+                            Text(text = stringResource(R.string.answer_options),
                                 modifier = Modifier
                                     .padding(0.dp, 2.dp, 0.dp, 2.dp))
                             for(i in 0..<answerListSize){
@@ -333,7 +334,7 @@ fun Task(
                         }
                     }
                     TaskType.NumberAnswer -> {
-                        Text(text = "Number answer")
+                        Text(text = stringResource(R.string.number_answer))
                         OutlinedTextField(
                             value = answerNumberInput,
                             onValueChange = { answerNumberInput = it },
@@ -351,7 +352,7 @@ fun Task(
                         )
                     }
                     TaskType.DateAnswer -> {
-                        Text(text = "Date answer")
+                        Text(text = stringResource(R.string.date_answer))
                         DatePicker(
                             fromToday = false,
                             context = context,
@@ -368,7 +369,7 @@ fun Task(
                                 .height(IntrinsicSize.Min)
                                 .fillMaxWidth()
                         ) {
-                            Text(text = "Map answer",
+                            Text(text = stringResource(R.string.map_answer),
                                 textAlign = TextAlign.Start,
                                 modifier = Modifier
                                     .padding(0.dp, 10.dp, 0.dp, 0.dp)
@@ -398,13 +399,13 @@ fun Task(
                                     state = MarkerState(position = deviceLatLng),
                                     draggable = false,
                                     ){
-                                    Text("You", color = Red)
+                                    Text(stringResource(R.string.map_marker_you), color = Red)
                                 }
                                 MarkerInfoWindowContent(
                                     state = MarkerState(position = originalMarkerState.position),
                                     draggable = false,
                                 ){
-                                    Text("Goal", color = Green)
+                                    Text(stringResource(R.string.map_marker_goal), color = Green)
                                 }
                                 Circle(
                                     center = originalMarkerState.position,
@@ -416,7 +417,7 @@ fun Task(
                         }
                     }
                     TaskType.OrderAnswer -> {
-                        Text(text = "Order answers")
+                        Text(text = stringResource(R.string.order_answer))
                         VerticalReorderList(
                             listElements=orderAnswerInputList,
                             newListElements=orderAnswerInputList
@@ -429,7 +430,7 @@ fun Task(
                             singleLine = false,
                             placeholder = {
                                 Text(
-                                    text = "Answer",
+                                    text = stringResource(R.string.user_answer),
                                     color = Gray
                                 )
                             },
@@ -439,7 +440,7 @@ fun Task(
                         )
                     }
                     TaskType.ImageAnswer -> {
-                        Text(text = "Image answer")
+                        Text(text = stringResource(R.string.task_type_image_answer))
                         Row(
                             horizontalArrangement  = Arrangement.SpaceEvenly,
                             verticalAlignment = Alignment.CenterVertically,
@@ -457,7 +458,7 @@ fun Task(
                                         PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
                                 }
                             ) {
-                                Text(text = "Select image")
+                                Text(text = stringResource(R.string.image_selection))
                             }
                             Button(
                                 modifier = Modifier
@@ -469,7 +470,7 @@ fun Task(
                                         uploadedImageUriString=onUploadImage(selectedImageUri!!)}
                                 }
                             ){
-                                Text(text = "Upload image")
+                                Text(text = stringResource(R.string.image_upload))
                             }
                         }
                         AsyncImage(
@@ -530,7 +531,7 @@ fun Task(
                     .fillMaxWidth(),
                 shape = RoundedCornerShape(10),
             ) {
-                Text("Save")
+                Text(stringResource(R.string.save))
             }
         }
     }

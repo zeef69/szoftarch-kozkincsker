@@ -60,7 +60,7 @@ fun ModeratorPlayerList(
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         TopAppBar(
-            title = { Text(text = "Player List") },
+            title = { Text(text = stringResource(R.string.player_list_title)) },
             navigationIcon = {
                 IconButton(
                     content = {
@@ -79,7 +79,7 @@ fun ModeratorPlayerList(
             Text(
                 buildAnnotatedString {
                     pushStyle(SpanStyle(fontSize = 14.sp, fontStyle = FontStyle.Italic))
-                    append("Creator: ")
+                    append(stringResource(R.string.creator))
 
                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
                         if((mission?.designerId != null) && (designer?.id == mission.designerId)) {
@@ -101,16 +101,16 @@ fun ModeratorPlayerList(
                     pushStyle(SpanStyle(fontWeight = FontWeight.Bold, fontSize = 24.sp))
                     withStyle(
                         style = SpanStyle(fontStyle = FontStyle.Italic)) {
-                        append("Mission: ")
+                        append(stringResource(R.string.mission_title))
                     }
                     append(mission?.name ?: unknown)
                     pop()
                     pushStyle(SpanStyle(fontWeight = FontWeight.Bold, fontSize = 18.sp))
                     withStyle(
                         style = SpanStyle(fontStyle = FontStyle.Italic)) {
-                        append("\nSession name: ")
+                        append(stringResource(R.string.session_name))
                     }
-                    append(session?.name)
+                    append(session?.name ?: unknown)
                     pop()
                 },
                 textAlign = TextAlign.Start,
@@ -143,7 +143,7 @@ fun ModeratorPlayerList(
                             withStyle(
                                 style = SpanStyle(fontStyle = FontStyle.Italic)
                             ) {
-                                append("Access code: ")
+                                append(stringResource(R.string.access_code))
                             }
                             append(session?.accessCode)
                             pop()
@@ -160,7 +160,7 @@ fun ModeratorPlayerList(
                         pushStyle(SpanStyle(fontSize = 14.sp))
                         withStyle(
                             style = SpanStyle(fontStyle = FontStyle.Italic)) {
-                            append("Starting date: ")
+                            append(stringResource(R.string.starting_date_title))
                         }
                         append(session?.startDate?.let {
                             SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.ENGLISH).format(
