@@ -11,9 +11,11 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import hu.bme.aut.szoftarch.kozkincsker.R
 
 @Composable
 fun FullScreenLoading() {
@@ -30,7 +32,7 @@ fun FullScreenLoading() {
                 .height(48.dp)
         )
         Text(
-            "Loading...",
+            stringResource(R.string.new_mission_title),
             fontSize = 24.sp,
             fontStyle = FontStyle.Italic
         )

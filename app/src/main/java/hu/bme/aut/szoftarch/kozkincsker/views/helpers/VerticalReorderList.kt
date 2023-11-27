@@ -73,7 +73,7 @@ fun VerticalReorderList(listElements: MutableList<String>,
         ) {
             items(data.value, { it }) { item ->
                 ReorderableItem(state,
-                    key = valueList.indexOf(item),
+                    key = listElements.indexOf(item),
                     modifier = Modifier
                         .height(IntrinsicSize.Min)
                         .fillMaxWidth()
@@ -108,92 +108,6 @@ fun VerticalReorderList(listElements: MutableList<String>,
                 }
             }
         }
-/*
-        ReorderableItem(state,
-            key = valueList.indexOf(data.value[0]),
-            modifier = Modifier
-                .height(IntrinsicSize.Min)
-                .fillMaxWidth()
-        ) { isDragging ->
-            val elevation = animateDpAsState(if (isDragging) 16.dp else 0.dp)
-            Column(
-                modifier = Modifier
-                    .shadow(elevation.value)
-                    .background(MaterialTheme.colors.surface)
-                    .height(IntrinsicSize.Min)
-                    .fillMaxWidth()
-            ) {
-                Text(text = data.value[0].toString())
-            }
-        }
-        ReorderableItem(state,
-            key = valueList.indexOf(data.value[1]),
-            modifier = Modifier
-                .height(IntrinsicSize.Min)
-                .fillMaxWidth()
-        ) { isDragging ->
-            val elevation = animateDpAsState(if (isDragging) 16.dp else 0.dp)
-            Column(
-                modifier = Modifier
-                    .shadow(elevation.value)
-                    .background(MaterialTheme.colors.surface)
-                    .height(IntrinsicSize.Min)
-                    .fillMaxWidth()
-            ) {
-                Text(text = data.value[1].toString())
-            }
-        }
-        ReorderableItem(state,
-            key = valueList.indexOf(data.value[2]),
-            modifier = Modifier
-                .height(IntrinsicSize.Min)
-                .fillMaxWidth()
-        ) { isDragging ->
-            val elevation = animateDpAsState(if (isDragging) 16.dp else 0.dp)
-            Column(
-                modifier = Modifier
-                    .shadow(elevation.value)
-                    .background(MaterialTheme.colors.surface)
-                    .height(IntrinsicSize.Min)
-                    .fillMaxWidth()
-            ) {
-                Text(text = data.value[2].toString())
-            }
-        }
-        ReorderableItem(state,
-            key = valueList.indexOf(data.value[3]),
-            modifier = Modifier
-                .height(IntrinsicSize.Min)
-                .fillMaxWidth()
-        ) { isDragging ->
-            val elevation = animateDpAsState(if (isDragging) 16.dp else 0.dp)
-            Column(
-                modifier = Modifier
-                    .shadow(elevation.value)
-                    .background(MaterialTheme.colors.surface)
-                    .height(IntrinsicSize.Min)
-                    .fillMaxWidth()
-            ) {
-                Text(text = data.value[3].toString())
-            }
-        }
-        ReorderableItem(state,
-            key = valueList.indexOf(data.value[4]),
-            modifier = Modifier
-                .height(IntrinsicSize.Min)
-                .fillMaxWidth()
-        ) { isDragging ->
-            val elevation = animateDpAsState(if (isDragging) 16.dp else 0.dp)
-            Column(
-                modifier = Modifier
-                    .shadow(elevation.value)
-                    .background(MaterialTheme.colors.surface)
-                    .height(IntrinsicSize.Min)
-                    .fillMaxWidth()
-            ) {
-                Text(text = data.value[4].toString())
-            }
-        }
-    */}
+    }
 }
 

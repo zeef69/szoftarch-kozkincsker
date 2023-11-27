@@ -16,6 +16,7 @@ import co.zsmb.rainbowcake.hilt.getViewModelFromFactory
 import co.zsmb.rainbowcake.navigation.navigator
 import com.google.firebase.FirebaseApp
 import dagger.hilt.android.AndroidEntryPoint
+import hu.bme.aut.szoftarch.kozkincsker.R
 import hu.bme.aut.szoftarch.kozkincsker.views.AccountView
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.FullScreenLoading
 import hu.bme.aut.szoftarch.kozkincsker.views.theme.AppUiTheme1
@@ -72,7 +73,7 @@ class AccountFragment : RainbowCakeFragment<AccountViewState, AccountViewModel>(
 
     private fun onPasswordChange() {
         viewModel.changePassword()
-        Toast.makeText(context, "Verification email has been sent about your password change", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, R.string.verification_send_password_change, Toast.LENGTH_SHORT).show()
     }
 
     private fun onLogout() {

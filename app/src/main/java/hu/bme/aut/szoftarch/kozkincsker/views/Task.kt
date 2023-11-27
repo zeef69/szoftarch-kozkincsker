@@ -202,6 +202,10 @@ fun Task(
      * */
     var textAnswerInput by remember { mutableStateOf("") }
 
+    val scrollablemodifier =
+        if((task.taskType == TaskType.OrderAnswer)
+            || (task.taskType == TaskType.MapAnswer)) Modifier
+        else Modifier.verticalScroll(rememberScrollState())
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -220,11 +224,10 @@ fun Task(
             }
         )
         Column(
-            modifier = Modifier
+            modifier = scrollablemodifier
                 .fillMaxSize()
                 .padding(12.dp, 12.dp, 12.dp, 25.dp)
                 .weight(1f, false)
-                .verticalScroll(rememberScrollState())
         ) {
             Column(
                 modifier = Modifier

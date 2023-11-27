@@ -13,12 +13,10 @@ import co.zsmb.rainbowcake.base.RainbowCakeFragment
 import co.zsmb.rainbowcake.hilt.getViewModelFromFactory
 import co.zsmb.rainbowcake.navigation.extensions.applyArgs
 import co.zsmb.rainbowcake.navigation.navigator
-import co.zsmb.rainbowcake.navigation.popUntil
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Level
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Task
 import hu.bme.aut.szoftarch.kozkincsker.data.model.User
-import hu.bme.aut.szoftarch.kozkincsker.ui.new_mission.NewMissionFragment
 import hu.bme.aut.szoftarch.kozkincsker.views.NewTask
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.FullScreenLoading
 import hu.bme.aut.szoftarch.kozkincsker.views.theme.AppUiTheme1
@@ -86,7 +84,6 @@ class NewTaskFragment : RainbowCakeFragment<NewTaskViewState,NewTaskViewModel>()
             level.taskList.add(task)
         if(!originalMission.levelList.contains(level)) originalMission.levelList.add(level)
         navigator?.pop()
-        //navigator?.replace(NewMissionFragment.newInstance(designer, originalMission))
     }
 
 
@@ -94,13 +91,10 @@ class NewTaskFragment : RainbowCakeFragment<NewTaskViewState,NewTaskViewModel>()
         level.taskList.remove(task)
         if(level.taskList.size==0) originalMission.levelList.remove(level)
         navigator?.pop()
-        //navigator?.replace(NewMissionFragment.newInstance(designer, originalMission))
-        //navigator?.pop()
     }
 
     private fun onBackClick(){
         if(level.taskList.size==0) originalMission.levelList.remove(level)
         navigator?.pop()
-        //navigator?.replace(NewMissionFragment.newInstance(designer, originalMission))
     }
 }

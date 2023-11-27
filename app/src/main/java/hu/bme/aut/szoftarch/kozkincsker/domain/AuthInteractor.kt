@@ -6,6 +6,7 @@ import co.zsmb.rainbowcake.navigation.Navigator
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
+import hu.bme.aut.szoftarch.kozkincsker.R
 import hu.bme.aut.szoftarch.kozkincsker.data.datasource.FirebaseDataSource
 import hu.bme.aut.szoftarch.kozkincsker.ui.main.MainFragment
 import kotlinx.coroutines.tasks.await
@@ -28,7 +29,7 @@ class AuthInteractor @Inject constructor(
                 firebaseUser?.sendEmailVerification()
 
                 firebaseDataSource.addUser(firebaseUser?.uid, name)
-                Toast.makeText(context, "Registration was successful\nVerification email has been sent", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, R.string.registration_success, Toast.LENGTH_SHORT).show()
             }
             .addOnFailureListener { exception ->
                 Toast.makeText(context, exception.message, Toast.LENGTH_SHORT).show()
@@ -50,7 +51,7 @@ class AuthInteractor @Inject constructor(
                     )
                 }
                 else
-                    Toast.makeText(context, "Please verify your email", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, R.string.verify_your_email, Toast.LENGTH_SHORT).show()
             }
             .addOnFailureListener { exception ->
                 Toast.makeText(context, exception.localizedMessage, Toast.LENGTH_SHORT).show()
@@ -76,10 +77,10 @@ class AuthInteractor @Inject constructor(
 
     fun changeEmail(context: Context, password: String?, newEmail: String?) {
         if(password.isNullOrEmpty()){
-            Toast.makeText(context, "Please enter a valid password", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, R.string.valid_password, Toast.LENGTH_SHORT).show()
         }
         else if(newEmail.isNullOrEmpty() || !newEmail.contains('@') || newEmail == getCurrentUserEmail() as String){
-            Toast.makeText(context, "Please enter a valid new email", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, R.string.valid_email, Toast.LENGTH_SHORT).show()
         }
         else {
             val mail = getCurrentUserEmail() as String
@@ -92,7 +93,7 @@ class AuthInteractor @Inject constructor(
                 ?.addOnSuccessListener {
                     firebaseAuth.currentUser?.verifyBeforeUpdateEmail(newEmail)
 
-                    Toast.makeText(context, "Verification email has been sent", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, R.string.verification_email, Toast.LENGTH_SHORT).show()
                 }
                 ?.addOnFailureListener { exception ->
                     Toast.makeText(context, exception.localizedMessage, Toast.LENGTH_SHORT).show()

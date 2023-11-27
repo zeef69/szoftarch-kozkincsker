@@ -92,7 +92,14 @@ fun NewTask(
             (typeSelectedIndexAutomatic == typeList.indexOf(TaskType.MapAnswer))
         )  Modifier
         else Modifier.verticalScroll(rememberScrollState())
-    
+
+    val miniScrollablemodifier =
+        if(
+            privacySwitchState == 0 &&
+            (typeSelectedIndexAutomatic == typeList.indexOf(TaskType.MapAnswer))
+        )  Modifier.verticalScroll(rememberScrollState())
+        else Modifier
+
     var titleInput by remember { mutableStateOf(task.title) }
     var descriptionInput by remember { mutableStateOf(task.description) }
     var scoreInput by remember { mutableStateOf(task.score.toString()) }
@@ -226,56 +233,60 @@ fun NewTask(
                     .padding(12.dp, 12.dp, 12.dp, 25.dp)
                     .weight(1f, false)
             ) {
-                SegmentedControl (
-                    listOf("Automatic", "Human"),
-                    privacySwitchState
-                ) { privacySwitchState = it }
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .padding(0.dp, 2.dp, 0.dp, 2.dp)
+                Column(
+                    modifier = miniScrollablemodifier
+                        .fillMaxWidth()
                 ){
-                    Box(
-                        modifier=Modifier
-                            .weight(0.5f, true)
-                    ) {
-                        if(privacySwitchState == 0) {
-                            ComboBox(
-                                list = typeListNames,
-                                selectedIndex = typeSelectedIndexAutomatic,
-                                onIndexChanged = { typeSelectedIndexAutomatic = it },
-                                isExpanded = typeExpanded,
-                                onExpandedChanged = { typeExpanded = it },
-                                textWidth = 130.dp
-                            )
-                        } else if(privacySwitchState == 1) {
-                            ComboBox(
-                                list = typeListNames,
-                                selectedIndex = typeSelectedIndexHuman,
-                                onIndexChanged = { typeSelectedIndexHuman = it },
-                                isExpanded = typeExpanded,
-                                onExpandedChanged = { typeExpanded = it },
-                                textWidth = 130.dp
-                            )
-                        }
-                    }
-                    OutlinedTextField(
-                        value = scoreInput,
-                        onValueChange = { scoreInput = it },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
-                        singleLine = true,
-                        label = {Text(text = "Score")},
-                        placeholder = {
-                            Text(
-                                text = "",
-                                color = Color.Gray
-                            )
-                        },
+                    SegmentedControl(
+                        listOf("Automatic", "Human"),
+                        privacySwitchState
+                    ) { privacySwitchState = it }
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
-                            .weight(0.5f, true)
                             .padding(0.dp, 2.dp, 0.dp, 2.dp)
-                    )
-                }
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .weight(0.5f, true)
+                        ) {
+                            if (privacySwitchState == 0) {
+                                ComboBox(
+                                    list = typeListNames,
+                                    selectedIndex = typeSelectedIndexAutomatic,
+                                    onIndexChanged = { typeSelectedIndexAutomatic = it },
+                                    isExpanded = typeExpanded,
+                                    onExpandedChanged = { typeExpanded = it },
+                                    textWidth = 130.dp
+                                )
+                            } else if (privacySwitchState == 1) {
+                                ComboBox(
+                                    list = typeListNames,
+                                    selectedIndex = typeSelectedIndexHuman,
+                                    onIndexChanged = { typeSelectedIndexHuman = it },
+                                    isExpanded = typeExpanded,
+                                    onExpandedChanged = { typeExpanded = it },
+                                    textWidth = 130.dp
+                                )
+                            }
+                        }
+                        OutlinedTextField(
+                            value = scoreInput,
+                            onValueChange = { scoreInput = it },
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
+                            singleLine = true,
+                            label = { Text(text = "Score") },
+                            placeholder = {
+                                Text(
+                                    text = "",
+                                    color = Color.Gray
+                                )
+                            },
+                            modifier = Modifier
+                                .weight(0.5f, true)
+                                .padding(0.dp, 2.dp, 0.dp, 2.dp)
+                        )
+                    }
 
                 OutlinedTextField(
                     value = titleInput,
@@ -306,6 +317,7 @@ fun NewTask(
                         .fillMaxWidth()
                         .padding(0.dp, 2.dp, 0.dp, 2.dp)
                 )
+            }
                 Column(
                     modifier= Modifier
                         .fillMaxWidth()

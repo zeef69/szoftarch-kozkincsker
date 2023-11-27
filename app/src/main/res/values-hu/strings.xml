@@ -3,10 +3,19 @@
     <string name="MAPS_API_KEY">AIzaSyCnkLt22SvVnpHOJC5Yp45WzK1v1P1ZAOY</string>
     <string name="login">BEJELENTKEZÉS</string>
     <string name="register">REGISZTRÁCIÓ</string>
+    <string name="registration_success">Sikeres regisztráció.\nMegerősítő email el lett küldve</string>
+    <string name="verify_your_email">Kérem erősítse meg az email címét</string>
+    <string name="valid_password">Kérem írjon be egy megfelelő jelszót</string>
+    <string name="valid_email">Kérem írjon be egy megfelelő email címet</string>
+    <string name="verification_email">Megerősítő email lett küldve</string>
+    <string name="verification_send_password_change">Megerősítő email lett küldve a jelszóváltoztatásról</string>
     <string name="title_email">E-mail</string>
     <string name="title_password">Jelszó</string>
-    <string name="missing_email">Írd be az e-mailcímed</string>
+    <string name="missing_email">Írd be az e-mail címed</string>
     <string name="missing_password">Írd be jelszavad</string>
+    <string name="loading">Betöltés…</string>
+    <!-- stringResource(R.string.new_mission_title)
+    -->
     <string name="task_type_listed_answer">Listából választás</string>
     <string name="task_type_number_answer">Szám</string>
     <string name="task_type_date_answer">Dátum</string>

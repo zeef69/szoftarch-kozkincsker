@@ -3,10 +3,17 @@
     <string name="MAPS_API_KEY">AIzaSyCnkLt22SvVnpHOJC5Yp45WzK1v1P1ZAOY</string>
     <string name="login">LOGIN</string>
     <string name="register">REGISTER</string>
+    <string name="registration_success">Registration was successful\nVerification email has been sent</string>
+    <string name="verify_your_email">Please verify your email</string>
+    <string name="valid_password">Please enter a valid password</string>
+    <string name="valid_email">Please enter a valid new email</string>
+    <string name="verification_email">Verification email has been sent</string>
+    <string name="verification_send_password_change">Verification email has been sent about your password change</string>
     <string name="title_email">Email</string>
     <string name="title_password">Password</string>
     <string name="missing_email">Please enter your email</string>
     <string name="missing_password">Please enter your password</string>
+    <string name="loading">Loading…</string>
     <string name="task_type_listed_answer">List choice</string>
     <string name="task_type_number_answer">Number</string>
     <string name="task_type_date_answer">Date</string>
