@@ -40,6 +40,7 @@ import hu.bme.aut.szoftarch.kozkincsker.views.helpers.RatingBar
 @Composable
 fun Rating(
     session: Session?,
+    score: Int = 0,
     onSaveClicked: (Feedback, String) -> Unit,
     onBackClick: () -> Unit = {}
 ) {
@@ -76,7 +77,7 @@ fun Rating(
                     }
                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
                         append(
-                            "0"
+                            score.toString()
                         )
                     }
                 },

@@ -23,17 +23,20 @@ class RatingFragment : RainbowCakeFragment<RatingViewState, RatingViewModel>() {
 
     companion object {
         private const val EXTRA_SESSION = "SESSION"
+        private const val EXTRA_SCORE = "SCORE"
 
-        fun newInstance(session: Session): RatingFragment {
+        fun newInstance(session: Session, score: Int): RatingFragment {
             return RatingFragment().applyArgs {
                 putParcelable(EXTRA_SESSION, session)
+                putInt(EXTRA_SCORE, score)
             }
         }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         viewModel.setRating(
-            arguments?.getParcelable(EXTRA_SESSION)!!
+            arguments?.getParcelable(EXTRA_SESSION)!!,
+            arguments?.getInt(EXTRA_SCORE)!!
         )
 
         return ComposeView(requireContext()).apply {
@@ -60,5 +63,6 @@ class RatingFragment : RainbowCakeFragment<RatingViewState, RatingViewModel>() {
 
     private fun onNewFeedback(feedback: Feedback, missionId: String) {
         viewModel.newFeedback(feedback, missionId)
+        navigator?.pop()
     }
 }

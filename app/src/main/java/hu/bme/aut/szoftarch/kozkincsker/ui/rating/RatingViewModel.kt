@@ -11,8 +11,8 @@ class RatingViewModel @Inject constructor(private val ratingPresenter: RatingPre
     Loading
 ) {
 
-    fun setRating(session: Session) {
-        viewState = RatingContent(false, session)
+    fun setRating(session: Session, score: Int) {
+        viewState = RatingContent(false, session, score)
     }
 
     fun newFeedback(feedback: Feedback, missionId: String) = execute {

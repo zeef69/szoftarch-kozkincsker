@@ -16,6 +16,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -59,6 +61,7 @@ fun Session(
     levels: MutableList<Level>,
     taskSolutionsAndTasks: List<Pair<TaskSolution, Task>> = emptyList(),
     onTaskClicked: (Task, Session, User) -> Unit,
+    onRateSession: (Session, Int) -> Unit,
     onBackClick: () -> Unit = {}
 ) {
     val unknown = stringResource(R.string.value_unknown)
@@ -258,6 +261,39 @@ fun Session(
                             }
                         }
                     }
+            }
+        }
+        Log.i("oksa", levels[levels.size-1].toString())
+        if(levels[levels.size-1].showNextLevel) {
+            var score = 0
+            for(level in levels) {
+                for (task in level.taskList) {
+                    for (taskSolutionAndTask in taskSolutionsAndTasks) {
+                        if (task.id == taskSolutionAndTask.second.id && taskSolutionAndTask.first.checked && taskSolutionAndTask.first.correct) {
+                            score += task.score
+                        }
+                    }
+                }
+            }
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(0.1f, true)
+            ) {
+                Button(
+                    onClick = {
+                        if (session != null) {
+                            onRateSession(session, score)
+                        }
+                    },
+                    modifier = Modifier
+                        .padding(vertical = 2.dp, horizontal = 50.dp)
+                        .fillMaxWidth(),
+                    shape = RoundedCornerShape(10),
+                ) {
+                    Text("Rate session")
+                }
             }
         }
     }
