@@ -23,8 +23,6 @@ import hu.bme.aut.szoftarch.kozkincsker.views.theme.AppUiTheme1
 class SessionPlayerFragment : RainbowCakeFragment<SessionPlayerViewState, SessionPlayerViewModel>(){
 
     override fun provideViewModel() = getViewModelFromFactory()
-
-    private lateinit var actualUser: User
     companion object {
         private const val SESSION = "SESSION"
 
@@ -39,7 +37,6 @@ class SessionPlayerFragment : RainbowCakeFragment<SessionPlayerViewState, Sessio
         viewModel.load(
             arguments?.getParcelable(SESSION)!!
         )
-        actualUser = viewModel.getCurrentUser()!!
 
         return ComposeView(requireContext()).apply {
             setContent {
@@ -56,6 +53,8 @@ class SessionPlayerFragment : RainbowCakeFragment<SessionPlayerViewState, Sessio
                         session = viewState.session,
                         mission = viewState.mission,
                         designer = viewState.designer,
+                        user = viewState.user,
+                        taskSolutionsAndTasks = viewState.taskSolutionsAndTasks,
                         onBackClick = { navigator?.pop() },
                         onTaskClicked = ::onTaskClicked
                     )
@@ -64,7 +63,7 @@ class SessionPlayerFragment : RainbowCakeFragment<SessionPlayerViewState, Sessio
         }
     }
 
-    private fun onTaskClicked(task : Task, session: Session) {
+    private fun onTaskClicked(task : Task, session: Session, actualUser: User) {
         navigator?.add(TaskFragment.newInstance(task, session, actualUser))
     }
 }

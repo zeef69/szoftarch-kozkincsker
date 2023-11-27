@@ -25,7 +25,6 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-//import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -33,18 +32,16 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hu.bme.aut.szoftarch.kozkincsker.views.theme.*
 import hu.bme.aut.szoftarch.kozkincsker.R
-import hu.bme.aut.szoftarch.kozkincsker.data.model.Level
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Task
+import hu.bme.aut.szoftarch.kozkincsker.data.model.TaskSolution
 import hu.bme.aut.szoftarch.kozkincsker.data.model.User
 import java.text.SimpleDateFormat
-import java.util.Date
 import java.util.Locale
 
 @Composable
@@ -52,7 +49,9 @@ fun Session(
     session: Session?,
     mission: Mission?,
     designer: User?,
-    onTaskClicked: (Task, Session) -> Unit,
+    user: User?,
+    taskSolutionsAndTasks: List<Pair<TaskSolution, Task>> = emptyList(),
+    onTaskClicked: (Task, Session, User) -> Unit,
     onBackClick: () -> Unit = {}
 ) {
 
@@ -206,8 +205,8 @@ fun Session(
                                                 .padding(5.dp, 5.dp, 5.dp, 5.dp)
                                                 .weight(1.0f, true)
                                                 .clickable {
-                                                    if (session != null) {
-                                                        onTaskClicked(task, session)
+                                                    if (session != null && user != null) {
+                                                        onTaskClicked(task, session, user)
                                                     }
                                                 }
                                         ) {
@@ -229,7 +228,7 @@ fun Session(
 }
 
 
-@Preview
+/*@Preview
 @Composable
 fun SessionPreview() {
     val designer = User(
@@ -280,5 +279,5 @@ fun SessionPreview() {
         mission = mission,
         designer = designer,
         onTaskClicked = ::onTaskClicked,
-    )
-}
+    )*/
+//}
