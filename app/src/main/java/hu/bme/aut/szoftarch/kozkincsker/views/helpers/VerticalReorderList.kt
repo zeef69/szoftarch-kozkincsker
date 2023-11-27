@@ -15,14 +15,11 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-//import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -45,19 +42,14 @@ fun VerticalReorderList(listElements: MutableList<String>,
                         modifier: Modifier = Modifier,
                         newListElements: MutableList<String>,
 ) {
-    var answerAInput by remember { mutableStateOf(value="a") }
-    var answerBInput by remember { mutableStateOf("b") }
-    var answerCInput by remember { mutableStateOf("c") }
-    var answerDInput by remember { mutableStateOf("d") }
-    var valueList = mutableListOf(
-        answerAInput, answerBInput, answerCInput, answerDInput
-    )
+
     var data = remember { mutableStateOf(listElements) }
     var state = rememberReorderableLazyListState(onMove = { from, to ->
         data.value = data.value.toMutableList().apply {
             add(to.index, removeAt(from.index))
         }
-    }, onDragEnd = {from, to -> newListElements.apply { add(to, removeAt(from)) } })
+    }, onDragEnd = {from, to -> newListElements.apply { add(to, removeAt(from)) } }
+    )
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -74,12 +66,10 @@ fun VerticalReorderList(listElements: MutableList<String>,
         ) {
             items(data.value, { it }) { item ->
                 ReorderableItem(state,
-                    key = listElements.indexOf(item),
+                    key = item,
                     modifier = Modifier
                         .height(IntrinsicSize.Min)
                         .fillMaxWidth()
-                        .detectReorderAfterLongPress(state),
-                    
                     ) { isDragging ->
                     val elevation = animateDpAsState(if (isDragging) 28.dp else 0.dp)
                     Column(

@@ -364,7 +364,7 @@ fun NewTask(
                                             Checkbox(
                                                 checked = checkedStateList[i],
                                                 onCheckedChange = { checkedStateList[i] = it },
-                                                colors = CheckboxDefaults.colors(Yellow),
+                                                colors = CheckboxDefaults.colors(MaterialTheme.colors.primary),
                                                 modifier = Modifier
                                                     .padding(2.dp)
                                                     .weight(0.1f, false)
@@ -577,10 +577,20 @@ fun NewTask(
                         }
                     }
                     else if(task.taskType==TaskType.OrderAnswer) {
+                        var tempAnswersList = mutableListOf<String>()
                         answerStringBuilder.append(answerNumberList[answersOrderSelectedIndex])
+
                         for(i in 0..<6){
                             answerStringBuilder.append('|')
-                            if(i < answerNumberList[answersOrderSelectedIndex].toInt()) answerStringBuilder.append(orderAnswerInputList[i])
+                            if(i < answerNumberList[answersOrderSelectedIndex].toInt()){
+                                tempAnswersList.add(orderAnswerInputList[i])
+                                answerStringBuilder.append(orderAnswerInputList[i])
+                            }
+                        }
+                        tempAnswersList.shuffle()
+                        for(i in 0..<answerNumberList[answersOrderSelectedIndex].toInt()){
+                            answerStringBuilder.append('|')
+                            answerStringBuilder.append(tempAnswersList[i])
                         }
                     }
                     else if(task.taskType==TaskType.MapAnswer) {

@@ -45,7 +45,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -94,6 +93,10 @@ import java.util.Locale
 fun Task(
     task: Task,
     session: Session,
+    answerListSize: Int,
+    choiceAnswerInputList: ArrayList<String>,
+    checkedStateList: MutableList<Boolean>,
+    orderAnswerInputList: MutableList<String>,
     onUploadImage : (uri: Uri) -> String,
     onSaveClicked: (Task, TaskSolution) -> Unit,
     onBackClick: () -> Unit = {}
@@ -105,20 +108,7 @@ fun Task(
     /**
      * Válaszlista és checkbox érték a választós és a sorbarendezős feladatokhoz
      * */
-    val answerListSize = if(task.taskType == TaskType.ListedAnswer || task.taskType == TaskType.OrderAnswer) task.answers.split(pattern)[0].toInt() else 0
-    val choiceAnswerInputList = ArrayList<String> () //remember { mutableStateListOf<String>() }
-    val checkedStateList = remember { mutableStateListOf<Boolean>() }
-    val orderAnswerInputList = remember { mutableStateListOf<String>() }
-    for (i in 0..<answerListSize){
-        if (task.taskType == TaskType.ListedAnswer && task.answers.split(pattern).size > 12) {
-            checkedStateList.add(false)
-            choiceAnswerInputList.add(task.answers.split(pattern)[2 * i + 2])
-        }
-        if (task.taskType == TaskType.OrderAnswer && task.answers.split(pattern).size > 6) {
-            orderAnswerInputList.add(task.answers.split(pattern)[i+1])
-        }
-    }
-    val shuffledOrderAnswerList = orderAnswerInputList.shuffled().toMutableList()
+    //Fragmentből érkeznek
     /**
      * Számos feladathoz válasz mező érték
      * */
@@ -321,7 +311,7 @@ fun Task(
                                     Checkbox(
                                         checked = checkedStateList[i],
                                         onCheckedChange = { checkedStateList[i] = it },
-                                        colors = CheckboxDefaults.colors(Yellow),
+                                        colors = CheckboxDefaults.colors(MaterialTheme.colors.primary),
                                         modifier = Modifier
                                             .padding(2.dp)
                                             .weight(0.1f, false)
@@ -428,8 +418,8 @@ fun Task(
                     TaskType.OrderAnswer -> {
                         Text(text = "Order answers")
                         VerticalReorderList(
-                            listElements=shuffledOrderAnswerList,
-                            newListElements=shuffledOrderAnswerList
+                            listElements=orderAnswerInputList,
+                            newListElements=orderAnswerInputList
                         )
                     }
                     TaskType.TextAnswer -> {
@@ -511,7 +501,7 @@ fun Task(
                         answerStringBuilder.append(answerListSize)
                         for(i in 0..<answerListSize){
                             answerStringBuilder.append('|')
-                            answerStringBuilder.append(shuffledOrderAnswerList[i])
+                            answerStringBuilder.append(orderAnswerInputList[i])
                         }
                     }
                     else if(task.taskType==TaskType.MapAnswer) {
