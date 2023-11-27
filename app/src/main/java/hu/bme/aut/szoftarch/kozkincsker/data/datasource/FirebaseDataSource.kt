@@ -472,4 +472,35 @@ class FirebaseDataSource @Inject constructor() {
             Log.i("Firebase_Down", "Failed in downloading")
         }.await()
     }
+
+    suspend fun getUsersListener(): Flow<List<User>> = callbackFlow {
+        val listenerRegistration = database.collection("users")
+            .addSnapshotListener { querySnapshot: QuerySnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
+                if (firebaseFirestoreException != null) {
+                    cancel(message = "Error fetching items", cause = firebaseFirestoreException)
+                    return@addSnapshotListener
+                }
+                val items = mutableListOf<User>()
+                if (querySnapshot != null) {
+                    for(document in querySnapshot) {
+                        items.add(document.toObject())
+                    }
+                }
+                this.trySend(items).isSuccess
+            }
+        awaitClose {
+            Log.d("failure", "Cancelling items listener")
+            listenerRegistration.remove()
+        }
+    }
+
+    suspend fun onEditUser(user: User){
+        database.collection("users").document(user.id).set(user, SetOptions.merge())
+            .addOnSuccessListener { documentReference ->
+                Log.d("success", "DocumentSnapshot written with ID: $documentReference.")
+            }
+            .addOnFailureListener { exception ->
+                Log.d("failure", "Error getting documents: ", exception)
+            }.await()
+    }
 }

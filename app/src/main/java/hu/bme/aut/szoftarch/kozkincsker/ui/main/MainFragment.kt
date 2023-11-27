@@ -11,6 +11,7 @@ import co.zsmb.rainbowcake.hilt.getViewModelFromFactory
 import dagger.hilt.android.AndroidEntryPoint
 import hu.bme.aut.szoftarch.kozkincsker.ui.account.AccountFragment
 import hu.bme.aut.szoftarch.kozkincsker.ui.missions.MissionsFragment
+import hu.bme.aut.szoftarch.kozkincsker.ui.user_list.UserListFragment
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.FullScreenLoading
 import hu.bme.aut.szoftarch.kozkincsker.views.nav.MainScreenView
 
@@ -20,10 +21,12 @@ class MainFragment: RainbowCakeFragment<MainViewState, MainViewModel>() {
 
     private lateinit var missionsFragment: MissionsFragment
     private lateinit var accountFragment: AccountFragment
+    private lateinit var userListFragment: UserListFragment
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         missionsFragment = MissionsFragment()
         accountFragment = AccountFragment()
+        userListFragment = UserListFragment()
 
         return ComposeView(requireContext()).apply {
             setContent {
@@ -46,7 +49,8 @@ class MainFragment: RainbowCakeFragment<MainViewState, MainViewModel>() {
                     MainScreenView(
                         parentFragmentManager,
                         missionsFragment,
-                        accountFragment
+                        accountFragment,
+                        userListFragment
                     )
                 }
             }.exhaustive

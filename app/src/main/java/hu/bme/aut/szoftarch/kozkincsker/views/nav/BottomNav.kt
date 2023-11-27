@@ -30,25 +30,27 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import hu.bme.aut.szoftarch.kozkincsker.ui.account.AccountFragment
 import hu.bme.aut.szoftarch.kozkincsker.ui.missions.MissionsFragment
+import hu.bme.aut.szoftarch.kozkincsker.ui.user_list.UserListFragment
 import hu.bme.aut.szoftarch.kozkincsker.views.theme.Teal200
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun MainScreenView(fragmentManager: FragmentManager, missionsFragment: MissionsFragment, accountFragment: AccountFragment) {
+fun MainScreenView(fragmentManager: FragmentManager, missionsFragment: MissionsFragment, accountFragment: AccountFragment, userListFragment: UserListFragment) {
     val navController = rememberNavController()
     Scaffold(
         modifier = Modifier
             .background(MaterialTheme.colors.background),
         bottomBar = { BottomNavigation(navController = navController) },
     ) {
-        NavigationGraph(navController = navController, fragmentManager = fragmentManager, missionsFragment = missionsFragment, accountFragment = accountFragment)
+        NavigationGraph(navController = navController, fragmentManager = fragmentManager, missionsFragment = missionsFragment, accountFragment = accountFragment, userListFragment = userListFragment)
     }
 }
 @Composable
 fun BottomNavigation(navController: NavController) {
     val items = listOf(
         BottomNavItem.Missions,
-        BottomNavItem.Account
+        BottomNavItem.Account,
+        BottomNavItem.Users,
     )
     androidx.compose.material.BottomNavigation(
         backgroundColor = Teal200,
@@ -83,7 +85,7 @@ fun BottomNavigation(navController: NavController) {
 }
 
 @Composable
-fun NavigationGraph(navController: NavHostController, fragmentManager: FragmentManager, missionsFragment: MissionsFragment, accountFragment: AccountFragment) {
+fun NavigationGraph(navController: NavHostController, fragmentManager: FragmentManager, missionsFragment: MissionsFragment, accountFragment: AccountFragment, userListFragment: UserListFragment) {
     NavHost(navController, startDestination = BottomNavItem.Missions.screenRoute) {
         composable(BottomNavItem.Missions.screenRoute) {
             FragmentContainer(
@@ -97,6 +99,13 @@ fun NavigationGraph(navController: NavHostController, fragmentManager: FragmentM
                 modifier = Modifier.fillMaxSize(),
                 fragmentManager = fragmentManager,
                 commit = { add(it, accountFragment) }
+            )
+        }
+        composable(BottomNavItem.Users.screenRoute) {
+            FragmentContainer(
+                modifier = Modifier.fillMaxSize(),
+                fragmentManager = fragmentManager,
+                commit = { add(it, userListFragment) }
             )
         }
     }

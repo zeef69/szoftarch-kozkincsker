@@ -3,6 +3,7 @@ package hu.bme.aut.szoftarch.kozkincsker.domain
 import com.google.firebase.firestore.toObject
 import hu.bme.aut.szoftarch.kozkincsker.data.datasource.FirebaseDataSource
 import hu.bme.aut.szoftarch.kozkincsker.data.model.User
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class UserInteractor @Inject constructor(
@@ -20,5 +21,13 @@ class UserInteractor @Inject constructor(
 
     suspend fun getUserFromId(id: String?): User? {
         return firebaseDataSource.getUserFromId(id)
+    }
+
+    suspend fun getUsersListener(): Flow<List<User>> {
+        return firebaseDataSource.getUsersListener()
+    }
+
+    suspend fun onEditUser(user: User) {
+        firebaseDataSource.onEditUser(user)
     }
 }
