@@ -14,8 +14,6 @@
     <string name="missing_email">Írd be az e-mail címed</string>
     <string name="missing_password">Írd be jelszavad</string>
     <string name="loading">Betöltés…</string>
-    <!-- stringResource(R.string.new_mission_title)
-    -->
     <string name="task_type_listed_answer">Listából választás</string>
     <string name="task_type_number_answer">Szám</string>
     <string name="task_type_date_answer">Dátum</string>
@@ -26,6 +24,12 @@
     <string name="level_type_all_task_per_level">Mind</string>
     <string name="level_type_min_one_task_per_level">Minimum 1</string>
     <string name="level_type_max_one_task_per_level">Pontosan 1</string>
+    <string name="bottom_nav_title_mission">Küldetés</string>
+    <string name="bottom_nav_title_account">Fiók</string>
+    <string name="bottom_nav_title_users">Felhasználók</string>
+
+    <!-- stringResource(R.string.new_mission_title)
+    -->
     <string name="other_settings">Egyéb beállítások</string>
     <string name="new_mission_title">Küldetés cím</string>
     <string name="new_mission_description">Küldetés leírás</string>

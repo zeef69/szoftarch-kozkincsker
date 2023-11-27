@@ -16,6 +16,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.fragment.app.FragmentContainerView
@@ -28,6 +29,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import hu.bme.aut.szoftarch.kozkincsker.R
 import hu.bme.aut.szoftarch.kozkincsker.ui.account.AccountFragment
 import hu.bme.aut.szoftarch.kozkincsker.ui.missions.MissionsFragment
 import hu.bme.aut.szoftarch.kozkincsker.ui.user_list.UserListFragment
@@ -52,6 +54,10 @@ fun BottomNavigation(navController: NavController) {
         BottomNavItem.Account,
         BottomNavItem.Users,
     )
+    items[0].title = stringResource(R.string.bottom_nav_title_mission)
+    items[1].title = stringResource(R.string.bottom_nav_title_account)
+    items[2].title = stringResource(R.string.bottom_nav_title_users)
+
     androidx.compose.material.BottomNavigation(
         backgroundColor = Teal200,
         contentColor = Color.Black
