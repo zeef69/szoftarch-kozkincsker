@@ -41,11 +41,12 @@ import hu.bme.aut.szoftarch.kozkincsker.views.helpers.RatingBar
 @Composable
 fun Rating(
     session: Session?,
+    score: Int,
     onSaveClicked: (Feedback, String) -> Unit,
     onBackClick: () -> Unit = {}
 ) {
     var commentInput by remember { mutableStateOf("") }
-    var rating by remember { mutableDoubleStateOf(3.5) }
+    var rating by remember { mutableDoubleStateOf(3.0) }
 
     Column(
         modifier = Modifier
@@ -77,7 +78,7 @@ fun Rating(
                     }
                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
                         append(
-                            "0"
+                            score.toString()
                         )
                     }
                 },

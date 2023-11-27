@@ -8,5 +8,6 @@ data object Loading : RatingViewState()
 
 data class RatingContent(
     var isLoading: Boolean = true,
-    var session: Session? = null
+    var session: Session? = null,
+    var score: Int = 0
 ) : RatingViewState()

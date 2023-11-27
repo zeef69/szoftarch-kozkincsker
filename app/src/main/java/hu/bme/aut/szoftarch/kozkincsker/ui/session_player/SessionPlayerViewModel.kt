@@ -47,10 +47,9 @@ class SessionPlayerViewModel @Inject constructor(
                     }
                     val taskSolutionsAndTasks: MutableList<Pair<TaskSolution, Task>> = emptyList<Pair<TaskSolution, Task>>().toMutableList()
                     for(taskSolution in taskSolutions)
-                        for(task in tasks) {
-                            if(taskSolution.taskId == task.id && !task.taskType.checkable && !taskSolution.checked)
+                        for(task in tasks)
+                            if(taskSolution.taskId == task.id)
                                 taskSolutionsAndTasks.add(Pair(taskSolution, task))
-                        }
 
                     viewState = SessionPlayerContent(
                         taskSolutionsAndTasks = taskSolutionsAndTasks,

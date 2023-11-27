@@ -14,6 +14,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Task
 import hu.bme.aut.szoftarch.kozkincsker.data.model.User
+import hu.bme.aut.szoftarch.kozkincsker.ui.rating.RatingFragment
 import hu.bme.aut.szoftarch.kozkincsker.ui.task.TaskFragment
 import hu.bme.aut.szoftarch.kozkincsker.views.Session
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.FullScreenLoading
@@ -49,15 +50,23 @@ class SessionPlayerFragment : RainbowCakeFragment<SessionPlayerViewState, Sessio
             AppUiTheme1 {
                 when (viewState) {
                     is Loading -> FullScreenLoading()
-                    is SessionPlayerContent -> Session(
-                        session = viewState.session,
-                        mission = viewState.mission,
-                        designer = viewState.designer,
-                        user = viewState.user,
-                        taskSolutionsAndTasks = viewState.taskSolutionsAndTasks,
-                        onBackClick = { navigator?.pop() },
-                        onTaskClicked = ::onTaskClicked
-                    )
+                    is SessionPlayerContent -> {
+                        /*val levels = remember { mutableStateListOf<Level>() }
+                        if(viewState.mission != null)
+                            for(level in viewState.mission!!.levelList)
+                                levels.add(level)*/
+                        Session(
+                            session = viewState.session,
+                            mission = viewState.mission,
+                            designer = viewState.designer,
+                            user = viewState.user,
+                            //levels = levels,
+                            taskSolutionsAndTasks = viewState.taskSolutionsAndTasks,
+                            onBackClick = { navigator?.pop() },
+                            onTaskClicked = ::onTaskClicked,
+                            onRateSession = ::onRateSession
+                        )
+                    }
                 }.exhaustive
             }
         }
@@ -65,5 +74,9 @@ class SessionPlayerFragment : RainbowCakeFragment<SessionPlayerViewState, Sessio
 
     private fun onTaskClicked(task : Task, session: Session, actualUser: User) {
         navigator?.add(TaskFragment.newInstance(task, session, actualUser))
+    }
+
+    private fun onRateSession(session: Session, score: Int) {
+        navigator?.add(RatingFragment.newInstance(session, score))
     }
 }

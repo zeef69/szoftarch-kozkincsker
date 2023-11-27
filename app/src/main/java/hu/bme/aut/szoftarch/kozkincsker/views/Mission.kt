@@ -27,7 +27,6 @@ import androidx.compose.material.icons.filled.StarRate
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -59,6 +58,7 @@ fun Mission(
     mission: Mission? = null,
     designer: User? = null,
     user: User? = null,
+    feedbacks: MutableList<Feedback>,
     onStartSession: (Session, Boolean) -> Unit,
     onDeleteFeedback: (Feedback, String) -> Unit,
     onBackClick: () -> Unit = {}
@@ -66,10 +66,11 @@ fun Mission(
     var switchState by remember { mutableIntStateOf(0) }
     var checkedModerator by remember { mutableStateOf(false) }
     var nameInput by remember { mutableStateOf("") }
-    val feedbacks = remember { mutableStateListOf<Feedback>() }
+
+    /*val feedbacks = remember { mutableStateListOf<Feedback>() }
     if(mission != null && mission.feedbackIds.isNotEmpty())
         for(feedback in mission.feedbackIds)
-            feedbacks.add(feedback)
+            feedbacks.add(feedback)*/
 
     Column(
         modifier = Modifier
@@ -264,7 +265,7 @@ fun Mission(
                                     fontSize = 18.sp,
                                     modifier = Modifier.padding(all = 2.dp).weight(0.6f, true)
                                 )
-                                if(user != null && user.isAdmin)
+                                if(user != null && (user.isAdmin || user.id == mission.designerId))
                                     Row(
                                         verticalAlignment = Alignment.CenterVertically,
                                         modifier = Modifier
