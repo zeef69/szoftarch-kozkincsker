@@ -58,7 +58,7 @@ fun Session(
     mission: Mission?,
     designer: User?,
     user: User?,
-    levels: MutableList<Level>,
+    //levels: MutableList<Level>,
     taskSolutionsAndTasks: List<Pair<TaskSolution, Task>> = emptyList(),
     onTaskClicked: (Task, Session, User) -> Unit,
     onRateSession: (Session, Int) -> Unit,
@@ -66,6 +66,12 @@ fun Session(
 ) {
     val unknown = stringResource(R.string.value_unknown)
     val missionDeleted = stringResource(R.string.mission_deleted_message)
+
+    val levels: MutableList<Level> = emptyList<Level>().toMutableList()
+    if(mission != null)
+        levels.addAll(mission.levelList)
+
+    var lastLevelTrue = false
 
     Column(
         modifier = Modifier
@@ -248,15 +254,20 @@ fun Session(
                                         }
                                     }
                                 }
-                                Log.i("solutionnum", solutionsInLevel.toString())
                                 if(!level.showNextLevel && level.levelType == LevelType.AllTaskInLevel && solutionsInLevel == level.taskList.size) {
                                     level.showNextLevel = true
+                                    if(index == levels.size-1)
+                                        lastLevelTrue = true
                                 }
                                 else if(!level.showNextLevel && level.levelType == LevelType.MinOneTaskInLevel && solutionsInLevel > 0) {
                                     level.showNextLevel = true
+                                    if(index == levels.size-1)
+                                        lastLevelTrue = true
                                 }
                                 else if(!level.showNextLevel && level.levelType == LevelType.MaxOneTaskInLevel && solutionsInLevel > 0) {
                                     level.showNextLevel = true
+                                    if(index == levels.size-1)
+                                        lastLevelTrue = true
                                 }
                             }
                         }
@@ -264,7 +275,7 @@ fun Session(
             }
         }
         Log.i("oksa", levels[levels.size-1].toString())
-        if(levels[levels.size-1].showNextLevel) {
+        if(lastLevelTrue) {
             var score = 0
             for(level in levels) {
                 for (task in level.taskList) {
