@@ -495,11 +495,7 @@ class FirebaseDataSource @Inject constructor() {
     }
 
     suspend fun onEditUser(user: User){
-        val editedFields: HashMap<String, Any> = HashMap()
-        editedFields["ableToEvaluate"] = user.ableToEvaluate
-        editedFields["admin"] = user.isAdmin
-
-        database.collection("users").document(user.id).set(editedFields, SetOptions.merge())
+        database.collection("users").document(user.id).set(user, SetOptions.merge())
             .addOnSuccessListener { documentReference ->
                 Log.d("success", "DocumentSnapshot written with ID: $documentReference.")
             }
