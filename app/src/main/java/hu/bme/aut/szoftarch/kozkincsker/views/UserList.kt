@@ -32,11 +32,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+//import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hu.bme.aut.szoftarch.kozkincsker.data.model.User
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.SegmentedControl
+import hu.bme.aut.szoftarch.kozkincsker.views.theme.*
 
 @Composable
 fun UserList(
@@ -100,7 +101,7 @@ fun UserList(
                                 }),
                             shape = RoundedCornerShape(20),
                             elevation = 1.dp,
-                            backgroundColor = Color.LightGray
+                            backgroundColor = CardBackGround
                         ){
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
@@ -114,7 +115,7 @@ fun UserList(
                                         .width(90.dp)
                                 ) {
                                     Text(
-                                        text = user.name, color = Color.Black, fontSize = 24.sp
+                                        text = user.name, color = Black, fontSize = 24.sp
                                     )
                                 }
                                 if (actualUser != null && actualUser.isAdmin){
@@ -178,7 +179,7 @@ fun UserList(
                                 }),
                             shape = RoundedCornerShape(20),
                             elevation = 1.dp,
-                            backgroundColor = Color.LightGray
+                            backgroundColor = CardBackGround
                         ){
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
@@ -192,7 +193,7 @@ fun UserList(
                                         .width(90.dp)
                                 ) {
                                     Text(
-                                        text = user.name, color = Color.Black, fontSize = 24.sp
+                                        text = user.name, color = Black, fontSize = 24.sp
                                     )
                                 }
                                 if (actualUser.isAdmin) {
@@ -227,7 +228,7 @@ fun UserList(
                                 }),
                             shape = RoundedCornerShape(20),
                             elevation = 1.dp,
-                            backgroundColor = Color.LightGray
+                            backgroundColor = CardBackGround
                         ){
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
@@ -241,7 +242,7 @@ fun UserList(
                                         .width(90.dp)
                                 ) {
                                     Text(
-                                        text = user.name, color = Color.Black, fontSize = 24.sp
+                                        text = user.name, color = Black, fontSize = 24.sp
                                     )
                                 }
                             }

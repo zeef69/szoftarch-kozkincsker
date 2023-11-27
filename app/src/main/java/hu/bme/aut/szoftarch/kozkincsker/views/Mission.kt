@@ -33,7 +33,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+//import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -50,6 +50,7 @@ import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
 import hu.bme.aut.szoftarch.kozkincsker.data.model.User
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.CustomChart
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.SegmentedControl
+import hu.bme.aut.szoftarch.kozkincsker.views.theme.*
 import java.util.Date
 
 @Composable
@@ -156,7 +157,7 @@ fun Mission(
                     placeholder = {
                         Text(
                             text = "Session name",
-                            color = Color.Gray
+                            color = Gray
                         )
                     },
                     modifier = Modifier
@@ -253,12 +254,12 @@ fun Mission(
                                 verticalAlignment = Alignment.CenterVertically,
                                 modifier = Modifier
                                     .fillMaxSize()
-                                    .background(Color.LightGray)
+                                    .background(CardBackGround)
                                     .padding(5.dp, 5.dp, 5.dp, 5.dp)
                             ) {
                                 Text(
                                     text = item.comment,
-                                    color = Color.Black,
+                                    color = Black,
                                     fontSize = 18.sp,
                                     modifier = Modifier.padding(all = 2.dp).weight(0.6f, true)
                                 )

@@ -28,10 +28,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Color
+//import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import com.google.firebase.firestore.PropertyName
+import hu.bme.aut.szoftarch.kozkincsker.views.theme.*
 
 @Composable
 fun AccordionMenu(modifier: Modifier = Modifier, model: AccordionModel) {
@@ -43,16 +44,16 @@ fun AccordionMenu(modifier: Modifier = Modifier, model: AccordionModel) {
         }
         AnimatedVisibility(visible = expanded) {
             Surface(
-                color = Color.White,
+                color = White,
                 shape = RoundedCornerShape(8.dp),
-                border = BorderStroke(1.dp, Color.Gray),
+                border = BorderStroke(1.dp, CardBackGround),
                 elevation = 1.dp,
                 //modifier = Modifier.padding(top = 8.dp)
             ) {
                 LazyColumn {
                     items(model.rows) { row ->
                         AccordionRow(row)
-                        Divider(color = Color.Blue, thickness = 1.dp)
+                        Divider(color = Secondary, thickness = 1.dp)
                     }
                 }
             }
@@ -109,7 +110,7 @@ private fun AccordionRow(
                 placeholder = {
                     Text(
                         text = "value",
-                        color = Color.Gray
+                        color = Gray
                     )
                 },
                 modifier = Modifier
@@ -127,7 +128,7 @@ private fun AccordionRow(
                 placeholder = {
                     Text(
                         text = "0",
-                        color = Color.Gray
+                        color = Gray
                     )
                 },
                 modifier = Modifier
@@ -143,7 +144,7 @@ private fun AccordionRow(
                 placeholder = {
                     Text(
                         text = "value",
-                        color = Color.Gray
+                        color = Gray
                     )
                 },
                 modifier = Modifier
@@ -159,7 +160,7 @@ private fun AccordionRow(
                 placeholder = {
                     Text(
                         text = "0",
-                        color = Color.Gray
+                        color = Gray
                     )
                 },
                 modifier = Modifier
@@ -184,7 +185,7 @@ private fun AccordionHeader(
     Surface(
         //color = Color.White,
         shape = RoundedCornerShape(10),
-        border = BorderStroke(1.dp, Color.Gray),
+        border = BorderStroke(1.dp, Gray),
         //elevation = 8.dp,
     ) {
         Row(
@@ -195,7 +196,7 @@ private fun AccordionHeader(
         ) {
             Text(
                 text = title,
-                color = Color.Gray,
+                color = Gray,
                 modifier = Modifier.weight(1f)
             )
             Surface(shape = CircleShape) {
@@ -203,7 +204,7 @@ private fun AccordionHeader(
                     Icons.Outlined.ArrowDownward,
                     contentDescription = "arrow-down",
                     modifier = Modifier.rotate(degrees),
-                    tint = Color.Black
+                    tint = Black
                 )
             }
         }

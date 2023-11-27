@@ -29,7 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import hu.bme.aut.szoftarch.kozkincsker.views.theme.Purple500
+import hu.bme.aut.szoftarch.kozkincsker.views.theme.*
 
 @Composable
 fun CustomChart(
@@ -61,7 +61,7 @@ fun CustomChart(
                         .clip(CircleShape)
                         .width(barGraphWidth)
                         .fillMaxHeight(it)
-                        .background(Purple500)
+                        .background(PrimaryVariant)
                         .clickable {
                             Toast
                                 .makeText(context, it.toString(), Toast.LENGTH_SHORT)

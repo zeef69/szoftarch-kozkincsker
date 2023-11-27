@@ -1,6 +1,5 @@
 package hu.bme.aut.szoftarch.kozkincsker.views.helpers
 
-
 import android.app.DatePickerDialog
 import android.content.Context
 import android.widget.DatePicker

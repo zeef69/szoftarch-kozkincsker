@@ -42,7 +42,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+//import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -54,10 +54,10 @@ import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Task
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.ChangingIconButton
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.ComboBox
+import hu.bme.aut.szoftarch.kozkincsker.views.theme.*
 import java.util.Date
 import hu.bme.aut.szoftarch.kozkincsker.R
 import hu.bme.aut.szoftarch.kozkincsker.data.enums.MissionType
-import hu.bme.aut.szoftarch.kozkincsker.data.enums.TaskType
 import hu.bme.aut.szoftarch.kozkincsker.data.model.User
 
 @Composable
@@ -138,7 +138,7 @@ fun NewMission(
                     placeholder = {
                         Text(
                             text = stringResource(R.string.new_mission_title),
-                            color = Color.Gray
+                            color = Gray
                         )
                     },
                     modifier = Modifier
@@ -178,7 +178,7 @@ fun NewMission(
                     placeholder = {
                         Text(
                             text = stringResource(R.string.new_mission_description),
-                            color = Color.Gray
+                            color = Gray
                         )
                     },
                     modifier = Modifier
@@ -202,7 +202,7 @@ fun NewMission(
                     label = {
                         Text(
                             text = "Solution days",
-                            color = Color.Gray
+                            color = Gray
                         )
                     },
                     modifier = Modifier
@@ -217,7 +217,7 @@ fun NewMission(
                     label = {
                         Text(
                             text = "Solution hours",
-                            color = Color.Gray
+                            color = Gray
                         )
                     },
                     modifier = Modifier
@@ -283,13 +283,13 @@ fun NewMission(
                                     modifier = Modifier
                                         .fillMaxHeight()
                                         .width(IntrinsicSize.Max)
-                                        .background(Color.LightGray)
+                                        .background(CardBackGround)
                                         .padding(5.dp, 5.dp, 5.dp, 5.dp)
                                         .weight(1.0f, true)
                                         .clickable { onTaskClicked(mission, level, task) }
                                 ) {
                                     Text(
-                                        text = task.title, color = Color.Black, fontSize = 18.sp, modifier = Modifier
+                                        text = task.title, color = Black, fontSize = 18.sp, modifier = Modifier
                                             .padding(all = 2.dp)
                                             .weight(0.6f, true)
                                     )

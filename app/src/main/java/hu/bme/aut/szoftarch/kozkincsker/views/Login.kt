@@ -30,7 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+//import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -40,6 +40,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import hu.bme.aut.szoftarch.kozkincsker.R
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.SegmentedControl
+import hu.bme.aut.szoftarch.kozkincsker.views.theme.*
 
 @Composable
 fun Login(
@@ -87,7 +88,7 @@ fun Login(
                 label = {
                     Text(
                         text = stringResource(R.string.title_email),
-                        color = Color.Gray
+                        color = Gray
                     )
                 },
                 modifier = Modifier
@@ -116,7 +117,7 @@ fun Login(
                 label = {
                     Text(
                         text = stringResource(R.string.title_password),
-                        color = Color.Gray
+                        color = Gray
                     )
                 },
                 modifier = Modifier
@@ -132,7 +133,7 @@ fun Login(
                     label = {
                         Text(
                             text = "Name",
-                            color = Color.Gray
+                            color = Gray
                         )
                     },
                     modifier = Modifier

@@ -36,7 +36,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+//import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -54,6 +54,7 @@ import hu.bme.aut.szoftarch.kozkincsker.data.model.Task
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.ComboBox
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.DatePicker
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.SegmentedControl
+import hu.bme.aut.szoftarch.kozkincsker.views.theme.*
 import java.util.Date
 import java.util.Locale
 
@@ -268,7 +269,7 @@ fun NewTask(
                         placeholder = {
                             Text(
                                 text = "",
-                                color = Color.Gray
+                                color = Gray
                             )
                         },
                         modifier = Modifier
@@ -284,7 +285,7 @@ fun NewTask(
                     placeholder = {
                         Text(
                             text = "Title",
-                            color = Color.Gray
+                            color = Gray
                         )
                     },
                     modifier = Modifier
@@ -299,7 +300,7 @@ fun NewTask(
                     placeholder = {
                         Text(
                             text = "Description",
-                            color = Color.Gray
+                            color = Gray
                         )
                     },
                     modifier = Modifier
@@ -351,7 +352,7 @@ fun NewTask(
                                             Checkbox(
                                                 checked = checkedStateList[i],
                                                 onCheckedChange = { checkedStateList[i] = it },
-                                                colors = CheckboxDefaults.colors(Color.Blue),
+                                                colors = CheckboxDefaults.colors(Yellow),
                                                 modifier = Modifier
                                                     .padding(2.dp)
                                                     .weight(0.1f, false)
@@ -365,7 +366,7 @@ fun NewTask(
                                                 placeholder = {
                                                     Text(
                                                         text = "Answer option $i.",
-                                                        color = Color.Gray
+                                                        color = Gray
                                                     )
                                                 },
                                                 modifier = Modifier
@@ -387,7 +388,7 @@ fun NewTask(
                                     placeholder = {
                                         Text(
                                             text = "0",
-                                            color = Color.Gray
+                                            color = Gray
                                         )
                                     },
                                     modifier = Modifier
@@ -428,7 +429,7 @@ fun NewTask(
                                             placeholder = {
                                                 Text(
                                                     text = "0",
-                                                    color = Color.Gray
+                                                    color = Gray
                                                 )
                                             },
                                             modifier = Modifier
@@ -472,7 +473,7 @@ fun NewTask(
                                     Circle(
                                         center = markerState.position,
                                         radius = actualRadius,
-                                        strokeColor = Color.Red
+                                        strokeColor = Red
                                     )
                                 }
                                 }
@@ -513,7 +514,7 @@ fun NewTask(
                                             placeholder = {
                                                 Text(
                                                     text = "Answer option",
-                                                    color = Color.Gray
+                                                    color = Gray
                                                 )
                                             },
                                             modifier = Modifier

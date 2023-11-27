@@ -23,7 +23,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+//import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -37,6 +37,7 @@ import hu.bme.aut.szoftarch.kozkincsker.R
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
 import hu.bme.aut.szoftarch.kozkincsker.data.model.User
+import hu.bme.aut.szoftarch.kozkincsker.views.theme.*
 import java.util.Locale
 
 @Composable
@@ -185,13 +186,13 @@ fun ModeratorPlayerList(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier
                                 .fillMaxSize()
-                                .background(Color.LightGray)
+                                .background(CardBackGround)
                                 .padding(5.dp, 5.dp, 5.dp, 5.dp)
                                 .clickable { session?.id?.let { onUserClicked(it, item.id) } }
                         ) {
                             Text(
                                 text = item.name,
-                                color = Color.Black,
+                                color = Black,
                                 fontSize = 18.sp,
                                 modifier = Modifier
                                     .padding(all = 2.dp)

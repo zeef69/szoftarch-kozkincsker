@@ -31,7 +31,7 @@ import androidx.navigation.compose.rememberNavController
 import hu.bme.aut.szoftarch.kozkincsker.ui.account.AccountFragment
 import hu.bme.aut.szoftarch.kozkincsker.ui.missions.MissionsFragment
 import hu.bme.aut.szoftarch.kozkincsker.ui.user_list.UserListFragment
-import hu.bme.aut.szoftarch.kozkincsker.views.theme.Teal200
+import hu.bme.aut.szoftarch.kozkincsker.views.theme.*
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -53,7 +53,7 @@ fun BottomNavigation(navController: NavController) {
         BottomNavItem.Users,
     )
     androidx.compose.material.BottomNavigation(
-        backgroundColor = Teal200,
+        backgroundColor = SecondaryVariant,
         contentColor = Color.Black
     ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()

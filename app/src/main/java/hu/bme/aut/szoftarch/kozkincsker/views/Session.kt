@@ -25,7 +25,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+//import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -36,6 +36,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import hu.bme.aut.szoftarch.kozkincsker.views.theme.*
 import hu.bme.aut.szoftarch.kozkincsker.R
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Level
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
@@ -201,7 +202,7 @@ fun Session(
                                             modifier = Modifier
                                                 .fillMaxHeight()
                                                 .width(IntrinsicSize.Max)
-                                                .background(Color.LightGray)
+                                                .background(CardBackGround)
                                                 .padding(5.dp, 5.dp, 5.dp, 5.dp)
                                                 .weight(1.0f, true)
                                                 .clickable {
@@ -211,7 +212,7 @@ fun Session(
                                                 }
                                         ) {
                                             Text(
-                                                text = task.title, color = Color.Black, fontSize = 18.sp, modifier = Modifier
+                                                text = task.title, color = Black, fontSize = 18.sp, modifier = Modifier
                                                     .padding(all = 2.dp)
                                                     .weight(0.6f, true)
                                             )
