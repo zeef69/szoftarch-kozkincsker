@@ -42,7 +42,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+//import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -54,6 +54,7 @@ import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Task
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.ChangingIconButton
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.ComboBox
+import hu.bme.aut.szoftarch.kozkincsker.views.theme.*
 import java.util.Date
 import hu.bme.aut.szoftarch.kozkincsker.R
 import hu.bme.aut.szoftarch.kozkincsker.data.enums.MissionType
@@ -130,36 +131,36 @@ fun NewMission(
                     .padding(12.dp, 12.dp, 12.dp, 25.dp)
                     .weight(0.6f, false)
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .height(IntrinsicSize.Min)
+                    .fillMaxWidth()
+            ){
+                OutlinedTextField(
+                    value = titleInput,
+                    onValueChange = { titleInput = it },
+                    singleLine = true,
+                    placeholder = {
+                        Text(
+                            text = stringResource(R.string.new_mission_title),
+                            color = Gray
+                        )
+                    },
                     modifier = Modifier
-                        .height(IntrinsicSize.Min)
                         .fillMaxWidth()
-                ){
-                    OutlinedTextField(
-                        value = titleInput,
-                        onValueChange = { titleInput = it },
-                        singleLine = true,
-                        placeholder = {
-                            Text(
-                                text = stringResource(R.string.new_mission_title),
-                                color = Color.Gray
-                            )
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(0.dp, 2.dp, 0.dp, 2.dp)
-                            .weight(0.82f, false)
-                    )
-                    /*
-                    var playablePublic = true
-                    for(level in mission.levelList) {
-                        for (task in level.taskList){
-                            playablePublic=playablePublic && task.taskType.checkable
-                        }
-                    }*/
-                    var iconList = mutableListOf(Icons.Filled.VisibilityOff)
-                    //if(playablePublic)
+                        .padding(0.dp, 2.dp, 0.dp, 2.dp)
+                        .weight(0.82f, false)
+                )
+                /*
+                var playablePublic = true
+                for(level in mission.levelList) {
+                    for (task in level.taskList){
+                        playablePublic=playablePublic && task.taskType.checkable
+                    }
+                }*/
+                var iconList = mutableListOf(Icons.Filled.VisibilityOff)
+                //if(playablePublic)
                     iconList.add(Icons.Filled.Public)
                     ChangingIconButton(
                         iconList,
@@ -169,81 +170,81 @@ fun NewMission(
                             .padding(2.dp, 0.dp)
                     ){privacySwitchState = it}
 
-                }
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .height(IntrinsicSize.Min)
-                        .fillMaxWidth()
-                ){
-                    OutlinedTextField(
-                        value = descriptionInput,
-                        onValueChange = { descriptionInput = it },
-                        singleLine = false,
-                        placeholder = {
-                            Text(
-                                text = stringResource(R.string.new_mission_description),
-                                color = Color.Gray
-                            )
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(0.dp, 2.dp, 0.dp, 2.dp)
-                            .weight(0.82f, false)
-                    )
-                }
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .height(IntrinsicSize.Min)
-                        .fillMaxWidth()
-                        .horizontalScroll(rememberScrollState())
-                ){
-                    OutlinedTextField(
-                        value = daysToSolveStringInput,
-                        onValueChange = { daysToSolveStringInput = it },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
-                        singleLine = true,
-                        label = {
-                            Text(
-                                text = "Solution days",
-                                color = Color.Gray
-                            )
-                        },
-                        modifier = Modifier
-                            .weight(0.3f, false)
-                            .padding(horizontal = 5.dp, vertical = 2.dp)
-                    )
-                    OutlinedTextField(
-                        value = hoursToSolveStringInput,
-                        onValueChange = { hoursToSolveStringInput = it },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
-                        singleLine = true,
-                        label = {
-                            Text(
-                                text = "Solution hours",
-                                color = Color.Gray
-                            )
-                        },
-                        modifier = Modifier
-                            .weight(0.3f, false)
-                            .padding(horizontal = 5.dp, vertical = 2.dp)
-                    )
-                    Box(
-                        modifier = Modifier
-                            .weight(0.4f, true)
-                            .padding(vertical = 2.dp)
-                    ) {
-                        ComboBox(
-                            list = missionTypeListNames,
-                            selectedIndex = missionTypeSelectedIndex,
-                            onIndexChanged = { missionTypeSelectedIndex = it },
-                            isExpanded = missionTypeExpanded,
-                            onExpandedChanged = { missionTypeExpanded = it },
-                            textWidth = 130.dp
+            }
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .height(IntrinsicSize.Min)
+                    .fillMaxWidth()
+            ){
+                OutlinedTextField(
+                    value = descriptionInput,
+                    onValueChange = { descriptionInput = it },
+                    singleLine = false,
+                    placeholder = {
+                        Text(
+                            text = stringResource(R.string.new_mission_description),
+                            color = Gray
                         )
-                    }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(0.dp, 2.dp, 0.dp, 2.dp)
+                        .weight(0.82f, false)
+                )
+            }
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .height(IntrinsicSize.Min)
+                    .fillMaxWidth()
+                    .horizontalScroll(rememberScrollState())
+                ){
+                OutlinedTextField(
+                    value = daysToSolveStringInput,
+                    onValueChange = { daysToSolveStringInput = it },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
+                    singleLine = true,
+                    label = {
+                        Text(
+                            text = "Solution days",
+                            color = Gray
+                        )
+                    },
+                    modifier = Modifier
+                        .weight(0.3f, false)
+                        .padding(horizontal = 5.dp, vertical=2.dp)
+                )
+                OutlinedTextField(
+                    value = hoursToSolveStringInput,
+                    onValueChange = { hoursToSolveStringInput = it },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
+                    singleLine = true,
+                    label = {
+                        Text(
+                            text = "Solution hours",
+                            color = Gray
+                        )
+                    },
+                    modifier = Modifier
+                        .weight(0.3f, false)
+                        .padding(horizontal = 5.dp, vertical=2.dp)
+                )
+                Box(
+                    modifier = Modifier
+                        .weight(0.4f, true)
+                        .padding(vertical = 2.dp)
+                ) {
+                    ComboBox(
+                        list = missionTypeListNames,
+                        selectedIndex = missionTypeSelectedIndex,
+                        onIndexChanged = { missionTypeSelectedIndex = it },
+                        isExpanded = missionTypeExpanded,
+                        onExpandedChanged = { missionTypeExpanded = it },
+                        textWidth = 130.dp
+                    )
                 }
+            }
             }
             LazyColumn(
                 modifier = Modifier
@@ -290,13 +291,13 @@ fun NewMission(
                                     modifier = Modifier
                                         .fillMaxHeight()
                                         .width(IntrinsicSize.Max)
-                                        .background(Color.LightGray)
+                                        .background(CardBackGround)
                                         .padding(5.dp, 5.dp, 5.dp, 5.dp)
                                         .weight(1.0f, true)
                                         .clickable { onTaskClicked(mission, level, task) }
                                 ) {
                                     Text(
-                                        text = task.title, color = Color.Black, fontSize = 18.sp, modifier = Modifier
+                                        text = task.title, color = Black, fontSize = 18.sp, modifier = Modifier
                                             .padding(all = 2.dp)
                                             .weight(0.6f, true)
                                     )

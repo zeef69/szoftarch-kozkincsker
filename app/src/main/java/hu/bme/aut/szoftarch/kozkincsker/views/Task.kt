@@ -51,7 +51,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+//import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -85,6 +85,7 @@ import hu.bme.aut.szoftarch.kozkincsker.data.model.TaskSolution
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.ChangingIconButton
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.DatePicker
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.VerticalReorderList
+import hu.bme.aut.szoftarch.kozkincsker.views.theme.*
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -320,7 +321,7 @@ fun Task(
                                     Checkbox(
                                         checked = checkedStateList[i],
                                         onCheckedChange = { checkedStateList[i] = it },
-                                        colors = CheckboxDefaults.colors(Color.Blue),
+                                        colors = CheckboxDefaults.colors(Yellow),
                                         modifier = Modifier
                                             .padding(2.dp)
                                             .weight(0.1f, false)
@@ -351,7 +352,7 @@ fun Task(
                             placeholder = {
                                 Text(
                                     text = "0",
-                                    color = Color.Gray
+                                    color = Gray
                                 )
                             },
                             modifier = Modifier
@@ -407,18 +408,18 @@ fun Task(
                                     state = MarkerState(position = deviceLatLng),
                                     draggable = false,
                                     ){
-                                    Text("You", color = Color.Red)
+                                    Text("You", color = Red)
                                 }
                                 MarkerInfoWindowContent(
                                     state = MarkerState(position = originalMarkerState.position),
                                     draggable = false,
                                 ){
-                                    Text("Goal", color = Color.Green)
+                                    Text("Goal", color = Green)
                                 }
                                 Circle(
                                     center = originalMarkerState.position,
                                     radius = actualRadius,
-                                    strokeColor = Color.Red
+                                    strokeColor = Red
                                 )
                             }
 
@@ -439,7 +440,7 @@ fun Task(
                             placeholder = {
                                 Text(
                                     text = "Answer",
-                                    color = Color.Gray
+                                    color = Gray
                                 )
                             },
                             modifier = Modifier

@@ -37,7 +37,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+//import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -45,6 +45,7 @@ import hu.bme.aut.szoftarch.kozkincsker.data.model.Mission
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
 import hu.bme.aut.szoftarch.kozkincsker.data.model.User
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.SegmentedControl
+import hu.bme.aut.szoftarch.kozkincsker.views.theme.*
 
 @Composable
 fun MissionsView(
@@ -125,7 +126,7 @@ fun MissionsView(
                                 }),
                             shape = RoundedCornerShape(20),
                             elevation = 1.dp,
-                            backgroundColor = Color.LightGray
+                            backgroundColor = CardBackGround
                         ) {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
@@ -139,7 +140,7 @@ fun MissionsView(
                                         .width(90.dp)
                                 ) {
                                     Text(
-                                        text = mission.name, color = Color.Black, fontSize = 24.sp
+                                        text = mission.name, color = Black, fontSize = 24.sp
                                     )
                                 }
                                 Row(
@@ -169,7 +170,7 @@ fun MissionsView(
                                     }),
                                 shape = RoundedCornerShape(20),
                                 elevation = 1.dp,
-                                backgroundColor = Color.LightGray
+                                backgroundColor = CardBackGround
                             ) {
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
@@ -183,7 +184,7 @@ fun MissionsView(
                                             .width(90.dp)
                                     ) {
                                         Text(
-                                            text = session.name, color = Color.Black, fontSize = 24.sp
+                                            text = session.name, color = Black, fontSize = 24.sp
                                         )
                                     }
                                     Row(
@@ -204,7 +205,7 @@ fun MissionsView(
                                     }),
                                 shape = RoundedCornerShape(20),
                                 elevation = 1.dp,
-                                backgroundColor = Color.LightGray
+                                backgroundColor = CardBackGround
                             ) {
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
@@ -217,7 +218,7 @@ fun MissionsView(
                                             .width(90.dp)
                                     ) {
                                         Text(
-                                            text = session.name, color = Color.Black, fontSize = 24.sp
+                                            text = session.name, color = Black, fontSize = 24.sp
                                         )
                                     }
                                 }
@@ -239,7 +240,7 @@ fun MissionsView(
                                 }),
                             shape = RoundedCornerShape(20),
                             elevation = 1.dp,
-                            backgroundColor = Color.LightGray
+                            backgroundColor = CardBackGround
                         ) {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
@@ -253,7 +254,7 @@ fun MissionsView(
                                         .width(90.dp)
                                 ) {
                                     Text(
-                                        text = mission.name, color = Color.Black, fontSize = 24.sp
+                                        text = mission.name, color = Black, fontSize = 24.sp
                                     )
                                 }
                                 Row(

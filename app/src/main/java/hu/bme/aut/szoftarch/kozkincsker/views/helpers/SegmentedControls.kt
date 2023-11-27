@@ -10,8 +10,9 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+//import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import hu.bme.aut.szoftarch.kozkincsker.views.theme.LightGray
 
 @Composable
 fun SegmentedControl(texts: List<String>, qualitySwitchState: Int, onValueChange: (Int) -> Unit) {
@@ -32,7 +33,7 @@ fun SegmentedControl(texts: List<String>, qualitySwitchState: Int, onValueChange
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = if (qualitySwitchState == index)
                         MaterialTheme.colors.primary
-                    else Color.LightGray
+                    else LightGray
                 ),
                 contentPadding = PaddingValues(0.dp),
                 modifier = Modifier

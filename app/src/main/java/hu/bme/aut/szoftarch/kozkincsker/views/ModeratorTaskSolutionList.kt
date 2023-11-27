@@ -20,7 +20,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+//import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Task
 import hu.bme.aut.szoftarch.kozkincsker.data.model.TaskSolution
+import hu.bme.aut.szoftarch.kozkincsker.views.theme.*
 
 @Composable
 fun ModeratorTaskSolutionList(
@@ -82,13 +83,13 @@ fun ModeratorTaskSolutionList(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(Color.LightGray)
+                            .background(CardBackGround)
                             .padding(5.dp, 5.dp, 5.dp, 5.dp)
                             .clickable { onTaskSolutionClicked(item.first, item.second) }
                     ) {
                         Text(
                             text = item.second.title,
-                            color = Color.Black,
+                            color = Black,
                             fontSize = 18.sp,
                             modifier = Modifier
                                 .padding(all = 2.dp)

@@ -36,7 +36,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+//import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -54,6 +54,7 @@ import hu.bme.aut.szoftarch.kozkincsker.data.model.Task
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.ComboBox
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.DatePicker
 import hu.bme.aut.szoftarch.kozkincsker.views.helpers.SegmentedControl
+import hu.bme.aut.szoftarch.kozkincsker.views.theme.*
 import java.util.Date
 import java.util.Locale
 
@@ -237,56 +238,56 @@ fun NewTask(
                     modifier = miniScrollablemodifier
                         .fillMaxWidth()
                 ){
-                    SegmentedControl(
-                        listOf("Automatic", "Human"),
-                        privacySwitchState
-                    ) { privacySwitchState = it }
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
+                SegmentedControl(
+                    listOf("Automatic", "Human"),
+                    privacySwitchState
+                ) { privacySwitchState = it }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .padding(0.dp, 2.dp, 0.dp, 2.dp)
+                ) {
+                    Box(
                         modifier = Modifier
-                            .padding(0.dp, 2.dp, 0.dp, 2.dp)
+                            .weight(0.5f, true)
                     ) {
-                        Box(
-                            modifier = Modifier
-                                .weight(0.5f, true)
-                        ) {
-                            if (privacySwitchState == 0) {
-                                ComboBox(
-                                    list = typeListNames,
-                                    selectedIndex = typeSelectedIndexAutomatic,
-                                    onIndexChanged = { typeSelectedIndexAutomatic = it },
-                                    isExpanded = typeExpanded,
-                                    onExpandedChanged = { typeExpanded = it },
-                                    textWidth = 130.dp
-                                )
-                            } else if (privacySwitchState == 1) {
-                                ComboBox(
-                                    list = typeListNames,
-                                    selectedIndex = typeSelectedIndexHuman,
-                                    onIndexChanged = { typeSelectedIndexHuman = it },
-                                    isExpanded = typeExpanded,
-                                    onExpandedChanged = { typeExpanded = it },
-                                    textWidth = 130.dp
-                                )
-                            }
+                        if (privacySwitchState == 0) {
+                            ComboBox(
+                                list = typeListNames,
+                                selectedIndex = typeSelectedIndexAutomatic,
+                                onIndexChanged = { typeSelectedIndexAutomatic = it },
+                                isExpanded = typeExpanded,
+                                onExpandedChanged = { typeExpanded = it },
+                                textWidth = 130.dp
+                            )
+                        } else if (privacySwitchState == 1) {
+                            ComboBox(
+                                list = typeListNames,
+                                selectedIndex = typeSelectedIndexHuman,
+                                onIndexChanged = { typeSelectedIndexHuman = it },
+                                isExpanded = typeExpanded,
+                                onExpandedChanged = { typeExpanded = it },
+                                textWidth = 130.dp
+                            )
                         }
-                        OutlinedTextField(
-                            value = scoreInput,
-                            onValueChange = { scoreInput = it },
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
-                            singleLine = true,
-                            label = { Text(text = "Score") },
-                            placeholder = {
-                                Text(
-                                    text = "",
-                                    color = Color.Gray
-                                )
-                            },
-                            modifier = Modifier
-                                .weight(0.5f, true)
-                                .padding(0.dp, 2.dp, 0.dp, 2.dp)
-                        )
                     }
+                    OutlinedTextField(
+                        value = scoreInput,
+                        onValueChange = { scoreInput = it },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
+                        singleLine = true,
+                        label = { Text(text = "Score") },
+                        placeholder = {
+                            Text(
+                                text = "",
+                                color = Gray
+                            )
+                        },
+                        modifier = Modifier
+                            .weight(0.5f, true)
+                            .padding(0.dp, 2.dp, 0.dp, 2.dp)
+                    )
+                }
 
                 OutlinedTextField(
                     value = titleInput,
@@ -295,7 +296,7 @@ fun NewTask(
                     placeholder = {
                         Text(
                             text = "Title",
-                            color = Color.Gray
+                            color = Gray
                         )
                     },
                     modifier = Modifier
@@ -310,7 +311,7 @@ fun NewTask(
                     placeholder = {
                         Text(
                             text = "Description",
-                            color = Color.Gray
+                            color = Gray
                         )
                     },
                     modifier = Modifier
@@ -363,7 +364,7 @@ fun NewTask(
                                             Checkbox(
                                                 checked = checkedStateList[i],
                                                 onCheckedChange = { checkedStateList[i] = it },
-                                                colors = CheckboxDefaults.colors(Color.Blue),
+                                                colors = CheckboxDefaults.colors(Yellow),
                                                 modifier = Modifier
                                                     .padding(2.dp)
                                                     .weight(0.1f, false)
@@ -377,7 +378,7 @@ fun NewTask(
                                                 placeholder = {
                                                     Text(
                                                         text = "Answer option $i.",
-                                                        color = Color.Gray
+                                                        color = Gray
                                                     )
                                                 },
                                                 modifier = Modifier
@@ -399,7 +400,7 @@ fun NewTask(
                                     placeholder = {
                                         Text(
                                             text = "0",
-                                            color = Color.Gray
+                                            color = Gray
                                         )
                                     },
                                     modifier = Modifier
@@ -440,7 +441,7 @@ fun NewTask(
                                             placeholder = {
                                                 Text(
                                                     text = "0",
-                                                    color = Color.Gray
+                                                    color = Gray
                                                 )
                                             },
                                             modifier = Modifier
@@ -484,7 +485,7 @@ fun NewTask(
                                     Circle(
                                         center = markerState.position,
                                         radius = actualRadius,
-                                        strokeColor = Color.Red
+                                        strokeColor = Red
                                     )
                                 }
                                 }
@@ -525,7 +526,7 @@ fun NewTask(
                                             placeholder = {
                                                 Text(
                                                     text = "Answer option",
-                                                    color = Color.Gray
+                                                    color = Gray
                                                 )
                                             },
                                             modifier = Modifier
