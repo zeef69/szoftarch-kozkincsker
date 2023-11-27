@@ -48,7 +48,8 @@ class SessionPlayerViewModel @Inject constructor(
                     val taskSolutionsAndTasks: MutableList<Pair<TaskSolution, Task>> = emptyList<Pair<TaskSolution, Task>>().toMutableList()
                     for(taskSolution in taskSolutions)
                         for(task in tasks)
-                            taskSolutionsAndTasks.add(Pair(taskSolution, task))
+                            if(taskSolution.taskId == task.id)
+                                taskSolutionsAndTasks.add(Pair(taskSolution, task))
 
                     viewState = SessionPlayerContent(
                         taskSolutionsAndTasks = taskSolutionsAndTasks,

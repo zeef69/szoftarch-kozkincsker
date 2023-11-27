@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.ComposeView
 import co.zsmb.rainbowcake.base.RainbowCakeFragment
 import co.zsmb.rainbowcake.extensions.exhaustive
@@ -11,6 +13,7 @@ import co.zsmb.rainbowcake.hilt.getViewModelFromFactory
 import co.zsmb.rainbowcake.navigation.extensions.applyArgs
 import co.zsmb.rainbowcake.navigation.navigator
 import dagger.hilt.android.AndroidEntryPoint
+import hu.bme.aut.szoftarch.kozkincsker.data.model.Level
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Session
 import hu.bme.aut.szoftarch.kozkincsker.data.model.Task
 import hu.bme.aut.szoftarch.kozkincsker.data.model.User
@@ -49,15 +52,21 @@ class SessionPlayerFragment : RainbowCakeFragment<SessionPlayerViewState, Sessio
             AppUiTheme1 {
                 when (viewState) {
                     is Loading -> FullScreenLoading()
-                    is SessionPlayerContent -> Session(
-                        session = viewState.session,
-                        mission = viewState.mission,
-                        designer = viewState.designer,
-                        user = viewState.user,
-                        taskSolutionsAndTasks = viewState.taskSolutionsAndTasks,
-                        onBackClick = { navigator?.pop() },
-                        onTaskClicked = ::onTaskClicked
-                    )
+                    is SessionPlayerContent -> {
+                        val levels = remember { mutableStateListOf<Level>() }
+                        if(viewState.mission != null)
+                            levels.addAll(viewState.mission!!.levelList)
+                        Session(
+                            session = viewState.session,
+                            mission = viewState.mission,
+                            designer = viewState.designer,
+                            user = viewState.user,
+                            levels = levels,
+                            taskSolutionsAndTasks = viewState.taskSolutionsAndTasks,
+                            onBackClick = { navigator?.pop() },
+                            onTaskClicked = ::onTaskClicked
+                        )
+                    }
                 }.exhaustive
             }
         }

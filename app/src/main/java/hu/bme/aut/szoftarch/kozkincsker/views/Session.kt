@@ -27,8 +27,6 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -58,14 +56,11 @@ fun Session(
     mission: Mission?,
     designer: User?,
     user: User?,
+    levels: MutableList<Level>,
     taskSolutionsAndTasks: List<Pair<TaskSolution, Task>> = emptyList(),
     onTaskClicked: (Task, Session, User) -> Unit,
     onBackClick: () -> Unit = {}
 ) {
-    val levels = remember { mutableStateListOf<Level>() }
-    if(mission != null)
-        levels.addAll(mission.levelList)
-
     val unknown = stringResource(R.string.value_unknown)
     val missionDeleted = stringResource(R.string.mission_deleted_message)
 
@@ -214,7 +209,7 @@ fun Session(
                                                 if(task.id == taskSolutionAndTask.second.id) {
                                                     solutionsInLevel++
                                                     solution = taskSolutionAndTask.first
-                                                    Log.i("solution", solution.toString())
+                                                    Log.i("solution", task.id + " " + taskSolutionAndTask.second.id)
                                                 }
                                             }
 
@@ -238,14 +233,15 @@ fun Session(
                                                         .padding(all = 2.dp)
                                                         .weight(0.6f, true)
                                                 )
-                                                if(solution != null && !solution.checked && !task.taskType.checkable)
+                                                if(solution != null && !solution!!.checked && !task.taskType.checkable)
                                                     Icon(imageVector  = Icons.Filled.MoreHoriz, "", modifier = Modifier.weight(0.4f, true))
-                                                else if(solution != null && solution.checked && solution.correct)
+                                                else if(solution != null && solution!!.checked && solution!!.correct)
                                                     Icon(imageVector  = Icons.Filled.Done, "", modifier = Modifier.weight(0.4f, true))
-                                                else if(solution != null && solution.checked && !solution.correct)
+                                                else if(solution != null && solution!!.checked && !solution!!.correct)
                                                     Icon(imageVector  = Icons.Filled.Close, "", modifier = Modifier.weight(0.4f, true))
                                             }
                                             Spacer(modifier = Modifier.width(5.dp))
+                                            solution = null
                                         }
                                     }
                                 }
@@ -254,7 +250,6 @@ fun Session(
                                     level.showNextLevel = true
                                 }
                                 else if(!level.showNextLevel && level.levelType == LevelType.MinOneTaskInLevel && solutionsInLevel > 0) {
-                                    Log.i("level thing", level.showNextLevel.toString())
                                     level.showNextLevel = true
                                 }
                                 else if(!level.showNextLevel && level.levelType == LevelType.MaxOneTaskInLevel && solutionsInLevel > 0) {
