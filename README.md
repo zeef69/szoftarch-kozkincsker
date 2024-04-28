@@ -18,6 +18,9 @@ egyénileg vagy csoportosan tudnak teljesíteni.
 A megvalósított applikáció 2 fő funkcióval rendelkezik: lehetséges benne küldetést tervezni,
 illetve teljesíteni egy már korábban elkészített küldetést.
 
+### Részletes feladat és megvalósítás leírás:
+A részletes feladatspecifikáció, fogalomjegyzék, felhasználói szerepek és Use-case-ek illetve az adatstruktúrák és az architektúra leírása a _Dokumentáció.pdf_ fájlban található.
+
 ### Technikai részletek:
 A követelmények alapján egy **Android** alapú mobilalkalmazást valósítottunk meg **Kotlin** nyelven a JetBrains Android Studio segítségével.
 Az Androidra való fejlesztéseknél egyre népszerűbb a Google Jetpack könyvtár, így ebbe az irányba mentünk el, amikor keresni kellett a követelméyneknek megfelelő architektúrát.
